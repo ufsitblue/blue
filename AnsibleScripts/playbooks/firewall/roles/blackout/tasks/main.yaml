@@ -1,0 +1,64 @@
+# Do a network blackout on linux
+
+- name: Do stuff on Linux
+  become: true
+  when: ansible_system | lower == "linux"
+  block:
+  - name: gather linux packages
+    ansible.builtin.package_facts:
+      manager: auto
+      strategy: first
+
+  - name: Use Firewalld
+    when: '"firewalld" in ansible_facts.packages'
+    include_tasks: firewalld.yaml
+
+  - name: Do stuff with iptables
+    when: '"iptables" in ansible_facts.packages'
+    include_tasks: iptables.yaml
+
+- name: do stuff in windows
+  when: ansible_os_family | lower == "windows"
+  become: true
+  become_method: runas
+  become_user: Administrator
+  block: 
+  - name: Disable firewalls
+    community.windows.win_firewall:
+      profiles:
+      - "Domain"
+      - "Private"
+      - "Public"
+      state: "disabled"
+
+  - name: Disable default firewall rules
+    ansible.windows.win_shell: Disable-NetFirewallRule -All
+
+  - name: Allow team IPs into windows
+    community.windows.win_firewall_rule:
+      name: "RDP"
+      group: "Team IPs"
+      description: "Allow team machines into local machine"
+      remoteip: "{{ item }}"
+      localport: 3389
+      protocol: "tcp"
+    loop: "{{ team_ips }}"
+
+  - name: Allow team IPs into windows
+    community.windows.win_firewall_rule:
+      name: "Winrm"
+      group: "Team IPs"
+      description: "Allow team machines into local machine"
+      remoteip: "{{ item }}"
+      localport: 5985
+      protocol: "tcp"
+    loop: "{{ team_ips }}"
+ 
+  - name: Add default drop policy and enable firewall
+    community.windows.win_firewall:
+      profiles:
+      - "Domain"
+      - "Private"
+      - "Public"
+      state: "enabled"
+      inbound_action: "block"

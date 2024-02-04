@@ -1,0 +1,34 @@
+# Implement Network Blackout with IPTables
+
+- name: save current rules
+  community.general.iptables_state:
+    state: "saved"
+    path: "/tmp/{{ inventory_hostname }}_init_rules"
+
+- name: grab current rules
+  ansible.builtin.fetch:
+    flat: true
+    src: "/tmp/{{ inventory_hostname }}_init_rules"
+    dest: "roles/add_rules/files/'
+
+- name: flush current rules
+  ansible.builtin.iptables:
+    flush: true
+
+- name: use iptables to only allow team IPs into network
+  ansible.builtin.iptables:
+    action: "append"
+    chain: "INPUT"
+    destination_port: "22"
+    source: "{{ item }}"
+    jump: "ACCEPT"
+    protocol: "tcp"
+    state: "present"
+  loop: "{{ team_ips }}"
+
+- name: use iptables to add default drop rule
+  ansible.builtin.iptables:
+    action: "append"
+    chain: "INPUT"
+    jump: "REJECT"
+    state: "present"

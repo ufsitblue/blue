@@ -1,0 +1,18 @@
+# Call update-suricata and restart the service
+
+- name: Stopping Suricata Service
+  ansible.builtin.service:
+    name: suricata
+    state: stopped
+  listen: "restart suricata"
+ 
+- name: Running suricata-update
+  ansible.builtin.shell: suricata-update
+  listen: "restart suricata"
+
+- name: Restarting Suricata
+  ansible.builtin.service:
+    name: suricata
+    state: restarted
+    enabled: true
+  listen: "restart suricata"

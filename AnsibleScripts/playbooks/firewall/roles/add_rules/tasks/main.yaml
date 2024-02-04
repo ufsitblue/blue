@@ -1,0 +1,59 @@
+# Add Firewall Rules For All Systems
+
+- name: Add Firewall Rules on Linux
+  when: "ansible_os_family | lower == 'linux'"
+  block:
+  - name: Gather Package Facts
+    ansible.builtin.package_facts:
+      manager: auto
+      strategy: first
+
+  - name: Use Firewalld
+    when: '"firewalld in ansible_facts.package"'
+    import_tasks: firewalld.yaml
+  
+  - name: Use IPtables
+    when: '"iptables" in ansible_facts.package'
+    import_tasks: iptables.yaml
+
+- name: Add Firewall Rules on Windows
+  when: "ansible_os_family | lower == 'windows'"
+  block:
+  - name: Disable firewalls
+    community.windows.win_firewall:
+      profiles:
+      - "Domain"
+      - "Private"
+      - "Public"
+      state: "disabled"
+
+  - name: Disable firewall rules
+    ansible.windows.win_shell: Disable-NetFirewallRule -All
+
+  - name: Allow services in
+    community.windows.win_firewall_rule:
+      name: "Service {{ item }}"
+      group: "Scored Services"
+      description: "This is a scored service.  This port must stay open."
+      localport: "{{ item }}"
+      protocol: "tcp"
+    loop: "{{ host_ports }}"
+
+  - name: Enable winrm rule
+    community.windows.win_firewall_rule:
+      name: "Winrm"
+      state: "present"
+
+  - name: Enable RDP rule
+    community.windows.win_firewall_rule:
+      name: "RDP"
+      state: "present"
+
+  - name: Add default drop policy and enable firewall
+    community.windows.win_firewall:
+      profiles:
+      - "Domain"
+      - "Private"
+      - "Public"
+      state: "enabled"
+      inbound_action: "block"  

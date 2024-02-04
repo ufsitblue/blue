@@ -1,0 +1,13 @@
+# variables for all groups
+
+users:
+  - bob
+  - alice
+  - carol
+  - jimmy
+
+passwords:
+  - easy_password1
+  - easy_password2
+  - easy_password3
+  - easy_password4

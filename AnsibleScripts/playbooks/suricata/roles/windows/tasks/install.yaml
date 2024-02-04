@@ -1,0 +1,5 @@
+# Installs Suricata's Windows Dependencies
+
+- name: Installing Suricata
+  ansible.windows.win_package:
+    path: "{{ suricata_download }}" 

@@ -1,0 +1,3 @@
+# Variables for Linux Suricata Configuration
+
+config_path: /etc/suricata/suricata.yaml

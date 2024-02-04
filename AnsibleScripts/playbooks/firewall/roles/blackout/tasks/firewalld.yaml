@@ -1,0 +1,18 @@
+# Implement blackout using firewalld
+
+- name: use firewalld to add team IPs for ssh
+  ansible.posix.firewalld:
+    permanent: true
+    source: "{{ item }}"
+    zone: "trusted"
+    state: "enabled"
+    port: "22"
+  loop: "{{ team_ips }}"
+
+- name: use firewalld to change default zone to DROP
+  ansible.posix.firewalld:
+    permanent: true
+    zone: "public"
+    state: "present"
+    target: "DROP"
+

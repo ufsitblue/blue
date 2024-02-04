@@ -1,0 +1,6 @@
+# Variables for all machines
+
+team_ips:
+  - Replace.me
+  - with.team
+  - ip.addresses

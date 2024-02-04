@@ -1,0 +1,3 @@
+# Variables for the Wazuh Manager install
+
+all_in_one: false

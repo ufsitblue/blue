@@ -1,0 +1,28 @@
+# Install Suricata on Windows
+
+- name: Install Suricata on Windows
+  hosts: windows
+  become: yes
+  strategy: free
+  become_method: runas
+  become_user: Administrator
+  vars_files:
+    - group_vars/all.yaml
+  tags:
+    - Windows
+  roles:
+    - windows
+
+# Install Suricata on Linux Distros
+- name: Install Suricata on Linux
+  hosts: linux
+  strategy: free
+  become: yes
+  vars_files:
+    - group_vars/all.yaml
+  tags:
+    - Linux
+  roles:
+    - linux_setup
+    - role: linux_configure
+      tags: Configuration

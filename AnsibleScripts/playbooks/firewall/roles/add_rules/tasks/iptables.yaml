@@ -1,0 +1,41 @@
+# Load default and service rules on Linux using iptables
+
+- name: Place default rules
+  ansible.builtin.copy:
+    src: "{{ inventory_host }}_init_rules"
+    dest: "/tmp/"
+    owner: "{{ ansible_ssh_user }}"
+    group: "{{ ansible_ssh_user }}"
+    mode: "600"
+
+- name: Load default rules
+  community.general.iptables_state:
+    state: "restored"
+    path: "/tmp/{{ inventory_host }}_init_rules"
+
+- name: Add own rules
+  ansible.builtin.iptables:
+    state: "present"
+    action: "append"
+    destination_port: "{{ item }}"
+    jump: "ACCEPT"
+    protocol: "tcp"
+  loop: "{{ host_ports }}"
+
+- name: Add default drop rule
+  ansible.builtin.iptables:
+    action: "append"
+    chain: "INPUT"
+    jump: "REJECT"
+    state: "present"
+
+- name: Save custom rules
+  communtiy.general.iptables_state:
+    state: "saved"
+    path: "/tmp/{{ inventory_host }}_custom_rules"
+
+- name: Grab custom rules
+  ansible.builtin.fetch:
+    flat: true
+    src: "/tmp/{{ inventory_hostname }}_custom_rules"
+    dest: "roles/add_rules/files/'

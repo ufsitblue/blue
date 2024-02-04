@@ -1,0 +1,8 @@
+[Unit]
+Description=Suricata service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/suricata -c /etc/suricata/suricata.yaml --af-packet -D
+Restart=always

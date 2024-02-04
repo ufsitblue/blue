@@ -1,0 +1,27 @@
+- name: Install Rust
+  import_role: 
+    name: rust_install
+
+- name: Download and unzip source files
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: "{{ suricata_download }}" 
+    dest: "{{ home }}" 
+
+- name: Running ./configure
+  become: no
+  ansible.builtin.command:
+    cmd: sudo ./configure {{ config_inputs }}
+    chdir: "{{ suricata_source_dir }}"
+  environment:
+    CPPFLAGS: "-I/usr/include/libnetfilter_queue/ -I/usr/include/libnfnetlink/"
+
+- name: Running make install-full
+  ansible.builtin.shell:
+    cmd: make && make install-full && ldconfig
+    chdir: "{{ suricata_source_dir }}"
+
+- name: Install Suricata as a Service
+  ansible.builtin.copy:
+    src: suricata.service
+    dest: /etc/systemd/system/
