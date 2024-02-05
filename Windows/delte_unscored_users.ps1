@@ -10,7 +10,7 @@ $usersToKeep = @(
     "sophia.constellation", "harry.potter", "celine.cosmos", "tessa.nova", "ivy.lee",
     "dave.marsden", "thomas.spacestation", "kate.bush", "emma.nova", "una.moonbase",
     "luna.lovegood", "frank.astro", "victor.meteor", "mars.patel", "grace.luna",
-    "wendy.starship", "neptune.williams", "henry.orbit", "ivy.starling", "Guest", "Administrator"
+    "wendy.starship", "neptune.williams", "henry.orbit", "ivy.starling", "Guest", "Administrator", "seccdc_black"
 )
 
 # get all local user accounts
