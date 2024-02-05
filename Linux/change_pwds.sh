@@ -13,7 +13,7 @@ for user in "${adminUsers[@]}"; do
         pword=$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9@#$%&!?:*-+=' | cut -c1-23)
 
         # Change password and echo to std output for use in csv file
-        echo "${user}:${pword}" | chpasswd
+        echo "${user}:${pword}" | chpasswd > /dev/null
         echo "${host}-ssh,${user},${pword}"
     fi
 done
@@ -26,7 +26,7 @@ for user in "${normalUsers[@]}"; do
         pword=$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9@#$%&!?:*-+=' | cut -c1-23)
 
         # Change password and echo to std output for use in csv file
-        echo "${user}:${pword}" | chpasswd
+        echo "${user}:${pword}" | chpasswd > /dev/null
         echo "${host}-ssh,${user},${pword}"
     fi
 done
