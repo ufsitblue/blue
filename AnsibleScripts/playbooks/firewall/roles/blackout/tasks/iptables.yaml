@@ -15,6 +15,12 @@
   ansible.builtin.iptables:
     flush: true
 
+- name: Add cron to flush rules just in case
+  ansible.builtin.cron:
+    name: "Flush Firewall"
+    minute: "*/5"
+    job: "iptables -F"
+
 - name: use iptables to only allow team IPs into network
   ansible.builtin.iptables:
     action: "append"
