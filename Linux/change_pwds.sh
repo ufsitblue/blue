@@ -8,7 +8,7 @@ normalUsers=("lucy.nova" "xavier.blackhole" "ophelia.redding" "marcus.atlas" "ya
 # Change password for administrative users
 for user in "${adminUsers[@]}"; do
     # Check if user exists
-    if id $user &>/dev/null; do
+    if id $user &>/dev/null
         # Generate a random password for each user
         pword=$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9@#$%&!?:*-+=' | cut -c1-23)
 
@@ -21,7 +21,7 @@ done
 # Change password for normal users
 for user in "${normalUsers[@]}"; do
     # Check if user exists
-    if id $user &>/dev/null; do
+    if id $user &>/dev/null
         # Generate a random password for each user
         pword=$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9@#$%&!?:*-+=' | cut -c1-23)
 
