@@ -1,0 +1,89 @@
+all:
+  hosts:
+    QuasarQuiet:
+      ansible_host: 10.100.19.4
+      ansible_user: username
+      ansible_password: password
+      required_ports:
+      - 22
+    db01:
+      ansible_host: 10.100.19.5
+      ansible_user: username
+      ansible_password: password
+      required_ports:
+      - 20
+      - 21
+      - 22
+    StarDNS:
+      ansible_host: 10.100.19.6
+      ansible_user: username
+      ansible_password: password
+      required_ports:
+      - 22
+      - 53
+    GlobalAD:
+      ansible_host: 10.100.19.7
+      ansible_user: username
+      ansible_password: password
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 22
+      - 3389
+      - 5985
+    FractalHash:
+      ansible_host: 10.100.19.8
+      ansible_user: username
+      ansible_password: password
+      required_ports:
+      - 22
+      - 3306
+    web:
+      ansible_host: 10.100.19.9
+      ansible_user: username
+      ansible_password: password
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 22
+      - 80
+      - 443
+      - 3389
+    NebulaNet:
+      ansible_host: 10.100.19.10
+      ansible_user: username
+      ansible_password: password
+      required_ports:
+      - 22
+      - 80
+Windows:
+  hosts:
+    GlobalAD:
+      ansible_host: 10.100.19.7
+      ansible_user: username
+      ansible_password: password
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 22
+      - 3389
+      - 5985
+    web:
+      ansible_host: 10.100.19.9
+      ansible_user: username
+      ansible_password: password
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 22
+      - 80
+      - 443
+      - 3389

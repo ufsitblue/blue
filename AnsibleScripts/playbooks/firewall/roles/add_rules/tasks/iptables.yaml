@@ -20,7 +20,7 @@
     destination_port: "{{ item }}"
     jump: "ACCEPT"
     protocol: "tcp"
-  loop: "{{ host_ports }}"
+  loop: "{{ required_ports }}"
 
 - name: Add default drop rule
   ansible.builtin.iptables:
