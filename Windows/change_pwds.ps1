@@ -5,6 +5,10 @@
 $AdminUsers=@("elara.boss" "sarah.lee" "lisa.brown" "michael.davis" "emily.chen" "tom.harris" "bob.johnson" "david.kim" "rachel.patel" "dave.grohl" "kate.skye" "leo.zenith" "jack.rover")
 $NormalUsers=@("lucy.nova" "xavier.blackhole" "ophelia.redding" "marcus.atlas" "yara.nebula" "parker.posey" "maya.star" "zachary.comet" "quinn.jovi" "nina.eclipse" "alice.bowie" "ruby.rose" "owen.mars" "bob.dylan" "samantha.stephens" "parker.jupiter" "carol.rivers" "taurus.tucker" "rachel.venus" "emily.waters" "una.veda" "ruby.starlight" "frank.zappa" "ava.stardust" "samantha.aurora" "grace.slick" "benny.spacey" "sophia.constellation" "harry.potter" "celine.cosmos" "tessa.nova" "ivy.lee" "dave.marsden" "thomas.spacestation" "kate.bush" "emma.nova" "una.moonbase" "luna.lovegood" "frank.astro" "victor.meteor" "mars.patel" "grace.luna" "wendy.starship" "neptune.williams" "henry.orbit" "ivy.starling")
 
+#Create Arrays to hold local and domain users information
+$LocalUsers=@()
+$DomainUsers=@()
+
 function Generate-Password {
     $PasswordLength = 23
     $PasswordChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789@#$%&!?:*-+="
@@ -17,16 +21,52 @@ function Generate-Password {
 }
 
 foreach ($User in $AdminUsers) {
+    $LocalUser = Get-LocalUser -Name $User -ErrorAction SilentlyContinue
+    $DomainUser = Get-ADUser -Filter { SamAccountName -eq $User } -ErrorAction SilentlyContinue
     $NewPassword = Generate-Password
-    Set-LocalUser -Name $user -Password (ConvertTo-SecureString $NewPassword -AsPlainText -Force)
-    Write-Output "checkname,$User,$NewPassword"
+    
+    if ($LocalUser) {    
+        Set-LocalUser -Name $User -Password (ConvertTo-SecureString $NewPassword -AsPlainText -Force) | Out-Null
+        $LocalUsers += [PSCustomObject]@{
+            UserName = $User
+            Password = $NewPassword
+        }
+    }
+    if ($DomainUser) {
+        Set-ADAccountPassword -Identity $User -NewPassword (ConvertTo-SecureString -AsPlainText $newPassword -Force)
+        $DomainUsers += [PSCustomObject]@{
+            UserName = $User
+            Password = $NewPassword
+        }
+    }
 }
 
 foreach ($User in $NormalUsers) {
+    $LocalUser = Get-LocalUser -Name $User -ErrorAction SilentlyContinue
+    $DomainUser = Get-ADUser -Filter { SamAccountName -eq $User } -ErrorAction SilentlyContinue
     $NewPassword = Generate-Password
-    Set-LocalUser -Name $user -Password (ConvertTo-SecureString $NewPassword -AsPlainText -Force)
-    Write-Output "checkname,$User,$NewPassword"
+    
+    if ($LocalUser) {    
+        Set-LocalUser -Name $User -Password (ConvertTo-SecureString $NewPassword -AsPlainText -Force) | Out-Null
+        $LocalUsers += [PSCustomObject]@{
+            UserName = $User
+            Password = $NewPassword
+        }
+    }
+    if ($DomainUser) {
+        Set-ADAccountPassword -Identity $User -NewPassword (ConvertTo-SecureString -AsPlainText $newPassword -Force)
+        $DomainUsers += [PSCustomObject]@{
+            UserName = $User
+            Password = $NewPassword
+        }
+    }
 }
 
-Write-Output "Finished changing passwords. Remember to copy the above to a file, replacing every 'checkname' with the correct host/service (i.e. StarDNS-DNS)"
-Write-Output "Hint: use ctrl + f"
+Write-Output "Printing local users csv:"
+$LocalUsers | ForEach-Object { "checkname,$($_.UserName),$($_.Password)" }
+Write-Output "Remember to replace 'checkname' with the appropriate host-service"
+Write-Output ""
+Write-Output "Printing domain users csv:"
+$DomainUsers | ForEach-Object { "checkname,$($_.UserName),$($_.Password)" }
+Write-Output "Remember to replace 'checkname' with the appropriate host-service"
+Write-Output "However, since we changed AD passwords, this file may need to be copied to many services"
