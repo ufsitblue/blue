@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <style>
+            body {
+                padding: 0px;
+                margin: 0px;
+            }
+            input,textarea {
+                width: 16em;
+                margin: 0px;
+                border: 1px black solid;
+                padding: 1px;
+            }
+            textarea {
+                height: auto;
+                resize: vertical;
+            }
+        </style>
+        <input type="text" id="nameInput" placeholder="File Name"><br>
+        <textarea id="contentsInput" placeholder="File Contents" rows="4" cols="16"></textarea><br>
+        <select id="fileInputSelect"></select>
+        <button id="updateFileButton">Update Input</button>
+        <script src="index.js"></script>
+    </body>
+</html>
