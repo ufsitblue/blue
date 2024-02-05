@@ -37,7 +37,7 @@
       description: "This is a scored service.  This port must stay open."
       localport: "{{ item }}"
       protocol: "tcp"
-    loop: "{{ host_ports }}"
+    loop: "{{ required_ports }}"
 
   - name: Enable winrm rule
     community.windows.win_firewall_rule:
