@@ -7,9 +7,5 @@ Invoke-WebRequest -Uri $url -OutFile $output
 #Install Python3.7 for all users
 & $output /passive InstallAllUsers=1 InstallLauncherAllUsers=1 Include_test=0
 
-# Open Firewall For winrm
-Set-NetFirewallRule -DisplayGroup "Windows Remote Management" -Profile Any
-
 # Download and install npcap.  Unfortunately, you can't install unattended.
 Invoke-WebRequest -Uri "https://npcap.com/dist/npcap-1.78.exe" -OutFile "npcap.exe"
-.\npcap.exe

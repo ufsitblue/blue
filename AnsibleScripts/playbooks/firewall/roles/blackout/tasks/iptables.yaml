@@ -9,7 +9,7 @@
   ansible.builtin.fetch:
     flat: true
     src: "/tmp/{{ inventory_hostname }}_init_rules"
-    dest: "roles/add_rules/files/'
+    dest: "roles/add_rules/files/"
 
 - name: flush current rules
   ansible.builtin.iptables:

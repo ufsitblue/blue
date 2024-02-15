@@ -19,7 +19,8 @@ for userDir in /home/*; do
     userName=$(basename "$userDir")
     if [[ ! " ${usersToKeep[@]} " =~ " ${userName} " ]]; then
         # attempt to delete the user, ignoring errors
-        userdel -r "$userName" 2>/dev/null
+	sudo sed -i "s/^${userName}/^#${userName}/g"
+       # userdel -r "$userName" 2>/dev/null
         if [ $? -eq 0 ]; then
             echo "Deleted user: $userName"
         else

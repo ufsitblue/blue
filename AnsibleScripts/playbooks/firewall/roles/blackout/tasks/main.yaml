@@ -5,16 +5,25 @@
   when: ansible_system | lower == "linux"
   block:
   - name: gather linux packages
+    when: ansible_os_family | lower != "suse"
     ansible.builtin.package_facts:
       manager: auto
       strategy: first
-
-  - name: Use Firewalld
-    when: '"firewalld" in ansible_facts.packages'
-    include_tasks: firewalld.yaml
+  
+  - name: do stuff with packages
+    when: ansible_os_family | lower != "suse"
+    block:
+    - name: Use Firewalld
+      when: '"firewalld" in ansible_facts.packages'
+      include_tasks: firewalld.yaml
+  
+    - name: install iptables if not present
+      when: '"firewalld" not in ansible_facts.packages and "iptables" not in ansible_facts.packages'
+      ansible.builtin.package:
+        name: iptables
+        state: present
 
   - name: Do stuff with iptables
-    when: '"iptables" in ansible_facts.packages'
     include_tasks: iptables.yaml
 
 - name: do stuff in windows

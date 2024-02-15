@@ -8,9 +8,9 @@
       manager: auto
       strategy: first
 
-  - name: Use Firewalld
-    when: '"firewalld in ansible_facts.package"'
-    import_tasks: firewalld.yaml
+        #  - name: Use Firewalld
+        #    when: '"firewalld in ansible_facts.package"'
+        #    import_tasks: firewalld.yaml
   
   - name: Use IPtables
     when: '"iptables" in ansible_facts.package'

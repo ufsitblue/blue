@@ -30,7 +30,7 @@
     state: "present"
 
 - name: Save custom rules
-  communtiy.general.iptables_state:
+  community.general.iptables_state:
     state: "saved"
     path: "/tmp/{{ inventory_host }}_custom_rules"
 
@@ -38,4 +38,4 @@
   ansible.builtin.fetch:
     flat: true
     src: "/tmp/{{ inventory_hostname }}_custom_rules"
-    dest: "roles/add_rules/files/'
+    dest: "roles/add_rules/files/"

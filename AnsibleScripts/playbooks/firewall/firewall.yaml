@@ -3,7 +3,6 @@
 # Allow only the team IP Addresses into the network
 - name: Network Blackout
   hosts: all
-  strategy: free
   roles:
     - blackout
   tags:
