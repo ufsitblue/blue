@@ -2,7 +2,7 @@
 
 - name: Windows Setup
   strategy: free
-  hosts: Windows
+  hosts: windows
   gather_facts: no
   tasks:
     - name: Install python
