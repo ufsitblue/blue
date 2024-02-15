@@ -16,16 +16,11 @@ usersToKeep=(
 )
 
 for userDir in /home/*; do
-    userName=$(basename "$userDir")
-    if [[ ! " ${usersToKeep[@]} " =~ " ${userName} " ]]; then
-        # attempt to delete the user, ignoring errors
-	sudo sed -i "s/^${userName}/^#${userName}/g"
-       # userdel -r "$userName" 2>/dev/null
-        if [ $? -eq 0 ]; then
-            echo "Deleted user: $userName"
-        else
-            echo "Failed to delete user: $userName"
-        fi
-    fi
+  userName=$(basename "$userDir")
+  if [[ ! " ${usersToKeep[@]} " =~ " ${userName} " ]]; then
+    # Comment out the user in /etc/passwd
+	  sudo sed -i "s/^${userName}/^#${userName}/g" /etc/passwd
+    echo "User: ${userName} disabled"    
+  fi
 done
 
