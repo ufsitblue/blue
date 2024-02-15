@@ -9,7 +9,7 @@ Make sure that you are installing ansible and not ansible-core.  The playbooks i
 
 If you are not running ansible version >= 2.10 and you used the package manager to install, then make sure you have the most up to date repository for ansible and reinstall.  These playbooks are built with >= 2.10 compatibility in mind and will not work with earlier versions.
 # Ansible Setup
-If you already have an inventory hosts.yaml file, then just run the command ```ansible-config init --disabled > ~/.ansible.cfg``` as the user you will run ansible with.  Then replace the line ```;inventory=...``` with ```inventory=<Host_File_Path>```.  Ansible is now fully configured and you can moveon to the next step.
+If you already have an inventory hosts.yaml file, then just run the command ```ansible-config init --disabled > ~/.ansible.cfg``` as the user you will run ansible with.  Then replace the line ```;inventory=...``` with ```inventory=<Host_File_Path>```.  Ansible is now fully configured and you can move on to the next step.
 
 If you do not have a hosts file yet, run anisble_setup.sh as the user you will run ansible with and follow the instructions in the script.
 
