@@ -47,7 +47,7 @@ all:
     FractalHash:
       ansible_host: 10.100.19.8
       ansible_user: alpine
-      ansible_private_key_path: /home/max/BlueTeam/ccdc_2024/practice/blue-vm-images-aws
+      ansible_password: Is1WaterWet?
       required_ports:
       - 22
       - 3306
@@ -133,4 +133,3 @@ windows:
       - 3269
 linux:
   hosts:
-
