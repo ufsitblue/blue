@@ -6,13 +6,20 @@
   roles:
     - blackout
   tags:
-    - network_blackout
+    - blackout
 
 # Distribute host based Firewall Rules
 - name: Add Firewall Rules
   hosts: all
-  strategy: free
   roles:
     - add_rules
   tags:
-    - setup_firewall
+    - add
+
+- name: Restore Firewall Rules
+  hosts: linux
+  strategy: free
+  roles:
+    - restore_rules
+  tags:
+    - restore

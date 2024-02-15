@@ -1,33 +1,85 @@
 # Load default and service rules on Linux using iptables
 
-- name: Place default rules
-  ansible.builtin.copy:
-    src: "{{ inventory_host }}_init_rules"
-    dest: "/tmp/"
-    owner: "{{ ansible_ssh_user }}"
-    group: "{{ ansible_ssh_user }}"
-    mode: "600"
-
-- name: Load default rules
-  community.general.iptables_state:
-    state: "restored"
-    path: "/tmp/{{ inventory_host }}_init_rules"
-
-- name: Add own rules
+- name: Flush current INPUT/OUTPUT Rules
   ansible.builtin.iptables:
-    state: "present"
-    action: "append"
+    chain: "{{ item }}"
+    flush: yes
+  with_items: ['INPUT', 'OUTPUT']
+
+- name: Add invalid packet rule
+  ansible.builtin.iptables:
+    chain: "{{ item }}"
+    cstate: ["INVALID"]
+    jump: "DROP"
+  with_items: ['INPUT', 'OUTPUT']
+
+- name: Add localhost INPUT rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    source: "127.0.0.0/8"
+    jump: "ACCEPT"
+
+- name: Add localhost OUTPUT rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    destination: "127.0.0.0/8"
+    jump: "ACCEPT"
+
+- name: Add ICMP INPUT rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    protocol: "icmp"
+    jump: "ACCEPT"
+
+- name: Add dns INPUT rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    protocol: "udp"
+    source_port: "53"
+    cstate: ["ESTABLISHED"]
+    jump: "ACCEPT"
+  
+- name: Add dns OUTPUT rule
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
+    protocol: "udp"
+    destination_port: "53"
+    jump: "ACCEPT"
+
+- name: Add required INPUT rules
+  ansible.builtin.iptables:
+    chain: "INPUT"
     destination_port: "{{ item }}"
     jump: "ACCEPT"
     protocol: "tcp"
   loop: "{{ required_ports }}"
 
+- name: Add required OUTPUT rules
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
+    source_port: "{{ item }}"
+    cstate: ["ESTABLISHED"]
+    protocol: "tcp"
+    jump: "ACCEPT"
+  loop: "{{ required_ports }}"
+
+- name: Add dropped INPUT LOG rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    jump: "LOG"
+    log_prefix: "[DROPPED_INPUT] "
+
+- name: Add dropped OUTPUT LOG rule
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
+    jump: "LOG"
+    log_prefix: "[DROPPED_OUTPUT] "
+
 - name: Add default drop rule
   ansible.builtin.iptables:
-    action: "append"
-    chain: "INPUT"
+    chain: "{{ item }}"
     jump: "REJECT"
-    state: "present"
+  with_items: ['INPUT', 'OUTPUT']
 
 - name: Save custom rules
   community.general.iptables_state:
@@ -37,5 +89,5 @@
 - name: Grab custom rules
   ansible.builtin.fetch:
     flat: true
-    src: "/tmp/{{ inventory_hostname }}_custom_rules"
-    dest: "roles/add_rules/files/"
+    src: "/tmp/{{ inventory_hostname }}.rules"
+    dest: "roles/restore_rules/files/"

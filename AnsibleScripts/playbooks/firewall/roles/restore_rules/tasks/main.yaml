@@ -1,0 +1,9 @@
+- name: Transfer rule file
+  ansible.builtin.copy:
+    src: "{{ inventory_hostname }}.rules"
+    dest: "/tmp/"
+
+- name: Load iptables rules
+  ansible.builtin.iptables_state:
+    path: "/tmp/{{ inventory_hostname }}.rules"
+    state: "restored"
