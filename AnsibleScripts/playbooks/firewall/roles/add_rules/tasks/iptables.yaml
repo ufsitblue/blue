@@ -21,13 +21,19 @@
 
 - name: Add localhost OUTPUT rule
   ansible.builtin.iptables:
-    chain: "INPUT"
+    chain: "OUTPUT"
     destination: "127.0.0.0/8"
     jump: "ACCEPT"
 
 - name: Add ICMP INPUT rule
   ansible.builtin.iptables:
     chain: "INPUT"
+    protocol: "icmp"
+    jump: "ACCEPT"
+
+- name: Add ICMP OUTPUT rule
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
     protocol: "icmp"
     jump: "ACCEPT"
 
@@ -78,7 +84,7 @@
 - name: Add default drop rule
   ansible.builtin.iptables:
     chain: "{{ item }}"
-    jump: "REJECT"
+    jump: "DROP"
   with_items: ['INPUT', 'OUTPUT']
 
 - name: Save custom rules

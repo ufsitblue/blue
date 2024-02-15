@@ -1,7 +1,7 @@
 # Add Firewall Rules For All Systems
 
 - name: Add Firewall Rules on Linux
-  when: "ansible_os_family | lower == 'linux'"
+  when: "ansible_system | lower == 'linux'"
   block:
 #  - name: Gather Package Facts
 #    ansible.builtin.package_facts:

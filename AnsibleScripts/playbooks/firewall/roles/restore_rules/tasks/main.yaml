@@ -4,6 +4,6 @@
     dest: "/tmp/"
 
 - name: Load iptables rules
-  ansible.builtin.iptables_state:
+  community.general.iptables_state:
     path: "/tmp/{{ inventory_hostname }}.rules"
     state: "restored"
