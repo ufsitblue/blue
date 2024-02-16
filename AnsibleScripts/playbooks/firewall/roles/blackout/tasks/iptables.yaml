@@ -1,5 +1,43 @@
 # Implement Network Blackout with IPTables
 
+- name: Create restore script
+  ansible.builtin.blockinfile:
+    create: true
+    path: "/etc/iptables/restore-iptables.sh"
+    block: |
+      {{ !/bin/bash | comment }}
+      iptables-restore < /root/{{ inventory_hostname }}.rules
+
+- name: Make restore script executable
+  ansible.builtin.file:
+    path: "/etc/iptables/restore-iptables.sh"
+    mode: 0500
+
+- name: Create systemd file
+  ansible.builtin.blockinfile:
+    create: true
+    path: "/etc/systemd/system/iptables-persistent.service"
+    block: |
+      [Unit] 
+      Description=runs iptables restore on boot
+      ConditionFileIsExecutable=/etc/iptables/restore-iptables.sh
+      After=network.target
+      
+      [Service]
+      Type=simple
+      ExecStart=/bin/bash /etc/iptables/restore-iptables.sh
+      TimeoutSec=10
+      RemainAfterExit=yes
+      GuessMainPID=no
+      
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Enable iptables reloader
+  ansible.builtin.systemd_service:
+    name: "iptables-persistent.service"
+    enabled: true
+
 - name: flush current rules
   ansible.builtin.iptables:
     flush: true
@@ -15,7 +53,7 @@
 - name: Add invalid packet rule
   ansible.builtin.iptables:
     chain: "{{ item }}"
-    cstate: ["INVALID"]
+    ctstate: ["INVALID"]
     jump: "DROP"
   with_items: ['INPUT', 'OUTPUT']
 
@@ -61,7 +99,7 @@
     source_port: "22"
     jump: "ACCEPT"
     protocol: "tcp"
-    cstate: ["ESTABLISHED"]
+    ctstate: ["ESTABLISHED"]
     state: "present"
 
 - name: Add dropped INPUT LOG rule
@@ -81,3 +119,8 @@
     chain: "{{ item }}"
     jump: "DROP"
   with_items: ['INPUT', 'OUTPUT']
+
+- name: Save custom rules
+  community.general.iptables_state:
+    state: "saved"
+    path: "/root/{{ inventory_hostname }}.rules"

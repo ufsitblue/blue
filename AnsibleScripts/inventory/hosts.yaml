@@ -23,53 +23,19 @@ windows:
       - 636
       - 3268
       - 3269
-    db01:
-      ansible_host: 10.100.19.5
-      ansible_user: root
+    web:
+      ansible_host: 10.100.19.9
+      ansible_user: Administrator
       ansible_password: Is1WaterWet?
       ansible_connection: winrm
       ansible_winrm_scheme: http
       ansible_port: 5985
       ansible_winrm_transport: ntlm
       required_ports:
+      - 80
+      - 443
       - 3389
-      - 53
-      - 88
-      - 135
-      - 137
-      - 138
-      - 389
-      - 445
-      - 464
-      - 636
-      - 3268
-      - 3269
-      - 20
-      - 21
-      - 22
-    StarDNS:
-      ansible_host: 10.100.19.6
-      ansible_user: root
-      ansible_password: Is1WaterWet?
-      ansible_connection: winrm
-      ansible_winrm_scheme: http
-      ansible_port: 5985
-      ansible_winrm_transport: ntlm
-      required_ports:
-      - 3389
-      - 53
-      - 88
-      - 135
-      - 137
-      - 138
-      - 389
-      - 445
-      - 464
-      - 636
-      - 3268
-      - 3269
-      - 22
-      - 53
+      - 5895
 linux:
   hosts:
     QuasarQuiet:
@@ -78,6 +44,21 @@ linux:
       ansible_password: Is1WaterWet?
       required_ports:
       - 22
+    db01:
+      ansible_host: 10.100.19.5
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 20
+      - 21
+      - 22
+    StarDNS:
+      ansible_host: 10.100.19.6
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+      - 53
     FractalHash:
       ansible_host: 10.100.19.8
       ansible_user: alpine
@@ -85,13 +66,6 @@ linux:
       required_ports:
       - 22
       - 3306
-    web:
-      ansible_host: 10.100.19.9
-      ansible_user: Administrator
-      ansible_password: Is1WaterWet?
-      required_ports:
-      - 22
-      - 80
     NebulaNet:
       ansible_host: 10.100.19.10
       ansible_user: root
