@@ -1,3 +1,10 @@
+"""
+If you want to upload to Mattermost, please set the following environment variables
+ - MATTERMOST_URL
+ - MATTERMOST_USERNAME
+ - MATTERMOST_PASSWORD
+"""
+
 import os
 import psutil
 import socket
