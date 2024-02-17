@@ -10,4 +10,5 @@ if [[ -v $1 ]]; then
 fi
 iptables-save > /etc/iptables/rules.v4
 ip6tables-save > /etc/iptables/rules.v6
+sleep 2
 reboot
