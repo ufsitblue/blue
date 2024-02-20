@@ -1,0 +1,29 @@
+<!-- Auditd Rules -->
+<group name="auditd">
+
+    <!-- Key: etcpasswd -->
+    <!-- Alert modifying /etc/passwd for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100005" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcpasswd</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/passwd was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/passwd using differnt user than original user -->
+    <rule id="100004" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcpasswd</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/passwd was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/passwd generic -->
+    <rule id="100001" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">etcpasswd</field>
+		<description>/etc/passwd was modified by user: $(audit.auid-h)</description>
+	</rule>
+
+</group>
