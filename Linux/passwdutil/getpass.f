@@ -52,8 +52,6 @@
       WRITE(6, FMT="(A)", ADVANCE="NO") WRITEBUFFER
       WRITE(6, FMT="(A)", ADVANCE="NO") " "
       END DO
-!     WRITE(6, FMT='(A19)') WORDS(RANDOMCHOICE(1),1:19),                      &
-!     &WORDS(RANDOMCHOICE(2), 1:19)
 
       END PROGRAM GENPASSWD
 
