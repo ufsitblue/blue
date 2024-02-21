@@ -18,6 +18,15 @@
   tags:
     - windows
 
+- name: Install on Solaris machines
+  hosts: solaris
+  strategy: free
+  become: yes
+  roles:
+    - solaris_agent
+  tags:
+    - solaris
+
 - name: Install on BSD machines
   hosts: bsd
   become: yes
