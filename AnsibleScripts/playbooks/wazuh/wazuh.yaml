@@ -1,5 +1,6 @@
 - name: Install on Non-Windows machines
   hosts: all,!windows,!manager
+  strategy: free
   become: yes
   roles:
     - linux_agent
