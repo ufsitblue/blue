@@ -73,6 +73,18 @@ linux:
       required_ports:
       - 22
       - 80
+bsd:
+  hosts:
+    OpenBased:
+      ansible_host: <ip_addr_here>
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      ansible_connection: paramiko
+    FreeBased:
+      ansible_host: <ip_addr_here>
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      ansible_connection: paramiko
 manager:
   hosts:
     FractalHash:

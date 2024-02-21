@@ -1,5 +1,5 @@
-- name: Install on Non-Windows machines
-  hosts: all,!windows,!manager
+- name: Install on Linux machines
+  hosts: linux
   strategy: free
   become: yes
   roles:
@@ -17,6 +17,14 @@
     - win_agent
   tags:
     - windows
+
+- name: Install on BSD machines
+  hosts: bsd
+  become: yes
+  roles:
+    - bsd_agent
+  tags:
+    - bsd
  
 - name: Install the manager
   hosts: manager
