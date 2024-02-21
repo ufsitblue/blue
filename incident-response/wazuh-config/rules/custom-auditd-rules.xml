@@ -50,5 +50,30 @@
        	<field name="audit.key">etcshadow</field>
 		<description>/etc/shadow was modified by user: $(audit.auid-h)</description>
 	</rule>
+	
+	<!-- Key: etcgroup -->
+    <!-- Alert modifying /etc/group for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100009" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcgroup</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/group was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/group using differnt user than original user -->
+    <rule id="100010" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcgroup</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/group was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/group generic -->
+    <rule id="100011" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">etcgroup</field>
+		<description>/etc/group was modified by user: $(audit.auid-h)</description>
+	</rule>
 
 </group>
