@@ -1,0 +1,31 @@
+- name: Import RSA key
+  ansible.builtin.get_url:
+    dest: "/etc/apk/keys/alpine-devel@wazuh.com-633d7457.rsa.pub"
+    url: "https://packages.wazuh.com/key/alpine-devel%40wazuh.com-633d7457.rsa.pub"
+
+- name: Add repository
+  ansible.builtin.lineinfile:
+    line: "https://packages.wazuh.com/4.x/alpine/v3.12/main"
+    path: "/etc/apk/repositories"
+
+- name: Install wazuh agent
+  community.general.apk:
+    name: "wazuh-agent"
+    update_cache: true
+
+- name: Add manager IP
+  ansible.builtin.replace:
+    path: "/var/ossec/etc/ossec.conf"
+    regexp: "MANAGER_IP"
+    replace: "{{ manager_ip }}"
+
+- name: add hostname
+  ansible.builtin.blockinfile:
+    path: "/var/ossec/etc/ossec.conf"
+    insertafter: "<client>"
+    block: |
+        <enrollment>
+          <agent_name>{{ inventory_hostname }}</agent_name>
+        <enrollment>
+  notify: "start/enable wazuh-agent"
+

@@ -5,7 +5,7 @@
     create: true
     path: "/etc/iptables/restore-iptables.sh"
     block: |
-      {{ !/bin/bash | comment }}
+      {{ "!/bin/bash" | comment }}
       iptables-restore < /root/{{ inventory_hostname }}.rules
 
 - name: Make restore script executable

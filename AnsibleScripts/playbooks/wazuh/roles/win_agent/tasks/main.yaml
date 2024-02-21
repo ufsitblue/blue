@@ -1,0 +1,12 @@
+- name: Download and install msi for wazuh
+  ansible.windows.win_package:
+    path: "https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.2-1.msi"
+    arguments: >-
+      /q
+      WAZUH_MANAGER={{ manager_ip }}
+      WAZUH_AGENT_NAME={{ inventory_hostname }}
+
+- name: Start and enable wazuh
+  ansible.windows.win_service:
+    name: Wazuh
+    state: "started"

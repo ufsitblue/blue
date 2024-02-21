@@ -1,0 +1,28 @@
+- name: Import gpg key
+  ansible.builtin.rpm_key:
+    key: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+    state: present
+
+- name: Add repository
+  ansible.builtin.blockinfile:
+    path: "/etc/zypp/repos.d/wazuh.repo"
+    create: true
+    block: |
+      [wazuh]
+      gpgcheck=1
+      gpgkey=https://packages.wazuh.com/key/GPG-KEY-WAZUH
+      enabled=1
+      name=EL-$releasever - Wazuh
+      baseurl=https://packages.wazuh.com/4.x/yum/
+      protect=1
+
+- name: Install wazuh agent
+  environment:
+    WAZUH_MANAGER: '{{ manager_ip }}'
+    WAZUH_AGENT_NAME: '{{ inventory_hostname }}'
+  community.general.zypper:
+    update_cache: true
+    name: wazuh-agent
+    state: present
+  notify: "start/enable wazuh-agent"
+

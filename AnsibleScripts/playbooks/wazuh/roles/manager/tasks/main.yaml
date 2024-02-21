@@ -1,0 +1,18 @@
+- name: Download script
+  ansible.builtin.get_url:
+    url: "https://packages.wazuh.com/4.7/wazuh-install.sh"
+    dest: "/tmp/wazuh-install.sh"
+    mode: '0775'
+
+- name: Run script
+  ansible.builtin.shell: './wazuh-install.sh -a -i'
+  args:
+    chdir: /tmp
+  register: wazuh_result
+
+- name: Copy output to local machine for creds
+  become: no
+  local_action:
+    module: ansible.builtin.copy
+    content: "{{ wazuh_result }}"
+    dest: wazuh_creds.txt
