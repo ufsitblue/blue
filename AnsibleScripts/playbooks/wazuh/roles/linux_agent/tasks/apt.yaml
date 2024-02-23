@@ -1,32 +1,65 @@
-- name: Import gpg key
-  ansible.builtin.apt_key:
-    url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
-    keyring: "gnupg-ring:/usr/share/keyrings/wazuh.gpg"
-
+---
 - name: Add repository
   block:
+    - name: Import gpg key
+      ansible.builtin.apt_key:
+        url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+        keyring: "gnupg-ring:/usr/share/keyrings/wazuh.gpg"
+    
     - name: try adding repo
       ansible.builtin.apt_repository:
         repo: "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main"
         filename: "wazuh"
-  rescue:
-    - name: Add public key
-      ansible.builtin.apt_key:
-        keyserver: 'hkp://keyserver.ubuntu.com:80'
-        id: '96B3EE5F29111145'
 
-    - name: Add repo
-      ansible.builtin.apt_repository:
-        repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
-        filename: "wazuh"
+  rescue:
+    - name: First Rescue
+      block:
+        - name: Install packages
+          ansible.builtin.apt:
+            name:
+              - gnupg
+              - apt-transport-https
+            force_apt_get: true
+    
+        - name: Import gpg key again
+          ansible.builtin.apt_key:
+            url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+
+        - name: try adding repo again
+          ansible.builtin.apt_repository:
+            repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+            filename: "wazuh"
+
+      rescue:
+        - name: Second Rescue
+          block:
+            - name: Add public key
+              ansible.builtin.apt_key:
+                keyserver: 'hkp://keyserver.ubuntu.com:80'
+                id: '96B3EE5F29111145'
+            - name: Add repo
+              ansible.builtin.apt_repository:
+                repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+                filename: "wazuh"
 
 - name: Install wazuh agent
-  environment:
-    WAZUH_MANAGER: "{{ manager_ip }}"
-    WAZUH_AGENT_NAME: "{{ inventory_hostname }}"
   ansible.builtin.apt:
     allow_unauthenticated: true
     force_apt_get: true
     name: wazuh-agent
-  notify: "start/enable wazuh-agent"
 
+- name: Add manager IP
+  ansible.builtin.replace:
+    path: "/var/ossec/etc/ossec.conf"
+    regexp: "MANAGER_IP"
+    replace: "{{ manager_ip }}"
+
+- name: add hostname
+  ansible.builtin.blockinfile:
+    path: "/var/ossec/etc/ossec.conf"
+    insertafter: "<client>"
+    block: |
+      "    <enrollment>"
+      "      <agent_name>{{ inventory_hostname }}</agent_name>"
+      "    </enrollment>"
+  notify: "start/enable wazuh-agent"

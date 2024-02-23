@@ -1,11 +1,7 @@
-- name: Install source files
-  ansible.builtin.get_url:
-    dest: "/tmp/"
-    url: "https://cgit.freebsd.org/ports/tree/security/wazuh-agent/"
-
-- name: build wazuh agent from source
-  community.general.make:
-    chdir: "/tmp/wazuh-agent/"
+- name: Install wazuh
+  ansible.builtin.package:
+    name: "wazuh-agent"
+    state: "present"
 
 - name: Add manager IP
   ansible.builtin.replace:
@@ -20,7 +16,7 @@
     block: |
         <enrollment>
           <agent_name>{{ inventory_hostname }}</agent_name>
-        <enrollment>
+        </enrollment>
 
 - name: start wazuh agent
   ansible.builtin.shell: /var/ossec/bin/wazuh-control start

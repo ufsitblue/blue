@@ -26,6 +26,6 @@
     block: |
         <enrollment>
           <agent_name>{{ inventory_hostname }}</agent_name>
-        <enrollment>
+        </enrollment>
   notify: "start/enable wazuh-agent"
 

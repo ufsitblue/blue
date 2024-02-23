@@ -17,10 +17,23 @@
       protect=1
 
 - name: install client
-  environment:
-    WAZUH_MANAGER: '{{ manager_ip }}'
-    WAZUH_AGENT_NAME: '{{ inventory_hostname }}'
   ansible.builtin.yum:
     name: wazuh-agent
     state: present
+
+- name: Add manager IP
+  ansible.builtin.replace:
+    path: "/var/ossec/etc/ossec.conf"
+    regexp: "MANAGER_IP"
+    replace: "{{ manager_ip }}"
+
+- name: add hostname
+  ansible.builtin.blockinfile:
+    path: "/var/ossec/etc/ossec.conf"
+    insertafter: "<client>"
+    block: |
+        <enrollment>
+          <agent_name>{{ inventory_hostname }}</agent_name>
+        </enrollment>
   notify: "start/enable wazuh-agent"
+

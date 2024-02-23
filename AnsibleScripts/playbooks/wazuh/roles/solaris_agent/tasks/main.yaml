@@ -1,7 +1,7 @@
 ---
 - name: Install on Solaris 10
   when: ansible_distribution_major_version | int == 10
-  community.general.srv4pkg:
+  community.general.svr4pkg:
     name: "wazuh-agent"
     src: "https://packages.wazuh.com/4.x/solaris/i386/10/wazuh-agent_v4.7.2-sol10-i386.pkg"
     state: "present"

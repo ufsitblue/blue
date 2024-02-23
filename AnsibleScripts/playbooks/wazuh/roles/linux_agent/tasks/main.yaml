@@ -1,28 +1,28 @@
+---
 - name: Install on suse
   when: ansible_os_family | lower == "suse"
   include_tasks: zypp.yaml
- 
-- name: Finish on suse
-  when: ansible_os_family | lower == "suse"
-  meta: end_play
 
-- name: Gather package facts
-  ansible.builtin.package_facts:
-    manager: auto
-    strategy: first
+- name: Install everywhere else
+  when: not ansible_os_family | lower == "suse"
+  block:
+  - name: Gather package facts
+    ansible.builtin.package_facts:
+      manager: auto
+      strategy: first
 
-- name: Install using apt
-  when: "'apt' in ansible_facts.packages"
-  include_tasks: apt.yaml
+  - name: Install using apt
+    when: "'apt' in ansible_facts.packages"
+    include_tasks: apt.yaml
 
-- name: Install using yum
-  when: "'yum' in ansible_facts.packages"
-  include_tasks: yum.yaml
+  - name: Install using yum
+    when: "'yum' in ansible_facts.packages"
+    include_tasks: yum.yaml
 
-- name: Install using apk
-  when: "'apk' in ansible_facts.packages"
-  include_tasks: yum.yaml
+  - name: Install using apk
+    when: "'apk' in ansible_facts.packages"
+    include_tasks: yum.yaml
 
-- name: Install using zypper not on Suse
-  when: "'zypper' in ansible_facts.packages and ansible_os_family | lower != 'suse'"
-  include_tasks: zypp.yaml
+  - name: Install using zypper not on Suse
+    when: "'zypper' in ansible_facts.packages"
+    include_tasks: zypp.yaml

@@ -1,11 +1,10 @@
 - name: Install on Linux machines
-  hosts: linux
-  strategy: free
+  hosts: linux,!manager
   become: yes
   roles:
     - linux_agent
   tags:
-    - linux
+    - install
 
 - name: Install on Windows machines
   hosts: windows
@@ -16,16 +15,15 @@
   roles:
     - win_agent
   tags:
-    - windows
+    - install
 
 - name: Install on Solaris machines
   hosts: solaris
-  strategy: free
   become: yes
   roles:
     - solaris_agent
   tags:
-    - solaris
+    - install
 
 - name: Install on BSD machines
   hosts: bsd
@@ -33,7 +31,7 @@
   roles:
     - bsd_agent
   tags:
-    - bsd
+    - install
  
 - name: Install the manager
   hosts: manager
@@ -42,3 +40,11 @@
     - manager
   tags:
     - manager
+
+- name: uninstall the wazuh agent
+  hosts: linux,bsd,!manager
+  become: yes
+  roles:
+    - linux_uninstall
+  tags:
+    - uninstall
