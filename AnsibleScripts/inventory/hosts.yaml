@@ -62,8 +62,8 @@ linux:
       - 80
     Alpine:
       ansible_host: 10.0.0.15
-      ansible_user: alpine
-      ansible_private_key: /home/max/BlueTeam/ccdc_2024/practice/customs.pem
+      ansible_user: root
+      ansible_password: Is1WaterWet?
       required_ports:
       - 22
 bsd:

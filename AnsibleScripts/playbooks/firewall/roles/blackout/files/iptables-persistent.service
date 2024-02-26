@@ -1,0 +1,14 @@
+[Unit] 
+Description=runs iptables restore on boot
+ConditionFileIsExecutable=/etc/iptables/restore-iptables.sh
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /etc/iptables/restore-iptables.sh
+TimeoutSec=10
+RemainAfterExit=yes
+GuessMainPID=no
+
+[Install]
+WantedBy=multi-user.target

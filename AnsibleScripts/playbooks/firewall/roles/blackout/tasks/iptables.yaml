@@ -1,42 +1,46 @@
+---
 # Implement Network Blackout with IPTables
 
-- name: Create restore script
-  ansible.builtin.blockinfile:
-    create: true
-    path: "/etc/iptables/restore-iptables.sh"
-    block: |
-      {{ "!/bin/bash" | comment }}
-      iptables-restore < /root/{{ inventory_hostname }}.rules
-
-- name: Make restore script executable
+- name: Create iptables folder
   ansible.builtin.file:
-    path: "/etc/iptables/restore-iptables.sh"
-    mode: 0500
+    path: "/etc/iptables"
+    state: "directory"
 
-- name: Create systemd file
-  ansible.builtin.blockinfile:
-    create: true
-    path: "/etc/systemd/system/iptables-persistent.service"
-    block: |
-      [Unit] 
-      Description=runs iptables restore on boot
-      ConditionFileIsExecutable=/etc/iptables/restore-iptables.sh
-      After=network.target
-      
-      [Service]
-      Type=simple
-      ExecStart=/bin/bash /etc/iptables/restore-iptables.sh
-      TimeoutSec=10
-      RemainAfterExit=yes
-      GuessMainPID=no
-      
-      [Install]
-      WantedBy=multi-user.target
+- name: Create restore script
+  ansible.builtin.template:
+    mode: "0500"
+    src: "restore-iptables.j2"
+    dest: "/etc/iptables/restore-iptables.sh"
 
-- name: Enable iptables reloader
-  ansible.builtin.systemd_service:
-    name: "iptables-persistent.service"
-    enabled: true
+- name: Create custom systemd service
+  when: not ansible_os_family | lower == "alpine"
+  block:
+    - name: Create service file
+      ansible.builtin.copy:
+        dest: "/etc/systemd/system/iptables-persistent.service"
+        src: "iptables-persistent.service"
+
+    - name: Enable iptables reloader
+      ansible.builtin.systemd_service:
+        name: "iptables-persistent.service"
+        enabled: true
+
+- name: Create custom openrc service
+  when: ansible_os_family | lower == "alpine"
+  block:
+    - name: Create service file
+      ansible.builtin.copy:
+        mode: "0550"
+        dest: "/etc/init.d/iptables-persistent"
+        src: "iptables-persistent"
+
+    - name: Add custom service to default run level
+      ansible.builtin.shell: rc-update add iptables-persistent default
+
+- name: Make sure rsyslog is installed
+  ansible.builtin.package:
+    name: "rsyslog"
+    state: "present"
 
 - name: flush current rules
   ansible.builtin.iptables:
@@ -132,16 +136,24 @@
     job: "iptables -F"
     disabled: true
 
+- name: Make sure rsyslog.d exists
+  ansible.builtin.file:
+    path: "/etc/rsyslog.d"
+    state: "directory"
+
 - name: Add rsyslog file
-  ansible.builtin.blockinfile:
-    path: /etc/rsyslog.d/00-iptables.conf
-    create: true
-    block: |
-      :msg,contains, "[DROPPED_OUTPUT] " /var/log/output.log
-      :msg,contains, "[DROPPED_INPUT] " /var/log/input.log
-      & stop
+  ansible.builtin.copy:
+    dest: "/etc/rsyslog.d/00-iptables.conf"
+    src: "00-iptables.conf"
 
 - name: restart rsyslog
   ansible.builtin.service:
     name: "rsyslog"
     state: "restarted"
+
+- name: reboot system to kill active connections
+  ansible.builtin.reboot:
+
+- name: restore blackout rules on CentOS
+  when: ansible_distribution | lower == "centos"
+  ansible.builtin.shell: bash /etc/iptables/restore-iptables.sh

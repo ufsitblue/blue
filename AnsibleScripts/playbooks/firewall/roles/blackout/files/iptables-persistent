@@ -1,0 +1,9 @@
+#!/sbin/openrc-run
+
+depend() {
+  need net
+}
+
+command="/bin/bash"
+command_args="/etc/iptables/restore-iptables.sh"
+pidfile="iptables-persistent.pid"
