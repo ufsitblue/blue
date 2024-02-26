@@ -124,3 +124,24 @@
   community.general.iptables_state:
     state: "saved"
     path: "/root/{{ inventory_hostname }}.rules"
+
+- name: Get rid of crontab
+  ansible.builtin.cron:
+    name: "Flush Firewall"
+    minute: "*/5"
+    job: "iptables -F"
+    disabled: true
+
+- name: Add rsyslog file
+  ansible.builtin.blockinfile:
+    path: /etc/rsyslog.d/00-iptables.conf
+    create: true
+    block: |
+      :msg,contains, "[DROPPED_OUTPUT] " /var/log/output.log
+      :msg,contains, "[DROPPED_INPUT] " /var/log/input.log
+      & stop
+
+- name: restart rsyslog
+  ansible.builtin.service:
+    name: "rsyslog"
+    state: "restarted"
