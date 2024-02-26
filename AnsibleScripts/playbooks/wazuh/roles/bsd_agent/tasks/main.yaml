@@ -6,7 +6,7 @@
 - name: Add manager IP
   ansible.builtin.replace:
     path: "/var/ossec/etc/ossec.conf"
-    regexp: "MANAGER_IP"
+    regexp: "IP"
     replace: "{{ manager_ip }}"
 
 - name: Add hostname
