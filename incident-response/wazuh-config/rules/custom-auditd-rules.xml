@@ -158,4 +158,20 @@
         <description>Auditd log file was read by user: $(audit.auid-h)</description>
     </rule>
 
+    <!-- Key: auditconfig -->
+    <!-- Modifications to audit configuration that occur while the audit collection functions are operating by UNKNOWN users -->
+    <rule id="100023" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditconfig</field>
+        <field name="audit.auid-h">unset</field>
+        <description>Auditd configuration was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Modifications to audit configuration that occur while the audit collection functions are operating by known users -->
+    <rule id="100022" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditconfig</field>
+        <description>Auditd configuration was modified by user: $(audit.auid-h)</description>
+    </rule>
+
 </group>
