@@ -18,7 +18,6 @@
       state: "present"
   
   - name: Use IPtables
-    when: '"iptables" in ansible_facts.package'
     import_tasks: iptables.yaml
 
 - name: Add Firewall Rules on Windows

@@ -90,7 +90,7 @@
 - name: Save custom rules
   community.general.iptables_state:
     state: "saved"
-    path: "/root/{{ inventory_host }}.rules"
+    path: "/root/{{ inventory_hostname }}.rules"
 
 - name: Grab custom rules
   ansible.builtin.fetch:
