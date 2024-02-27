@@ -151,9 +151,9 @@
     name: "rsyslog"
     state: "restarted"
 
-- name: reboot system to kill active connections
-  ansible.builtin.reboot:
+#- name: reboot system to kill active connections
+#  ansible.builtin.reboot:
 
-- name: restore blackout rules on CentOS
-  when: ansible_distribution | lower == "centos"
-  ansible.builtin.shell: bash /etc/iptables/restore-iptables.sh
+#- name: restore blackout rules on CentOS
+#  when: ansible_distribution | lower == "centos"
+#  ansible.builtin.shell: bash /etc/iptables/restore-iptables.sh
