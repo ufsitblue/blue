@@ -1,6 +1,6 @@
 windows:
   hosts:
-    GlobalAD:
+    Windows2016:
       ansible_host: 10.0.0.16
       ansible_user: Administrator
       ansible_password: Is1WaterWet?
@@ -23,6 +23,24 @@ windows:
       - 636
       - 3268
       - 3269
+      - 1514
+      - 1515
+    Windows2019:
+      ansible_host: 10.0.0.17
+      ansible_user: Administrator
+      ansible_password: Is1WaterWet?
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 20
+      - 21
+      - 22
+      - 3389
+      - 5985
+      - 1514
+      - 1515
 linux:
   hosts:
     Debian:

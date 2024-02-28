@@ -1,3 +1,7 @@
+
+- name: enable internet access
+  ansible.builtin.script: enable_internet.sh
+
 - name: Download script
   ansible.builtin.get_url:
     url: "https://packages.wazuh.com/4.7/wazuh-install.sh"
@@ -16,3 +20,24 @@
     module: ansible.builtin.copy
     content: "{{ wazuh_result }}"
     dest: wazuh_creds.txt
+
+- name: disable internet access
+  ansible.builtin.script: disable_internet.sh
+
+- name: Open wazuh ports
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    destination_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ wazuh_ports }}"
+    
+- name: Open wazuh ports outbound
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "OUTPUT"
+    protocol: "tcp"
+    source_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ wazuh_ports }}"
