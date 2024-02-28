@@ -1,5 +1,14 @@
+---
 # Variables for all machines
 
 team_ips:
   - 172.19.253.10
   - 172.19.253.6
+
+# Wazuh manager IP
+manager_ip: 10.0.0.5
+
+# Wazuh agent ports
+agent_ports:
+  - 1515
+  - 1514

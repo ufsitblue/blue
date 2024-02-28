@@ -69,6 +69,48 @@
     jump: "ACCEPT"
   loop: "{{ required_ports }}"
 
+- name: Open wazuh agent ports INPUT
+  when: "'manager' not in group_names"
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    source: "{{ manager_ip }}"
+    source_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ agent_ports }}"
+    
+- name: Open wazuh agent ports OUTPUT
+  when: "'manager' not in group_names"
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "OUTPUT"
+    protocol: "tcp"
+    destination: "{{ manager_ip }}"
+    destination_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ agent_ports }}"
+
+- name: Open wazuh manager ports INPUT
+  when: "'manager' in group_names"
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    destination_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ manager_ports }}"
+    
+- name: Open wazuh agent ports OUTPUT
+  when: "'manager' in group_names"
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "OUTPUT"
+    protocol: "tcp"
+    source_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ manager_ports }}"
+
 - name: Add dropped INPUT LOG rule
   ansible.builtin.iptables:
     chain: "INPUT"
