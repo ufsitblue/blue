@@ -1,0 +1,80 @@
+- name: Disable all firewalls
+  community.windows.win_firewall:
+    state: "disabled"
+
+- name: Back up and delete original firewall rules
+  ansible.windows.win_shell: |
+    netsh advfirewall export C:\backup.wfw
+    Remove-NetFirewallRule -All
+
+- name: Add ICMP rule
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow icmp for network debugging"
+    direction: "in"
+    group: "Standard"
+    name: "Allow ping"
+    protocol: "icmpv4"
+
+- name: Add localhost rule input
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow localhost into the network"
+    direction: "in"
+    group: "Standard"
+    name: "Localhost in"
+    remoteip: "127.0.0.0/8"
+
+- name: Add localhost rule output
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow localhost out of the network"
+    direction: "out"
+    group: "Standard"
+    name: "Localhost out"
+    localip: "127.0.0.0/8"
+
+- name: Add RDP rule
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow RDP from team into network"
+    direction: "in"
+    group: "Blackout"
+    name: "RDP from team"
+    remoteip: '{{ team_ips | join(",") }}'
+    localport: "3389"
+    protocol: "tcp"
+
+- name: Add winrm rule
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow winrm from team into network"
+    direction: "in"
+    group: "Standard"
+    name: "winrm from team"
+    remoteip: '{{ team_ips | join(",") }}'
+    localport: "5985"
+    protocol: "tcp"
+
+- name: Add wazuh Rules
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow connection to and from wazuh manager"
+    direction: "out"
+    group: "Wazuh"
+    name: "Wazuh manager connection"
+    remoteip: "{{ manager_ip }}"
+    remoteport: "1514-1515"
+    protocol: "tcp"
+
+- name: Add drop rule
+  community.windows.win_firewall_rule:
+    action: "block"
+    descrition: "Default block rule"
+    direction: "out"
+    group: "Block"
+    name: "Default block"
+
+- name: Enable firewalls
+  community.windows.win_firewall:
+    state: "enabled"
