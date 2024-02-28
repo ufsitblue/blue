@@ -27,7 +27,7 @@
         <if_matched_sid>110003</if_matched_sid>
         <same_source_ip></same_source_ip>
         <action>[DROPPED_INPUT]</action>
-        <description>Iptables: More than 10 outbound blocks to IP $(dstip):$(dstport)/$(protocol) in 1min.</description>
+        <description>Iptables: More than 10 outbound blocks to IP $(srcip):$(srcport)/$(protocol) in 1min.</description>
     </rule>
 
 </group>
