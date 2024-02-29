@@ -17,7 +17,7 @@
     - add
 
 - name: Restore Firewall Rules
-  hosts: linux
+  hosts: all
   strategy: free
   roles:
     - restore_rules

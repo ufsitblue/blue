@@ -8,7 +8,6 @@
 
 - name: Install on Windows machines
   hosts: windows
-  strategy: free
   become: yes
   become_method: runas
   become_user: Administrator

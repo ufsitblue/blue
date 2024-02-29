@@ -10,8 +10,6 @@ windows:
       ansible_winrm_transport: ntlm
       required_ports:
       - 22
-      - 3389
-      - 5985
       - 53
       - 88
       - 135
@@ -23,8 +21,6 @@ windows:
       - 636
       - 3268
       - 3269
-      - 1514
-      - 1515
     Windows2019:
       ansible_host: 10.0.0.17
       ansible_user: Administrator
@@ -38,9 +34,6 @@ windows:
       - 21
       - 22
       - 3389
-      - 5985
-      - 1514
-      - 1515
 linux:
   hosts:
     Debian:

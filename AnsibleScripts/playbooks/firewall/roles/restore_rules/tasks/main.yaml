@@ -1,9 +1,32 @@
-- name: Transfer rule file
-  ansible.builtin.copy:
-    src: "{{ inventory_hostname }}.rules"
-    dest: "/tmp/"
+---
+- name: Restore on Linux
+  become: true
+  when: ansible_system | lower == "Linux"
+  block:
+    - name: Transfer rule file
+      ansible.builtin.copy:
+        src: "{{ inventory_hostname }}.rules"
+        dest: "/tmp/"
 
-- name: Load iptables rules
-  community.general.iptables_state:
-    path: "/tmp/{{ inventory_hostname }}.rules"
-    state: "restored"
+    - name: Load iptables rules
+      community.general.iptables_state:
+        path: "/tmp/{{ inventory_hostname }}.rules"
+        state: "restored"
+
+- name: Restore on Windows
+  when: ansible_os_family | lower == "windows"
+  become: true
+  become_method: runas
+  become_user: Administrator
+  block:
+    - name: Transfer wfw file
+      ansible.windows.win_copy:
+        src: "{{ inventory_hostname }}.wfw"
+        dest: "C:\\"
+
+    - name: Load firewall rules
+      ansible.windows.win_shell: netsh advfirewall import "C:\\{{ inventory_hostname }}.wfw"
+
+    - name: Enable firewalll
+      community.windows.win_firewall:
+        state: "enabled"
