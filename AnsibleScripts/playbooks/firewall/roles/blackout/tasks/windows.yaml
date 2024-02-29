@@ -25,7 +25,7 @@
     name: "Localhost in"
     remoteip: "127.0.0.0/8"
 
-- name: Add RDP rule
+- name: Add RDP input rule
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow RDP from team into network"
@@ -36,7 +36,18 @@
     localport: "3389"
     protocol: "tcp"
 
-- name: Add winrm rule
+- name: Add RDP output rule
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow RDP from team into network"
+    direction: "out"
+    group: "Blackout"
+    name: "RDP to team"
+    remoteip: '{{ team_ips | join(",") }}'
+    localport: "3389"
+    protocol: "tcp"
+
+- name: Add winrm input rule
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow winrm from team into network"
@@ -47,6 +58,43 @@
     localport: "5985"
     protocol: "tcp"
 
+- name: Add winrm output rule
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow winrm from team into network"
+    direction: "out"
+    group: "Standard"
+    name: "winrm to team"
+    remoteip: '{{ team_ips | join(",") }}'
+    localport: "5985"
+    protocol: "tcp"
+
+- name: Add internet connection rules
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow http/s traffic out of network"
+    direction: "out"
+    group: "Internet"
+    name: "Http/s traffic out"
+    remoteport: "80,443"
+    protocol: "tcp"
+
+- name: Add DNS rules
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DNS traffic out of network"
+    direction: "out"
+    group: "Internet"
+    name: "DNS traffic out"
+    remoteport: "53"
+    protocol: "udp"
+
+- name: Disable Internet rules
+  community.windows.win_firewall_rule:
+    group: "Internet"
+    enabled: "false"
+
 - name: Enable firewalls
   community.windows.win_firewall:
     state: "enabled"
+    outbound_action: "block"

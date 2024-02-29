@@ -110,22 +110,20 @@
 - name: Open mattermost port inbound
   when: "'manager' in group_names"
   ansible.builtin.iptables:
-    action: "insert"
     chain: "INPUT"
     protocol: "tcp"
     source_port: 443
-    source: "{{ mattermost_ip }}"
-    cstate: "ESTABLISHED"
+#    source: "{{ mattermost_ip }}"
+    ctstate: "ESTABLISHED"
     jump: "ACCEPT"
 
 - name: Open mattermost port outbound
   when: "'manager' in group_names"
   ansible.builtin.iptables:
-    action: "insert"
-    chain: "INPUT"
+    chain: "OUTPUT"
     protocol: "tcp"
     destination_port: 443
-    destination: "{{ mattermost_ip }}"
+#    destination: "{{ mattermost_ip }}"
     jump: "ACCEPT"
 
 - name: Add dropped INPUT LOG rule

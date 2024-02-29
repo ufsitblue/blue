@@ -10,4 +10,4 @@ wazuh_ports:
   - 55000
 
 mattermost_ip:
-  - any
+  - 0.0.0.0/0
