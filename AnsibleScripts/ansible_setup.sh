@@ -32,12 +32,12 @@ else
 fi
 
 # Create or overwrite the inventory file
-echo -e "- linux:" > "$linux_file"
-echo -e "  - hosts:" >> "$linux_file"
-echo -e "- windows:" > "$win_file"
-echo -e "  - hosts:" >> "$win_file"
-echo -e "- manager:" > "$man_file"
-echo -e "  - hosts:" >> "$man_file"
+echo -e "linux:" > "$linux_file"
+echo -e "  hosts:" >> "$linux_file"
+echo -e "windows:" > "$win_file"
+echo -e "  hosts:" >> "$win_file"
+echo -e "manager:" > "$man_file"
+echo -e "  hosts:" >> "$man_file"
 echo -e "" > $inventory_file
 
 # Check if using private key log in
@@ -54,9 +54,9 @@ for host in "$@"; do
 	    read -p "Enter ip address: " ip
 	    read -p "Enter SSH username: " user
             # Add that infor to file no matter what
-	    echo -e "    - $host:" >> $linux_file
-	    echo -e "      - ansible_host: $ip" >> $linux_file
-	    echo -e "      - ansible_user: $user" >> $linux_file
+	    echo -e "    $host:" >> $linux_file
+	    echo -e "      ansible_host: $ip" >> $linux_file
+	    echo -e "      ansible_user: $user" >> $linux_file
      
 	    read -p "Are you using private key login? (y/n): " priv
 	    
@@ -98,7 +98,7 @@ for host in "$@"; do
 				# host="$host" ip="$ip" yq -i '.linux.hosts.[env(host)].ansible_host = env(ip)' "$linux_file"
 				# host="$host" user="$user" yq -i '.linux.hosts.[env(host)].ansible_user = env(user)' "$linux_file"
 				# host="$host" priv_path="$priv_path" yq -i '.linux.hosts.[env(host)].ansible_private_key_file = env(priv_path)' "$linux_file"
-    				echo -e "      - ansible_private_key_file: $priv_path" >> $linux_file
+    				echo -e "      ansible_private_key_file: $priv_path" >> $linux_file
 			fi
 	    else
 	       read -s -p "Enter SSH password" password
@@ -108,7 +108,7 @@ for host in "$@"; do
 	       # host="$host" ip="$ip" yq -i '.linux.hosts.[env(host)].ansible_host = env(ip)' "$linux_file"
 	       # host="$host" user="$user" yq -i '.linux.hosts.[env(host)].ansible_user = env(user)' "$linux_file"
 	       # host="$host" password="$password" yq -i '.linux.hosts.[env(host)].ansible_password = env(password)' "$linux_file"
-	       echo -e "      - ansible_password: $password" >> $linux_file
+	       echo -e "      ansible_password: $password" >> $linux_file
 	    fi
 
 	    # Check if the current host is the wazuh manager to add it to the manager group
@@ -117,21 +117,21 @@ for host in "$@"; do
 	       if [ $ans = "y" ]; then
 		  # Only have one wazuh manager
 		  got_man=1
-                  echo -e "    - $host:" >> $man_file
-	          echo -e "      - ansible_host: $ip" >> $man_file
-	          echo -e "      - ansible_user: $user" >> $man_file
+                  echo -e "    $host:" >> $man_file
+	          echo -e "      ansible_host: $ip" >> $man_file
+	          echo -e "      ansible_user: $user" >> $man_file
                   
                   # Check if using private key or password for login then input the corresponding info into manager yaml
 		  if [ $private_key -eq "1" ]; then
 	             # host="$host" ip="$ip" yq -i '.manager.hosts.[env(host)].ansible_host = env(ip)' "$man_file"
 	             # host="$host" user="$user" yq -i '.manager.hosts.[env(host)].ansible_user = env(user)' "$man_file"
 	             # host="$host" priv_path="$priv_path" yq -i '.manager.hosts.[env(host)].ansible_private_key_file = env(priv_path)' "$man_file"
-	             echo -e "      - ansible_private_key_file: $priv_path" >> $man_file
+	             echo -e "      ansible_private_key_file: $priv_path" >> $man_file
 	          else
 	             # host="$host" ip="$ip" yq -i '.manager.hosts.[env(host)].ansible_host = env(ip)' "$man_file"
 	             # host="$host" user="$user" yq -i '.manager.hosts.[env(host)].ansible_user = env(user)' "$man_file"
 	             # host="$host" password="$password" yq -i '.manager.hosts.[env(host)].ansible_password = env(password)' "$man_file"
-	             echo -e "      - ansible_password: $password" >> $man_file
+	             echo -e "      ansible_password: $password" >> $man_file
 	          fi
 	       fi
 	    fi
@@ -158,14 +158,14 @@ for host in "$@"; do
 		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_winrm_scheme = "http"' "$man_file"
 		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_port = 5985' "$man_file"
 		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_winrm_transport = "ntlm"' "$man_file"
-                  echo -e "    - $host:" >> $man_file
-		  echo -e "      - ansible_host: $ip" >> $man_file
-                  echo -e "      - ansible_user: $user" >> $man_file
-                  echo -e "      - ansible_password: $password" >> $man_file
-		  echo -e '      - ansible_connection: "winrm"' >> $man_file
-		  echo -e '      - ansible_winrm_scheme: "http"' >> $man_file
-                  echo -e '      - ansible_port: "5985"' >> $man_file
-		  echo -e '      - ansible_winrm_transport = "ntlm"' >> $man_file
+                  echo -e "    $host:" >> $man_file
+		  echo -e "      ansible_host: $ip" >> $man_file
+                  echo -e "      ansible_user: $user" >> $man_file
+                  echo -e "      ansible_password: $password" >> $man_file
+		  echo -e '      ansible_connection: "winrm"' >> $man_file
+		  echo -e '      ansible_winrm_scheme: "http"' >> $man_file
+                  echo -e '      ansible_port: "5985"' >> $man_file
+		  echo -e '      ansible_winrm_transport = "ntlm"' >> $man_file
 	       fi
 	    fi
 
@@ -176,14 +176,14 @@ for host in "$@"; do
 	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_winrm_scheme = "http"' "$win_file"
 	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_port = 5985' "$win_file"
 	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_winrm_transport = "ntlm"' "$win_file"
-            echo -e "    - $host:" >> $win_file
-	    echo -e "      - ansible_host: $ip" >> $win_file
-            echo -e "      - ansible_user: $user" >> $win_file
-            echo -e "      - ansible_password: $password" >> $win_file
-	    echo -e '      - ansible_connection: "winrm"' >> $win_file
-	    echo -e '      - ansible_winrm_scheme: "http"' >> $win_file
-            echo -e '      - ansible_port: "5985"' >> $win_file
-	    echo -e '      - ansible_winrm_transport = "ntlm"' >> $win_file
+            echo -e "    $host:" >> $win_file
+	    echo -e "      ansible_host: $ip" >> $win_file
+            echo -e "      ansible_user: $user" >> $win_file
+            echo -e "      ansible_password: $password" >> $win_file
+	    echo -e '      ansible_connection: "winrm"' >> $win_file
+	    echo -e '      ansible_winrm_scheme: "http"' >> $win_file
+            echo -e '      ansible_port: "5985"' >> $win_file
+	    echo -e '      ansible_winrm_transport = "ntlm"' >> $win_file
             echo
 	    ;;
         *)
