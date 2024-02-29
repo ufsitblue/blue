@@ -2,7 +2,7 @@
 
 # Check if at least one host is provided
 if [ "$#" -eq 0 ]; then
-    echo "Usage: $0 host1 [host2 ... hostN]"
+    echo "Usage: $0 hostname1 [hostname2 ... hostnameN]"
     exit 1
 fi
 
@@ -165,7 +165,7 @@ for host in "$@"; do
 		  echo -e '      ansible_connection: "winrm"' >> $man_file
 		  echo -e '      ansible_winrm_scheme: "http"' >> $man_file
                   echo -e '      ansible_port: "5985"' >> $man_file
-		  echo -e '      ansible_winrm_transport = "ntlm"' >> $man_file
+		  echo -e '      ansible_winrm_transport: "ntlm"' >> $man_file
 	       fi
 	    fi
 
