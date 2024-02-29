@@ -40,7 +40,7 @@ def main(argv: list[str]) -> int:
         if digest_matches:
             print("OK matches")
         else:
-            print("ERROR check failed")
+            print("WARN checksum match failed")
     else:
         shutil.make_archive(str(base_directory / archive_name), "zip", str(path_to_monitor), str(path_to_monitor))
         print("OK " + str(base_directory / (archive_name + ".zip")))
