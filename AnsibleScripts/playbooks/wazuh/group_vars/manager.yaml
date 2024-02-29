@@ -7,5 +7,7 @@ wazuh_ports:
   - 1516
   - 9200
   - '9300:9400'
-  - 55000 
+  - 55000
 
+mattermost_ip:
+  - any

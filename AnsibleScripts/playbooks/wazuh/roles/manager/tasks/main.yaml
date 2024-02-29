@@ -41,3 +41,22 @@
     source_port: "{{ item }}"
     jump: "ACCEPT"
   loop: "{{ wazuh_ports }}"
+
+- name: Open mattermost port inbound
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    source_port: 443
+    source: "{{ mattermost_ip }}"
+    cstate: "ESTABLISHED"
+    jump: "ACCEPT"
+
+- name: Open mattermost port outbound
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    destination_port: 443
+    destination: "{{ mattermost_ip }}"
+    jump: "ACCEPT"

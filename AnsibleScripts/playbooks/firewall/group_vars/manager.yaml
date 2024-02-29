@@ -9,3 +9,5 @@ manager_ports:
   - '9300:9400'
   - 55000 
 
+mattermost_ip:
+  - any
