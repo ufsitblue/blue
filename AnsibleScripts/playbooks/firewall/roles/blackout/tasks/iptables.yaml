@@ -48,11 +48,6 @@
     chain: "{{ item }}"
   with_items: ["INPUT", "OUTPUT"]
 
-- name: Add cron to flush rules just in case
-  ansible.builtin.cron:
-    name: "Flush Firewall"
-    minute: "*/5"
-    job: "iptables -F"
 
 - name: Add invalid packet rule
   ansible.builtin.iptables:
@@ -108,7 +103,8 @@
 
 - name: Add DC rules (Linux)
   when: in_domain
-  import_role: DC
+  import_role: 
+    name: DC
 
 - name: Add dropped INPUT LOG rule
   ansible.builtin.iptables:
@@ -122,11 +118,16 @@
     jump: "LOG"
     log_prefix: "[DROPPED_OUTPUT] "
 
+- name: Add cron to flush rules just in case
+  ansible.builtin.cron:
+    name: "Flush Firewall"
+    minute: "*/5"
+    job: "iptables -F"
+
 - name: Add default drop rule
-  ansible.builtin.iptables:
-    chain: "{{ item }}"
-    jump: "DROP"
-  with_items: ['INPUT', 'OUTPUT']
+  ansible.builtin.shell: |
+    iptables -A INPUT -j DROP
+    iptables -A OUTPUT -j DROP
 
 - name: Save custom rules
   community.general.iptables_state:

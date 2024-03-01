@@ -126,6 +126,11 @@
 #    destination: "{{ mattermost_ip }}"
     jump: "ACCEPT"
 
+- name: Add DC rules
+  when: in_domain
+  import_role:
+    name: DC
+
 - name: Add dropped INPUT LOG rule
   ansible.builtin.iptables:
     chain: "INPUT"
@@ -139,10 +144,9 @@
     log_prefix: "[DROPPED_OUTPUT] "
 
 - name: Add default drop rule
-  ansible.builtin.iptables:
-    chain: "{{ item }}"
-    jump: "DROP"
-  with_items: ['INPUT', 'OUTPUT']
+  ansible.builtin.shell:
+    iptables -A INPUT -j DROP
+    iptables -A OUTPUT -j DROP
 
 - name: Save custom rules
   community.general.iptables_state:
