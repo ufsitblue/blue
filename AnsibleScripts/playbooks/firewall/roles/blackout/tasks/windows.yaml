@@ -89,6 +89,9 @@
     remoteport: "53"
     protocol: "udp"
 
+- name: Add DC rules
+  import_role: DC
+
 - name: Disable Internet rules
   community.windows.win_firewall_rule:
     group: "Internet"

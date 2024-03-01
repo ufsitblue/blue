@@ -1,0 +1,69 @@
+- name: Allow everything between the DCs in
+  when: domain_controller and not ip == ansible_host
+  community.general.win_firewall_rule:
+    action: "allow"
+    description: "Allow DCs to communicate in"
+    direction: "in"
+    group: "DC"
+    name: "DC to DC in {{ ip }}"
+    remoteip: "{{ ip }}"
+  loop: "{{ dc_ips }}"
+  loop_control:
+    loop_var: ip
+
+- name: Allow everything between the DCs out
+  when: domain_controller and not ip == ansible_host
+  community.general.win_firewall_rule:
+    action: "allow"
+    description: "Allow DCs to communicate out"
+    direction: "out"
+    group: "DC"
+    name: "DC to DC out {{ ip }}"
+    remoteip: "{{ ip }}"
+  loop: "{{ dc_ips }}"
+  loop_control:
+    loop_var: ip
+
+- name: Allow DC ports into domain machines tcp
+  when: in_domain and not domain_controller
+  community.general.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine tcp"
+    direction: "in"
+    group: "DC"
+    name: "Allow DC in tcp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remote_port: "{{ dc_ports_tcp }}"
+ 
+- name: Allow DC ports into domain machines udp
+  when: in_domain and not domain_controller
+  community.general.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine udp"
+    direction: "in"
+    group: "DC"
+    name: "Allow DC in udp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remote_port: "{{ dc_ports_udp }}"
+
+- name: Allow DC ports from domain machines tcp
+  when: in_domain and not domain_controller
+  community.general.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine tcp"
+    direction: "out"
+    group: "DC"
+    name: "Allow DC out tcp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remote_port: "{{ dc_ports_tcp }}"
+ 
+- name: Allow DC ports from domain machines udp
+  when: in_domain and not domain_controller
+  community.general.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine udp"
+    direction: "out"
+    group: "DC"
+    name: "Allow DC out udp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remote_port: "{{ dc_ports_udp }}"

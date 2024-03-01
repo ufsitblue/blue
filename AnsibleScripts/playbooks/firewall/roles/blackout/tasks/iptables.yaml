@@ -21,7 +21,7 @@
         src: "iptables-persistent.service"
 
     - name: Enable iptables reloader
-      ansible.builtin.systemd_service:
+      ansible.builtin.systemd:
         name: "iptables-persistent.service"
         enabled: true
 
@@ -105,6 +105,10 @@
     protocol: "tcp"
     ctstate: ["ESTABLISHED"]
     state: "present"
+
+- name: Add DC rules (Linux)
+  when: in_domain
+  import_role: DC
 
 - name: Add dropped INPUT LOG rule
   ansible.builtin.iptables:
