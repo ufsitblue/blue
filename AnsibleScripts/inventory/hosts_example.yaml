@@ -1,0 +1,95 @@
+windows:
+  hosts:
+    Windows2016:
+      ansible_host: 10.0.0.16
+      ansible_user: Administrator
+      ansible_password: Is1WaterWet?
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 22
+      - 53
+      - 88
+      - 135
+      - 137
+      - 138
+      - 389
+      - 445
+      - 464
+      - 636
+      - 3268
+      - 3269
+    Windows2019:
+      ansible_host: 10.0.0.17
+      ansible_user: Administrator
+      ansible_password: Is1WaterWet?
+      ansible_connection: winrm
+      ansible_winrm_scheme: http
+      ansible_port: 5985
+      ansible_winrm_transport: ntlm
+      required_ports:
+      - 20
+      - 21
+      - 22
+      - 3389
+linux:
+  hosts:
+    Debian:
+      ansible_host: 10.0.0.11
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+    Centos:
+      ansible_host: 10.0.0.12
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 20
+      - 21
+      - 22
+    Suse:
+      ansible_host: 10.0.0.14
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+      - 53
+    Ubuntu20:
+      ansible_host: 10.0.0.5
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+      - 3306
+    Ubuntu22:
+      ansible_host: 10.0.0.10
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+      - 80
+    Alpine:
+      ansible_host: 10.0.0.15
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+bsd:
+  hosts:
+    FreeBased:
+      ansible_host: 10.0.0.13
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      ansible_connection: ssh
+manager:
+  hosts:
+    Ubuntu20:
+      ansible_host: 10.0.0.5
+      ansible_user: root
+      ansible_password: Is1WaterWet?
+      required_ports:
+      - 22
+      - 3306 
