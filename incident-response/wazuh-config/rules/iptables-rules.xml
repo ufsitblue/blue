@@ -1,33 +1,37 @@
 <group name="firewall">
 
-    <!-- Alert for dropped traffic leaving from local machine -->
-    <rule id="110001" level="5">
-        <if_sid>4100</if_sid>
+    
+    <rule id="110001" level="5" ignore="600">
+        <if_matched_sid>4100</if_matched_sid>
+        <same_dstip></same_dstip>
+        <same_dstport></same_dstport>
         <action>[DROPPED_OUTPUT]</action>
         <description>Iptables: Dropped OUTGOING connection to IP: $(dstip) Port: $(dstport)/$(protocol)</description>
     </rule>
 
-    <!-- Alert for 10 dropped outbound packets over 60 seconds from same IP address. Five minute cooldown. -->
+    
     <rule id="110002" level="12" frequency="10" timeframe="60" ignore="300">
-        <if_matched_sid>110001</if_matched_sid>
-        <same_source_ip></same_source_ip>
+        <if_matched_sid>4100</if_matched_sid>
+        <same_dstip></same_dstip>
         <action>[DROPPED_OUTPUT]</action>
         <description>Iptables: More than 10 outbound blocks to IP $(dstip):$(dstport)/$(protocol) in 1min.</description>
     </rule>
     
-    <!-- Alert for dropped traffic incoming to the local machine -->
-    <rule id="110003" level="5">
-        <if_sid>4100</if_sid>
+    
+    <rule id="110003" level="5" frequency="1" timeframe="300" ignore="600">
+        <if_matched_sid>4100</if_matched_sid>
+        <same_srcip></same_srcip>
+        <same_dstport></same_dstport>
         <action>[DROPPED_INPUT]</action>
-        <description>Iptables: Dropped INCOMING connection from IP: $(srcip) Port: $(srcport)/$(protocol)</description>
+        <description>Iptables: Dropped INCOMING connection from IP: $(srcip) Port: $(dstport)/$(protocol)</description>
     </rule>
 
-    <!-- Alert for 10 dropped incoming packets over 60 seconds from same IP address. Five minute cooldown. -->
+    
     <rule id="110004" level="12" frequency="10" timeframe="60" ignore="300">
-        <if_matched_sid>110003</if_matched_sid>
-        <same_source_ip></same_source_ip>
+        <if_matched_sid>4100</if_matched_sid>
+        <same_srcip></same_srcip>
         <action>[DROPPED_INPUT]</action>
-        <description>Iptables: More than 10 outbound blocks to IP $(srcip):$(srcport)/$(protocol) in 1min.</description>
+        <description>Iptables: More than 10 inbound blocks from IP $(srcip):$(dstport)/$(protocol) in 1min.</description>
     </rule>
 
 </group>
