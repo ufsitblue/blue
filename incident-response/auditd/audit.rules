@@ -47,11 +47,11 @@
 
 ## Audit the audit logs
 ### Successful and unsuccessful attempts to read information from the audit records
--w /var/log/audit/ -p wa -k auditlog-wa
--w /var/log/audit/ -p r -k auditlog-r
+-w /var/log/audit/ -p wa -k auditlog_wa
+-w /var/log/audit/ -p r -k auditlog_r
 
--w /var/audit/ -p wa -k auditlog-wa
--w /var/audit/ -p r -k auditlog-r
+-w /var/audit/ -p wa -k auditlog_wa
+-w /var/audit/ -p r -k auditlog_r
 
 ## Auditd configuration
 ### Modifications to audit configuration that occur while the audit collection functions are operating

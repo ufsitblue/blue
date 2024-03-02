@@ -126,11 +126,11 @@
 		<description>/etc/security/opasswd was modified by user: $(audit.auid-h)</description>
 	</rule>
 
-    <!-- Key: auditlog-wa -->
+    <!-- Key: auditlog_wa -->
     <!-- Alert modifying to files /var/log/audit/ or /var/audit by UKNOWN users -->
     <rule id="100019" level="6">
         <if_sid>80700</if_sid>
-        <field name="audit.key">auditlog-wa</field>
+        <field name="audit.key">auditlog_wa</field>
         <field name="audit.auid-h">unset</field>
         <description>Auditd log file was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
     </rule>
@@ -138,15 +138,15 @@
     <!-- Alert modifying to files /var/log/audit/ or /var/audit by known users -->
     <rule id="100018" level="6">
         <if_sid>80700</if_sid>
-        <field name="audit.key">auditlog-wa</field>
+        <field name="audit.key">auditlog_wa</field>
         <description>Auditd log file was modified by user: $(audit.auid-h)</description>
     </rule>
 
-    <!-- Key: auditlog-r -->
+    <!-- Key: auditlog_r -->
     <!-- Alert reading files in /var/log/audit/ or /var/audit by UKNOWN users -->
     <rule id="100021" level="6">
         <if_sid>80700</if_sid>
-        <field name="audit.key">auditlog-r</field>
+        <field name="audit.key">auditlog_r</field>
         <field name="audit.auid-h">unset</field>
         <description>Auditd log file was read by an UNKNOWN USER (group: $(audit.gid-h))</description>
     </rule>
@@ -154,7 +154,7 @@
     <!-- Alert reading files in /var/log/audit/ or /var/audit -->
     <rule id="100020" level="6">
         <if_sid>80700</if_sid>
-        <field name="audit.key">auditlog-r</field>
+        <field name="audit.key">auditlog_r</field>
         <description>Auditd log file was read by user: $(audit.auid-h)</description>
     </rule>
 
@@ -172,6 +172,31 @@
         <if_sid>80700</if_sid>
         <field name="audit.key">auditconfig</field>
         <description>Auditd configuration was modified by user: $(audit.auid-h)</description>
+    </rule>
+
+    <!-- Key: audittools -->
+    <!-- Level 8 because we should never be using audit tools to sift through logs -->
+    <!-- Alert executing audit tools by known users -->
+    <rule id="100024" level="8">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">audittools</field>
+        <description>Audit tool: $(audit.command) was executed by user: $(audit.auid-h)</description>
+    </rule>
+
+    <!-- Alert executing audit tools by UNKNOWN users -->
+    <rule id="100025" level="8">
+        <if_sid>100024</if_sid>
+        <field name="audit.key">audittools</field>
+        <field name="audit.auid-h">unset</field>
+        <description>Audit tool: $(audit.command) was executed by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert executing audit tools by known users using sudo -->
+    <rule id="100026" level="8">
+        <if_sid>100024</if_sid>
+        <field name="audit.auid-h" negate="yes">root</field>
+        <field name="audit.key">audittools</field>
+        <description>Audit tool: $(audit.command) was executed by user: $(audit.auid-h) with sudo.</description>
     </rule>
 
 </group>
