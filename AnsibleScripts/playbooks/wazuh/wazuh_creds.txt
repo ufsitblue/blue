@@ -1,0 +1,1 @@
+{"changed": false, "stdout": "skipped, since /var/ossec/etc/ossec.conf exists", "stderr": "", "rc": 0, "cmd": "./wazuh-install.sh -a -i", "start": null, "end": null, "delta": null, "msg": "Did not run command since '/var/ossec/etc/ossec.conf' exists", "stdout_lines": ["skipped, since /var/ossec/etc/ossec.conf exists"], "stderr_lines": [], "failed": false}
