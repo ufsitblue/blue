@@ -20,6 +20,7 @@ bsd=0
 
 # Read in use host file location and store it, otherwise create directory inventory if it doesn't exist
 read -p "Where is your hosts file? (Blank for default: $inventory_file): " user_hosts
+read -p "What is the default password? " password
 
 if [ ! "$user_hosts" = "" ]; then
    inventory_file=$user_hosts
@@ -103,9 +104,6 @@ for host in "$@"; do
     				echo -e "      ansible_private_key_file: $priv_path" >> $linux_file
 			fi
 	    else
-	       read -s -p "Enter SSH password" password
-	       echo
-	       
 	       # Input information into linux yaml file
 	       echo -e "      ansible_password: $password" >> $linux_file
 	    fi
@@ -181,9 +179,6 @@ for host in "$@"; do
     				echo -e "      ansible_private_key_file: $priv_path" >> $bsd_file
 			fi
 	    else
-	       read -s -p "Enter SSH password" password
-	       echo
-	       
 	       # Input information into bsd yaml file
 	       echo -e "      ansible_password: $password" >> $bsd_file
 	    fi
@@ -212,7 +207,6 @@ for host in "$@"; do
 	    win=1
 	    # Get the winrm username and password and the ip address to connect to
 	    read -p "Enter winrm username: " user
-            read -s -p "Enter winrm password: " password
 	    echo
 	    read -p "Enter ip address: " ip
       read -p "Domain cotroller? (true or false)" controller
