@@ -19,7 +19,7 @@
           state: "present"
   
   - name: Disable internet access
-    ansible.builtin.script: enable_internet.sh
+    ansible.builtin.script: disable_internet.sh
 
   - name: Install custom rules
     ansible.builtin.copy:
