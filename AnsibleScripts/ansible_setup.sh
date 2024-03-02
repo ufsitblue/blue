@@ -291,5 +291,6 @@ echo "" >> ~/.ansible.cfg
 echo "inventory = $(inventory_file)"
 echo "" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
-echo "[ssh_connection]"
-echo "ssh_args = -o ControlMaster=auto -o ControlPersist=600s"
+echo "[ssh_connection]" >> ~/.ansible.cfg
+echo "ssh_args = -o ControlMaster=auto -o ControlPersist=600s" >> ~/.ansible.cfg
+echo "host_key_checking = False" >> ~/.ansible.cfg
