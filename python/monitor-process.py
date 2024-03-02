@@ -10,15 +10,11 @@ import time
 shells_nix = {"ash", "bash", "csh" "dash", "sh", "tcsh", "zsh"}
 shells_win = {"cmd.exe", "powershell.exe", "conhost.exe", "windowsterminal.exe"}
 
-def printhelp(scriptname: str):
-    print("Monitors for and optionally kills shells and other suspicious activities.")
-    print(scriptname + " [USERNAME_BLACKLIST]")
-    print("USERNAME_BLACKLIST - The usernames to kill shells of.")
-
 def main(argv: list[str]) -> int:
     argparser = argparse.ArgumentParser()
     argparser.add_argument("users", metavar="user", type=str, nargs="*", help="the usernames to kill shells of")
     argparser.add_argument("--list", action="store_true", help="list all users running a process and exit")
+    argparser.add_argument("--log", help="log to the specified file in addition to printing to console")
     parsedarguments = vars(argparser.parse_args())
     
     if parsedarguments["list"] is True:
@@ -36,21 +32,32 @@ def main(argv: list[str]) -> int:
         for user in sorted(usernames):
             print(user)
         return 0
-        
+    
+    def printlog(message: str):
+        print(message)
+        if parsedarguments["log"]:
+            try:
+                with open(parsedarguments["log"], "a") as logfile:
+                    logfile.write(message + "\n")
+            except PermissionError:
+                print("WARNING: Failed to log to file \"" + parsedarguments["log"] + "\", got permission denied.")
+
     no_shell_users = parsedarguments["users"]
     while True:
         for process in psutil.process_iter():
-            # TODO Use pathlib to extract the last part of the path. Also grep through the command line.
-            # TODO Send SIGKILL or SIGTERM with os.kill
             try:
                 executable_name = pathlib.Path(process.exe()).name
                 if os.name == "nt":
-                    if process.username() in no_shell_users and executable_name.lower() in shells_win:
-                        os.kill(process.pid, signal.SIGTERM)
+                    if executable_name.lower() in shells_win:
+                        printlog(process.username() + " is running " + process.exe())
+                        if process.username() in no_shell_users:
+                            printlog("Killed process " + str(process.pid))
+                            os.kill(process.pid, signal.SIGTERM)
                 else:
-                    if process.username() in no_shell_users and executable_name in shells_nix:
-                        os.kill(process.pid, signal.SIGKILL)
-                print(process.username() + " is running " + process.exe())
+                    if executable_name in shells_nix:
+                        printlog(process.username() + " is running " + process.exe())
+                        if process.username() in no_shell_users:
+                            os.kill(process.pid, signal.SIGKILL)
             except psutil.AccessDenied:
                 # We aren't root/administrator. Life goes on...
                 pass
