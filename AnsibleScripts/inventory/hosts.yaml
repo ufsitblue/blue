@@ -42,12 +42,12 @@ windows:
   hosts:
     win2016:
       ansible_host: 10.0.0.16
-      ansible_user: 10.0.0.16
+      ansible_user: Administrator
       ansible_password: Is1WaterWet?
       ansible_connection: "winrm"
       ansible_winrm_scheme: "http"
       ansible_port: "5985"
-      ansible_winrm_transport = "ntlm"
+      ansible_winrm_transport: "ntlm"
       in_domain: true
       domain_controller: true
     win2019:
@@ -57,7 +57,7 @@ windows:
       ansible_connection: "winrm"
       ansible_winrm_scheme: "http"
       ansible_port: "5985"
-      ansible_winrm_transport = "ntlm"
+      ansible_winrm_transport: "ntlm"
       in_domain: true
       domain_controller: false
 manager:

@@ -17,6 +17,7 @@ private_key=0
 win=0
 linux=0
 bsd=0
+os_input=0
 
 # Read in use host file location and store it, otherwise create directory inventory if it doesn't exist
 read -p "Where is your hosts file? (Blank for default: $inventory_file): " user_hosts
@@ -49,11 +50,14 @@ echo -e "" > $inventory_file
 
 # Add each host to the inventory file with user-provided details
 for host in "$@"; do
+  os_input=0
+  while [ $os_input -eq 0 ]; do
     read -p "Is '$host' a Linux, Windows, or BSD host? (l/w/b): " os_type
     os_type=$(echo "$os_type" | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
     
     case "$os_type" in
         l|linux)
+      os_input=1
 	    linux=1
 	    # Gets the ip, ssh username, and the password/private key
 	    read -p "Enter ip address: " ip
@@ -130,6 +134,7 @@ for host in "$@"; do
             ;;
         b|bsd)
 	    bsd=1
+      os_input=1
 	    # Gets the ip, ssh username, and the password/private key
 	    read -p "Enter ip address: " ip
 	    read -p "Enter SSH username: " user
@@ -205,6 +210,7 @@ for host in "$@"; do
             ;;
         w|windows)
 	    win=1
+      os_input=1
 	    # Get the winrm username and password and the ip address to connect to
 	    read -p "Enter winrm username: " user
 	    echo
@@ -218,16 +224,16 @@ for host in "$@"; do
 	    echo -e '      ansible_connection: "winrm"' >> $win_file
 	    echo -e '      ansible_winrm_scheme: "http"' >> $win_file
             echo -e '      ansible_port: "5985"' >> $win_file
-	    echo -e '      ansible_winrm_transport = "ntlm"' >> $win_file
+	    echo -e '      ansible_winrm_transport: "ntlm"' >> $win_file
       echo -e "      in_domain: true" >> $win_file
       echo -e "      domain_controller: $controller" >> $win_file
             echo
 	    ;;
         *)
             echo "Invalid input. Specify 'l' for Linux or 'w' for Windows."
-            exit 1
             ;;
     esac
+  done
 done
 
 if [ $win -eq 0 ]; then
