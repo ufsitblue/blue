@@ -31,7 +31,17 @@
     - bsd_agent
   tags:
     - install
- 
+
+- name: Install auditd
+  import_playbook: ../auditd/auditd.yaml
+  tags:
+    - install
+
+- name: Install suricata
+  import_playbook: ../suricata/suricata.yaml
+  tags:
+    -install
+
 - name: Install the manager
   hosts: manager
   become: yes

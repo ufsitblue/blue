@@ -8,6 +8,9 @@
     src: "{{ suricata_download }}" 
     dest: "{{ home }}" 
 
+- name: disable internet access
+  ansible.builtin.script: disable_internet.sh
+
 - name: Running ./configure
   become: no
   ansible.builtin.command:

@@ -1,5 +1,8 @@
 # Install Suricata on All Linux Distros
 
+- name: Enable internet access
+  ansible.builtin.script: enable_internet.sh
+
 - name: Setup using Package Manager
   block:
   - name: Setup on Debian
@@ -46,6 +49,9 @@
     ansible.builtin.package:
       name: suricata
       state: present
+
+  - name: Disable internet access
+    ansible.builtin.script: disable_internet.sh
 
   # If package manager install fails, switch to source install
   rescue:
