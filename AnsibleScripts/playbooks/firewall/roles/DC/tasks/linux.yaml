@@ -8,7 +8,7 @@
     jump: "ACCEPT"
     protocol: "tcp"
     state: "present"
-  loop: "{{ dc_ports_tcp }}"
+  loop: "{{ linux_dc_ports_tcp }}"
   loop_control:
     loop_var: port
 
@@ -34,7 +34,7 @@
     jump: "ACCEPT"
     protocol: "tcp"
     state: "present"
-  loop: "{{ dc_ports_tcp }}"
+  loop: "{{ linux_dc_ports_tcp }}"
   loop_control:
     loop_var: port
 
@@ -47,22 +47,6 @@
     jump: "ACCEPT"
     protocol: "udp"
     state: "present"
-  loop: "{{ dc_ports_tcp }}"
+  loop: "{{ dc_ports_udp }}"
   loop_control:
     loop_var: port
-
-#- name: use iptables to let DC in tcp
-#  ansible.builtin.iptables:
-#    action: "append"
-#    chain: "INPUT"
-#    source: "{{ ip }}"
-#    jump: "ACCEPT"
-#    state: "present"
-
-#- name: use iptables to let domain ports out tcp
-#  ansible.builtin.iptables:
-#    action: "append"
-#    chain: "OUTPUT"
-#    destination: "{{ ip }}"
-#    jump: "ACCEPT"
-#    state: "present"
