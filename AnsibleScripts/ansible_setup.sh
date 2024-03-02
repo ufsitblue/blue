@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# test
 # Check if at least one host is provided
 if [ "$#" -eq 0 ]; then
     echo "Usage: $0 hostname1 [hostname2 ... hostnameN]"
