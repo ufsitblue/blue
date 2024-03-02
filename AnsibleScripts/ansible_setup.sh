@@ -206,9 +206,8 @@ for host in "$@"; do
         w|windows)
 	    win=1
 	    # Get the winrm username and password and the ip address to connect to
-	    read -p "Enter winrm username: " user
-	    echo
 	    read -p "Enter ip address: " ip
+	    read -p "Enter winrm username: " user
       read -p "Domain cotroller? (true or false): " controller
 	    
             echo -e "    $host:" >> $win_file
