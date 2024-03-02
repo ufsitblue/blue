@@ -282,7 +282,7 @@ echo "gathering = smart" >> ~/.ansible.cfg
 echo "fact_caching = jsonfile" >> ~/.ansible.cfg
 echo "fact_caching_connection = /tmp" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
-echo "inventory = $(inventory_file)" >> ~/.ansible.cfg
+echo "inventory = $inventory_file" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
 echo "[ssh_connection]" >> ~/.ansible.cfg
