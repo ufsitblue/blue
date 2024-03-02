@@ -236,4 +236,12 @@
         <description>Kernel parameter: $(audit.path.1) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
     </rule>
 
+    <!-- Key: modules -->
+    <!-- Alert loading kernel modules by known users -->
+    <rule id="100031" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">modules</field>
+        <description>Kernel module loaded by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
 </group>
