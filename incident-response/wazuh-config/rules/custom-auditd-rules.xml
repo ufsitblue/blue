@@ -199,4 +199,41 @@
         <description>Audit tool: $(audit.command) was executed by user: $(audit.auid-h) with sudo.</description>
     </rule>
 
+    <!-- Key: sysctl -->
+    <!-- Level 12 because kernel parameters should rarely/never changed -->
+    <!-- Alert modifying kernel parameters by known users -->
+    <rule id="100027" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">sysctl</field>
+        <description>Kernel parameter modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying kernel parameters by known users. Only one path item. -->
+    <rule id="100028" level="12">
+        <if_sid>100027</if_sid>
+        <field name="audit.key">sysctl</field>
+        <field name="audit.path.0">\.+</field>
+        <description>Kernel parameter: $(audit.path.0) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying kernel parameters by known users. Two path items. Second path item is not full path. -->
+    <rule id="100029" level="12">
+        <if_sid>100028</if_sid>
+        <field name="audit.key">sysctl</field>
+        <field name="audit.path.0">\.+</field>
+        <field name="audit.path.1">\.+</field>
+        <field name="audit.path.1" negate="yes">^/</field>
+        <description>Kernel parameter: $(audit.path.0)/$(audit.path.1) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying kernel parameters by known users. Two path items. Second path item is full path. -->
+    <rule id="100030" level="12">
+        <if_sid>100028</if_sid>
+        <field name="audit.key">sysctl</field>
+        <field name="audit.path.0">\.+</field>
+        <field name="audit.path.1">\.+</field>
+        <field name="audit.path.1" negate="no">^/</field>
+        <description>Kernel parameter: $(audit.path.1) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
 </group>

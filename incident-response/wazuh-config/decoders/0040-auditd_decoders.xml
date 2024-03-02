@@ -34,94 +34,15 @@
 
 <decoder name="auditd-syscall">
   <parent>auditd</parent>
-  <regex offset="after_regex">comm=\p*(\w+)\p*</regex>
-  <order>audit.command</order>
-</decoder>
-
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">exe=\p(\S+)\p</regex>
-  <order>audit.exe</order>
-</decoder>
-
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">key=\((\S+)\)|key=&quot;(\S+)&quot;|key=(\S+) </regex>
-  <order>audit.key</order>
-</decoder>
-
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">type=EXECVE msg=audit\(\S+\): argc=\d+ a0=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a0</order>
+  <regex offset="after_parent">type=PATH\.+item=0\.+name="(\.+)"\s</regex>
+  <order>audit.path.0</order>
 </decoder>
 
 <decoder name="auditd-syscall">
   <parent>auditd</parent>
-  <regex offset="after_regex">a1=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a1</order>
+  <regex offset="after_parent">type=PATH\.+item=1\.+name="(\.+)"</regex>
+  <order>audit.path.1</order>
 </decoder>
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">a2=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a2</order>
-</decoder>
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">a3=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a3</order>
-</decoder>
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">a4=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a4</order>
-</decoder>
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">a5=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a5</order>
-</decoder>
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">a6=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a6</order>
-</decoder>
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">a7=&quot;(\.+)&quot; </regex>
-  <order>audit.execve.a7</order>
-</decoder>
-
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">type=CWD msg=audit\(\S+\):\s+cwd=&quot;(\.+)&quot; </regex>
-  <order>audit.cwd</order>
-</decoder>
-
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">type=PATH msg=audit\(\S+\): item=\S+ name=&quot;(\.+)&quot; inode=(\S+) dev=\S+ mode=(04\S+) ouid=\S+ ogid=\S+ </regex>
-  <order>audit.directory.name, audit.directory.inode, audit.directory.mode</order>
-</decoder>
-
-
-<decoder name="auditd-syscall">
-  <parent>auditd</parent>
-  <regex offset="after_regex">type=PATH msg=audit\(\S+\): item=\S+ name=&quot;(\.+)&quot; inode=(\S+) dev=\S+ mode=(\S+) ouid=\S+ ogid=\S+ |type=PATH msg=audit\(\S+\): item=\S+ name=\((null)\) inode=(\S+) dev=\S+ mode=(\S+) ouid=\S+ ogid=\S+ </regex>
-  <order>audit.file.name, audit.file.inode, audit.file.mode</order>
-</decoder>
-
 
 <decoder name="auditd-config_change">
   <parent>auditd</parent>
