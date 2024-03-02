@@ -95,9 +95,6 @@ for host in "$@"; do
 
 			if [ -n "$priv_path" ]; then
 				# Input information into linux yaml file
-				# host="$host" ip="$ip" yq -i '.linux.hosts.[env(host)].ansible_host = env(ip)' "$linux_file"
-				# host="$host" user="$user" yq -i '.linux.hosts.[env(host)].ansible_user = env(user)' "$linux_file"
-				# host="$host" priv_path="$priv_path" yq -i '.linux.hosts.[env(host)].ansible_private_key_file = env(priv_path)' "$linux_file"
     				echo -e "      ansible_private_key_file: $priv_path" >> $linux_file
 			fi
 	    else
@@ -105,9 +102,6 @@ for host in "$@"; do
 	       echo
 	       
 	       # Input information into linux yaml file
-	       # host="$host" ip="$ip" yq -i '.linux.hosts.[env(host)].ansible_host = env(ip)' "$linux_file"
-	       # host="$host" user="$user" yq -i '.linux.hosts.[env(host)].ansible_user = env(user)' "$linux_file"
-	       # host="$host" password="$password" yq -i '.linux.hosts.[env(host)].ansible_password = env(password)' "$linux_file"
 	       echo -e "      ansible_password: $password" >> $linux_file
 	    fi
 
@@ -123,14 +117,8 @@ for host in "$@"; do
                   
                   # Check if using private key or password for login then input the corresponding info into manager yaml
 		  if [ $private_key -eq "1" ]; then
-	             # host="$host" ip="$ip" yq -i '.manager.hosts.[env(host)].ansible_host = env(ip)' "$man_file"
-	             # host="$host" user="$user" yq -i '.manager.hosts.[env(host)].ansible_user = env(user)' "$man_file"
-	             # host="$host" priv_path="$priv_path" yq -i '.manager.hosts.[env(host)].ansible_private_key_file = env(priv_path)' "$man_file"
 	             echo -e "      ansible_private_key_file: $priv_path" >> $man_file
 	          else
-	             # host="$host" ip="$ip" yq -i '.manager.hosts.[env(host)].ansible_host = env(ip)' "$man_file"
-	             # host="$host" user="$user" yq -i '.manager.hosts.[env(host)].ansible_user = env(user)' "$man_file"
-	             # host="$host" password="$password" yq -i '.manager.hosts.[env(host)].ansible_password = env(password)' "$man_file"
 	             echo -e "      ansible_password: $password" >> $man_file
 	          fi
 	       fi
@@ -150,14 +138,6 @@ for host in "$@"; do
 	       read -p "Is this the Wazuh Manager? (y/n): " ans
 	       if [ $ans = "y" ]; then
 		  got_man=1
-		  # host="$host" ip="$ip" yq -i '.manager.hosts.[env(host)].ansible_host = env(ip)' "$man_file"
-	          # host="$host" subnet="$subnet" yq -i '.manager.hosts.[env(host)].ansible_subnet = env(subnet)' "$man_file"
-		  # host="$host" user="$user" yq -i '.manager.hosts.[env(host)].ansible_user = env(user)' "$man_file"
-		  # host="$host" password="$password" yq -i '.manager.hosts.[env(host)].ansible_password = env(password)' "$man_file"
-		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_connection = "winrm"' "$man_file" 
-		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_winrm_scheme = "http"' "$man_file"
-		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_port = 5985' "$man_file"
-		  # host="$host" yq -i '.manager.hosts.[env(host)].ansible_winrm_transport = "ntlm"' "$man_file"
                   echo -e "    $host:" >> $man_file
 		  echo -e "      ansible_host: $ip" >> $man_file
                   echo -e "      ansible_user: $user" >> $man_file
@@ -169,13 +149,6 @@ for host in "$@"; do
 	       fi
 	    fi
 
-            # host="$host" ip="$ip" yq -i '.windows.hosts.[env(host)].ansible_host = env(ip)' "$win_file"
-	    # host="$host" user="$user" yq -i '.windows.hosts.[env(host)].ansible_user = env(user)' "$win_file"
-	    # host="$host" password="$password" yq -i '.windows.hosts.[env(host)].ansible_password = env(password)' "$win_file"
-	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_connection = "winrm"' "$win_file" 
-	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_winrm_scheme = "http"' "$win_file"
-	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_port = 5985' "$win_file"
-	    # host="$host" yq -i '.windows.hosts.[env(host)].ansible_winrm_transport = "ntlm"' "$win_file"
             echo -e "    $host:" >> $win_file
 	    echo -e "      ansible_host: $ip" >> $win_file
             echo -e "      ansible_user: $user" >> $win_file
@@ -234,17 +207,14 @@ fi
 
 echo "Creating ansible.cfg"
 echo
-ansible-config init --disabled > ~/.ansible.cfg
-
-echo "Adding Inventory to ansible.cfg"
-
-commented_inventory_lines=$(grep -E "^[[:space:]]*[;#][[:space:]]*inventory[[:space:]]*=" ~/.ansible.cfg | wc -l)
-
-# Check if inventory setting is commented with either ';' or '#'
-if [ $commented_inventory_lines -eq 1 ]; then
-   # Uncomment the inventory line and update it with the new inventory file path
-   sudo sed -i "s@^[[:space:]]*[;#][[:space:]]*inventory[[:space:]]*=.*@inventory=$(echo $inventory_file)@g"  ~/.ansible.cfg
-elif [ $commented_inventory_lines -eq 0 ]; then
-   # Append the new inventory file path if it's not already present
-   sudo sed -i "s@inventory[[:space:]]*=.*@inventory=$(echo $inventory_file)@g"  ~/.ansible.cfg
-fi
+echo "" > ~/.ansible.cfg
+echo "[default]" > ~/.ansible.cfg
+echo "gathering = smart" >> ~/.ansible.cfg
+echo "fact_caching = jsonfile" >> ~/.ansible.cfg
+echo "fact_caching_connection = /tmp" >> ~/.ansible.cfg
+echo "" >> ~/.ansible.cfg
+echo "inventory = $(inventory_file)"
+echo "" >> ~/.ansible.cfg
+echo "" >> ~/.ansible.cfg
+echo "[ssh_connection]"
+echo "ssh_args = -o ControlMaster=auto -o ControlPersist=600s"
