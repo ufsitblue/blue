@@ -209,7 +209,7 @@ for host in "$@"; do
 	    read -p "Enter winrm username: " user
 	    echo
 	    read -p "Enter ip address: " ip
-      read -p "Domain cotroller? (true or false)" controller
+      read -p "Domain cotroller? (true or false): " controller
 	    
             echo -e "    $host:" >> $win_file
 	    echo -e "      ansible_host: $ip" >> $win_file
@@ -238,7 +238,7 @@ if [ $linux -eq 0 ]; then
     cat /dev/null > $linux_file
 fi
 
-if [ $bsd -eq 0]; then
+if [ $bsd -eq 0 ]; then
     cat /dev/null > $bsd_file
 fi
 
@@ -282,7 +282,7 @@ echo "gathering = smart" >> ~/.ansible.cfg
 echo "fact_caching = jsonfile" >> ~/.ansible.cfg
 echo "fact_caching_connection = /tmp" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
-echo "inventory = $(inventory_file)"
+echo "inventory = $(inventory_file)" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
 echo "[ssh_connection]" >> ~/.ansible.cfg
