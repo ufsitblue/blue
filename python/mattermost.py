@@ -24,7 +24,7 @@ def get_token() -> typing.Optional[str]:
     except requests.exceptions.SSLError:
         request = requests.post(hostname + "/api/v4/users/login", data=json.dumps({"login_id": username, "password": password}))
     if request.status_code == 401:
-        print("Unauthorized: incorrect username or password?")
+        raise PermissionError("401 Unauthorized: incorrect username or password?")
 
     return request.headers["Token"]
 
@@ -49,6 +49,7 @@ class MattermostApi:
         """
         i = 0
         teams = []
+        print("Choose a team...")
         for team in self.get_teams():
             print("[" + str(i) + "] " + team["display_name"])
             i += 1
@@ -67,6 +68,7 @@ class MattermostApi:
         
         channels = []
         i = 0
+        print("Choose a channel...")
         for channel in self.get_channels(team_to_use["id"]):
             channels.append(channel)
             print("[" + str(i) + "] " + channel["display_name"])

@@ -25,7 +25,7 @@ def main(argv: list[str]) -> int:
     argparser.add_argument("--timeout", help="Timeout in seconds after which the server will be considered down. Default is 5.")
     
     argsdict = vars(argparser.parse_args())
-
+    
     request_timeout = 5
     try:
         if argsdict["timeout"]:
@@ -119,8 +119,21 @@ def main(argv: list[str]) -> int:
         database.close()
         print(protocol.upper() + " monitor for host " + host + " added.")
         return 0
+    
+    # Try to get a Mattermost token (it's okay if we don't have one)
+    mattermost_token = None
+    try:
+        mattermost_token = mattermost.get_token()
+    except PermissionError:
+        print("Incorrect Mattermost username or password, check the environment variables MATTERMOST_USERNAME and MATTERMOST_PASSWORD")
+    mattermostapi, mattermostchannel = None, None
+    if mattermost_token is not None:
+        mattermostapi = mattermost.MattermostApi(mattermost_token)
+        mattermostchannel = mattermostapi.get_some_channel()
 
+    last_big_update_time = time.time()  # When we last had a major update about service status
     while True:
+        services_down = []
         for row in database.execute("SELECT id, protocol, hostname, port, path, up, response FROM services"):
             uniqueid, protocol, host, port, path, upbefore, responseregex = row
             servicestring = protocol + "://" + host + (":" + str(port) if port else "") + \
@@ -166,10 +179,30 @@ def main(argv: list[str]) -> int:
                     upafter = False
             
             if upbefore != upafter:
-                print("Service " + servicestring + " changed state from " + ("UP" if upbefore else "DOWN") + 
-                      " to " + ("UP" if upafter else "DOWN"))
+                print_string = "Service " + servicestring + " changed state from " + \
+                        ("UP" if upbefore else "DOWN") + " to " + ("UP \u2705" if upafter else "DOWN \u274c")
+                print(print_string)
+                try:
+                    if mattermostchannel is not None:
+                        mattermostapi.post_message(mattermostchannel["id"], print_string)
+                except Exception as e:
+                    print("Got exception when trying to post to Mattermost:\n" + str(e))
+            if not upafter:
+                services_down.append(servicestring)
             database.execute("UPDATE services SET up=? WHERE id=?", (upafter, uniqueid))
             database.commit()
+        if time.time() - last_big_update_time > 20:
+            last_big_update_time = time.time()
+            if services_down:
+                big_update_str = "Note that the following services are DOWN:\n"
+                for service in services_down:
+                    big_update_str += " - " + service + "\n"
+                print(big_update_str)
+                try:
+                    if mattermostchannel is not None:
+                        mattermostapi.post_message(mattermostchannel["id"], big_update_str)
+                except Exception as e:
+                    print("Got exception when trying to post to Mattermost:\n" + str(e))
         time.sleep(2)
     return 0
 

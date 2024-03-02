@@ -36,6 +36,11 @@ def main(argv: list[str]) -> int:
     print(output_string)
     
     mattermost_token = mattermost.get_token()
+
+    if mattermost_token is None:
+        print("Not posting to Mattermost - failed to get token")
+        return 0
+
     mmapi = mattermost.MattermostApi(mattermost_token)
 
     print("Press Ctrl-C now if you don't want to post to Mattermost")
