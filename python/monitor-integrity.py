@@ -7,6 +7,8 @@ Copyright (c) 2024 UFSIT Blue Team.
 """
 
 import hashlib
+import os
+import os.path
 import pathlib
 import re
 import shutil
@@ -25,25 +27,43 @@ def main(argv: list[str]) -> int:
     """The base directory where the archives are saved"""
     
     temp_directory = pathlib.Path(tempfile.gettempdir())
-
+    
     path_to_monitor = pathlib.Path(argv[1])
     
-    archive_name = re.sub(r"[^A-Za-z0-9-_]", "_", str(path_to_monitor))
+    archive_name = None
+    monitor_directory = False  # Whether a directory is being monitored
+    if os.path.isdir(path_to_monitor):
+        archive_name = re.sub(r"[^A-Za-z0-9-_]", "_", str(path_to_monitor)) + ".zip"
+        monitor_directory = True
+    elif os.path.isfile(path_to_monitor):
+        archive_name = re.sub(r"[^A-Za-z0-9-_]", "_", str(path_to_monitor))
+    else:
+        print("File \"" + path_to_monitor + "\" not found.")
+        return 1
 
-    if (base_directory / (archive_name + ".zip")).exists():
+    if (base_directory / archive_name).exists():
         # The path exists
-        shutil.make_archive(str(temp_directory / archive_name), "zip", str(path_to_monitor), str(path_to_monitor))
         digest_matches = False
-        with open(str(temp_directory / (archive_name + ".zip")), "rb") as currentarchive:
-            with open(str(base_directory / (archive_name + ".zip")), "rb") as savedarchive:
-                digest_matches = hashlib.file_digest(currentarchive, "sha512").hexdigest() == hashlib.file_digest(savedarchive, "sha512").hexdigest()
+        if monitor_directory:
+            shutil.make_archive(str(temp_directory / archive_name)[:-4], "zip", str(path_to_monitor), str(path_to_monitor))
+            with open(str(temp_directory / (archive_name)), "rb") as currentarchive:
+                with open(str(base_directory / (archive_name)), "rb") as savedarchive:
+                    digest_matches = hashlib.file_digest(currentarchive, "sha512").hexdigest() == hashlib.file_digest(savedarchive, "sha512").hexdigest()
+        else:
+            with open(str(path_to_monitor), "rb") as currentarchive:
+                with open(str(base_directory / (archive_name)), "rb") as savedarchive:
+                    digest_matches = hashlib.file_digest(currentarchive, "sha512").hexdigest() == hashlib.file_digest(savedarchive, "sha512").hexdigest()
         if digest_matches:
             print("OK matches")
         else:
             print("WARN checksum match failed")
     else:
-        shutil.make_archive(str(base_directory / archive_name), "zip", str(path_to_monitor), str(path_to_monitor))
-        print("OK " + str(base_directory / (archive_name + ".zip")))
+        base_directory.mkdir(parents=True, exist_ok=True)
+        if monitor_directory:
+            shutil.make_archive(str(base_directory / archive_name)[:-4], "zip", str(path_to_monitor), str(path_to_monitor))
+        else:
+            shutil.copy2(str(path_to_monitor), str(base_directory / archive_name))
+        print("OK " + str(base_directory / archive_name))
 
     return 0
 
