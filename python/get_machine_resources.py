@@ -9,6 +9,7 @@ import os
 import psutil
 import socket
 import sys
+sys.dont_write_bytecode = True
 
 import mattermost
 
