@@ -315,7 +315,7 @@ echo "host_key_checking = False" >> ~/.ansible.cfg
 while true; do
   read -p "Enter team ip (blank for done): " ip
   if [ ! ip == "" ]; then
-    sed -i s/team_ips:/"team_ips:\n  - $ip"/g group_vars/all.yaml
+    sed -i s/team_ips:/"team_ips:\n  - $ip"/g playbooks/firewall/group_vars/all.yaml
   else
     break
   fi
