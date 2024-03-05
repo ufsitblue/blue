@@ -38,7 +38,7 @@ def main(argv: list[str]) -> int:
     elif os.path.isfile(path_to_monitor):
         archive_name = re.sub(r"[^A-Za-z0-9-_]", "_", str(path_to_monitor))
     else:
-        print("File \"" + path_to_monitor + "\" not found.")
+        print("NOTFOUND File \"" + str(path_to_monitor) + "\" not found.")
         return 1
 
     if (base_directory / archive_name).exists():
@@ -54,16 +54,16 @@ def main(argv: list[str]) -> int:
                 with open(str(base_directory / (archive_name)), "rb") as savedarchive:
                     digest_matches = hashlib.file_digest(currentarchive, "sha512").hexdigest() == hashlib.file_digest(savedarchive, "sha512").hexdigest()
         if digest_matches:
-            print("OK matches")
+            print("CHECKPASS checksum atches")
         else:
-            print("WARN checksum match failed")
+            print("CHECKFAIL checksum match failed")
     else:
         base_directory.mkdir(parents=True, exist_ok=True)
         if monitor_directory:
             shutil.make_archive(str(base_directory / archive_name)[:-4], "zip", str(path_to_monitor), str(path_to_monitor))
         else:
             shutil.copy2(str(path_to_monitor), str(base_directory / archive_name))
-        print("OK " + str(base_directory / archive_name))
+        print("CREATED " + str(base_directory / archive_name))
 
     return 0
 
