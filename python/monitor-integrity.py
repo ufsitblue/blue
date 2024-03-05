@@ -54,7 +54,7 @@ def main(argv: list[str]) -> int:
                 with open(str(base_directory / (archive_name)), "rb") as savedarchive:
                     digest_matches = hashlib.file_digest(currentarchive, "sha512").hexdigest() == hashlib.file_digest(savedarchive, "sha512").hexdigest()
         if digest_matches:
-            print("CHECKPASS checksum atches")
+            print("CHECKPASS checksum matches")
         else:
             print("CHECKFAIL checksum match failed")
     else:
