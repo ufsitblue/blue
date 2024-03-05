@@ -18,17 +18,16 @@ win=0
 linux=0
 bsd=0
 os_input=0
-same_user=""
-same_pass=""
+
 
 # Read in use host file location and store it, otherwise create directory inventory if it doesn't exist
 read -p "Where is your hosts file? (Blank for default: $inventory_file): " user_hosts
 read -p "Are you using the same user? (y/n): " same_user
 read -p "Are you using the same password? (y/n): " same_pass
-if [ same_user == "y" ]; then
+if [ $same_user == "y" ]; then
   read -p "Enter the default user: " user
 fi
-if [ same_pass == "y" ]; then
+if [ $same_pass == "y" ]; then
   read -p "Enter the default password: " password
 fi
 
