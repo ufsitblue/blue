@@ -29,12 +29,6 @@ if ($domain_controller -eq "yes") {
     } until ($ip -eq "done")
 }
 
-$dc_ports_tcp_string = $dc_ports_tcp -join ","
-$dc_ports_udp_string = $dc_ports_udp -join ","
-$team_ips_string = $team_ips -join ","
-$dc_ips_string = $dc_ips -join ","
-$domain_ips_string = $domain_ips -join ","
-
 # Disable all firewalls
 Set-NetFirewallProfile -All -Enabled False
 
@@ -50,12 +44,12 @@ New-NetFirewallRule -DisplayName "Localhost in" -Description "Allow localhost in
 New-NetFirewallRule -DisplayName "Localhost out" -Description "Allow localhost into the network" -Direction Outbound -localAddress 127.0.0.0/8 -RemoteAddress 127.0.0.0/8 -Action Allow -Group "Standard"
 
 # Add RDP rules
-New-NetFirewallRule -DisplayName "RDP from team" -Description "Allow RDP from team into network" -Direction Inbound -Protocol TCP -LocalPort 3389 -RemoteAddress $team_ips_string -Action Allow -Group "Blackout"
-New-NetFirewallRule -DisplayName "RDP to team" -Description "Allow RDP from team into network" -Direction Outbound -Protocol TCP -LocalPort 3389 -RemoteAddress $team_ips_string -Action Allow -Group "Blackout"
+New-NetFirewallRule -DisplayName "RDP from team" -Description "Allow RDP from team into network" -Direction Inbound -Protocol TCP -LocalPort 3389 -RemoteAddress $team_ips -Action Allow -Group "Blackout"
+New-NetFirewallRule -DisplayName "RDP to team" -Description "Allow RDP from team into network" -Direction Outbound -Protocol TCP -LocalPort 3389 -RemoteAddress $team_ips -Action Allow -Group "Blackout"
 
 # Add winrm rules
-New-NetFirewallRule -DisplayName "winrm from team" -Description "Allow winrm from team into network" -Direction Inbound -Protocol TCP -LocalPort 5985 -RemoteAddress $team_ips_string -Action Allow -Group "Standard"
-New-NetFirewallRule -DisplayName "winrm to team" -Description "Allow winrm from team into network" -Direction Outbound -Protocol TCP -LocalPort 5985 -RemoteAddress $team_ips_string -Action Allow -Group "Standard"
+New-NetFirewallRule -DisplayName "winrm from team" -Description "Allow winrm from team into network" -Direction Inbound -Protocol TCP -LocalPort 5985 -RemoteAddress $team_ips -Action Allow -Group "Standard"
+New-NetFirewallRule -DisplayName "winrm to team" -Description "Allow winrm from team into network" -Direction Outbound -Protocol TCP -LocalPort 5985 -RemoteAddress $team_ips -Action Allow -Group "Standard"
 
 # Add internet connection rules
 New-NetFirewallRule -DisplayName "Http/s traffic out" -Description "Allow http/s traffic out of network" -Direction Outbound -Protocol TCP -RemotePort 80,443 -Action Allow -Group "Internet"
@@ -65,20 +59,20 @@ New-NetFirewallRule -DisplayName "DNS traffic out" -Description "Allow DNS traff
 if ($domain_controller -eq "yes") {
     # Allow DCs to communicate if there are multiple
     if ($dc_ips.Count > 1){
-      New-NetFirewallRule -DisplayName "DC to DC in" -Description "Allow DCs to communicate in" -Direction Inbound -RemoteAddress $dc_ips_string -Action Allow -Group "DC"
-      New-NetFirewallRule -DisplayName "DC to DC out" -Description "Allow DCs to communicate out" -Direction Outbound -RemoteAddress $dc_ips_string -Action Allow -Group "DC"
+      New-NetFirewallRule -DisplayName "DC to DC in" -Description "Allow DCs to communicate in" -Direction Inbound -RemoteAddress $dc_ips -Action Allow -Group "DC"
+      New-NetFirewallRule -DisplayName "DC to DC out" -Description "Allow DCs to communicate out" -Direction Outbound -RemoteAddress $dc_ips -Action Allow -Group "DC"
     }
 
     # Allow traffic from the DC to the domain machines and vice versa
-    New-NetFirewallRule -DisplayName "Allow into DC TCP" -Description "Allow domain machines into DC tcp" -Direction Inbound -Protocol TCP -LocalPort $dc_ports_tcp_string -RemoteAddress $domain_ips_string -Action Allow -Group "DC"
-    New-NetFirewallRule -DisplayName "Allow DC out TCP" -Description "Allow DC out to domain machine tcp" -Direction Outbound -Protocol TCP -LocalPort $dc_ports_tcp_string -RemoteAddress $domain_ips_string -Action Allow -Group "DC"
-    New-NetFirewallRule -DisplayName "Allow into DC UDP" -Description "Allow domain machines into DC udp" -Direction Inbound -Protocol UDP -LocalPort $dc_ports_udp_string -RemoteAddress $domain_ips_string -Action Allow -Group "DC"
-    New-NetFirewallRule -DisplayName "Allow DC out UDP" -Description "Allow DC out to machine udp" -Direction Outbound -Protocol UDP -LocalPort $dc_ports_udp_string -RemoteAddress $domain_ips_string -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Allow into DC TCP" -Description "Allow domain machines into DC tcp" -Direction Inbound -Protocol TCP -LocalPort $dc_ports_tcp -RemoteAddress $domain_ips -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Allow DC out TCP" -Description "Allow DC out to domain machine tcp" -Direction Outbound -Protocol TCP -LocalPort $dc_ports_tcp -RemoteAddress $domain_ips -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Allow into DC UDP" -Description "Allow domain machines into DC udp" -Direction Inbound -Protocol UDP -LocalPort $dc_ports_udp -RemoteAddress $domain_ips -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Allow DC out UDP" -Description "Allow DC out to machine udp" -Direction Outbound -Protocol UDP -LocalPort $dc_ports_udp -RemoteAddress $domain_ips -Action Allow -Group "DC"
 } else {
-    New-NetFirewallRule -DisplayName "Let DC in TCP" -Description "Allow the Domain Controller into the machine on the DC ports in TCP" -Direction Inbound -Protocol TCP -RemotePort $dc_ports_tcp_string -RemoteAddress $dc_ips_string -Action Allow -Group "DC"
-    New-NetFirewallRule -DisplayName "Let DC in UDP" -Description "Allow the Domain Controller into the machine on the DC ports in UDP" -Direction Inbound -Protocol UDP -RemotePort $dc_ports_udp_string -RemoteAddress $dc_ips_string -Action Allow -Group "DC"
-    New-NetFirewallRule -DisplayName "Let out to DC TCP" -Description "Allow the machine to communicate out to the DC in TCP" -Direction Outbound -Protocol TCP -RemotePort $dc_ports_tcp_string -RemoteAddress $dc_ips_string -Action Allow -Group "DC"
-    New-NetFirewallRule -DisplayName "Let out to DC UDP" -Description "Allow the machine to communicate out to the DC in UDP" -Direction Outbound -Protocol UDP -RemotePort $dc_ports_udp_string -RemoteAddress $dc_ips_string -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Let DC in TCP" -Description "Allow the Domain Controller into the machine on the DC ports in TCP" -Direction Inbound -Protocol TCP -RemotePort $dc_ports_tcp -RemoteAddress $dc_ips -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Let DC in UDP" -Description "Allow the Domain Controller into the machine on the DC ports in UDP" -Direction Inbound -Protocol UDP -RemotePort $dc_ports_udp -RemoteAddress $dc_ips -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Let out to DC TCP" -Description "Allow the machine to communicate out to the DC in TCP" -Direction Outbound -Protocol TCP -RemotePort $dc_ports_tcp -RemoteAddress $dc_ips -Action Allow -Group "DC"
+    New-NetFirewallRule -DisplayName "Let out to DC UDP" -Description "Allow the machine to communicate out to the DC in UDP" -Direction Outbound -Protocol UDP -RemotePort $dc_ports_udp -RemoteAddress $dc_ips -Action Allow -Group "DC"
 }
 
 # Disable Internet rules
