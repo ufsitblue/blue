@@ -25,7 +25,7 @@
     loop_var: ip
 
 - name: Allow domain machines into DC tcp
-  when: domain_controller and hostvars[item].in_domain and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow domain machines into DC tcp"
@@ -38,7 +38,7 @@
   loop: "{{ groups['all'] }}"
 
 - name: Allow domain machines into DC udp
-  when: domain_controller and hostvars[item].in_domain and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow domain machines into DC udp"
@@ -51,7 +51,7 @@
   loop: "{{ groups['all'] }}"
 
 - name: Allow DC to connect out to machines tcp
-  when: domain_controller and hostvars[item].in_domain and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC out to domain machine tcp"
@@ -64,7 +64,7 @@
   loop: "{{ groups['all'] }}"
  
 - name: Allow DC to connect out to machines udp
-  when: domain_controller and hostvars[item].in_domain and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC out to machine udp"
@@ -77,7 +77,7 @@
   loop: "{{ groups['all'] }}"
 
 - name: Allow DC ports into domain machines tcp
-  when: in_domain and not domain_controller
+  when: not domain_controller
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC into machine tcp"
@@ -89,7 +89,7 @@
     protocol: "tcp"
  
 - name: Allow DC ports into domain machines udp
-  when: in_domain and not domain_controller
+  when: not domain_controller
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC into machine udp"
@@ -101,7 +101,7 @@
     protocol: "udp"
 
 - name: Allow DC ports from domain machines tcp
-  when: in_domain and not domain_controller
+  when: not domain_controller
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC into machine tcp"
@@ -113,7 +113,7 @@
     protocol: "tcp"
 
 - name: Allow DC ports from domain machines udp
-  when: in_domain and not domain_controller
+  when: not domain_controller
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC into machine udp"
