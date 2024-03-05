@@ -69,10 +69,10 @@ for host in "$@"; do
 	    linux=1
 	    # Gets the ip, ssh username, and the password/private key
 	    read -p "Enter ip address: " ip
-      if [ same_user == "n" ]; then
+      if [ $same_user == "n" ]; then
 	      read -p "Enter SSH username: " user
       fi
-      if [ same_pass == "n" ]; then
+      if [ $same_pass == "n" ]; then
         read -p "Enter SSH password: " password
       fi
             # Add that infor to file no matter what
@@ -149,10 +149,10 @@ for host in "$@"; do
       os_input=1
 	    # Gets the ip, ssh username, and the password/private key
 	    read -p "Enter ip address: " ip
-      if [ same_user == "n" ]; then
+      if [ $same_user == "n" ]; then
 	      read -p "Enter SSH username: " user
       fi
-      if [ same_pass == "n" ]; then
+      if [ $same_pass == "n" ]; then
         read -p "Enter SSH password: " password
       fi
             # Add that infor to file no matter what
@@ -229,10 +229,10 @@ for host in "$@"; do
       os_input=1
 	    # Get the winrm username and password and the ip address to connect to
 	    read -p "Enter ip address: " ip
-      if [ same_user == "n" ]; then
+      if [ $same_user == "n" ]; then
 	      read -p "Enter winrm username: " user
       fi
-      if [ same_pass == "n" ]; then
+      if [ $same_pass == "n" ]; then
         read -p "Enter winrm password: " password
       fi
       read -p "Domain cotroller? (true or false): " controller
