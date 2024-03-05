@@ -18,10 +18,19 @@ win=0
 linux=0
 bsd=0
 os_input=0
+same_user=""
+same_pass=""
 
 # Read in use host file location and store it, otherwise create directory inventory if it doesn't exist
 read -p "Where is your hosts file? (Blank for default: $inventory_file): " user_hosts
-read -p "What is the default password? " password
+read -p "Are you using the same user? (y/n): " same_user
+read -p "Are you using the same password? (y/n): " same_pass
+if [ same_user == "y" ]; then
+  read -p "Enter the default user: " user
+fi
+if [ same_pass == "y" ]; then
+  read -p "Enter the default password: " password
+fi
 
 if [ ! "$user_hosts" = "" ]; then
    inventory_file=$user_hosts
@@ -61,12 +70,16 @@ for host in "$@"; do
 	    linux=1
 	    # Gets the ip, ssh username, and the password/private key
 	    read -p "Enter ip address: " ip
-	    read -p "Enter SSH username: " user
+      if [ same_user == "n" ]; then
+	      read -p "Enter SSH username: " user
+      fi
+      if [ same_pass == "n" ]; then
+        read -p "Enter SSH password: " password
+      fi
             # Add that infor to file no matter what
 	    echo -e "    $host:" >> $linux_file
 	    echo -e "      ansible_host: $ip" >> $linux_file
 	    echo -e "      ansible_user: $user" >> $linux_file
-      echo -e "      in_domain: true" >> $linux_file
      
 	    read -p "Are you using private key login? (y/n): " priv
 	    
@@ -137,12 +150,16 @@ for host in "$@"; do
       os_input=1
 	    # Gets the ip, ssh username, and the password/private key
 	    read -p "Enter ip address: " ip
-	    read -p "Enter SSH username: " user
+      if [ same_user == "n" ]; then
+	      read -p "Enter SSH username: " user
+      fi
+      if [ same_pass == "n" ]; then
+        read -p "Enter SSH password: " password
+      fi
             # Add that infor to file no matter what
 	    echo -e "    $host:" >> $bsd_file
 	    echo -e "      ansible_host: $ip" >> $bsd_file
 	    echo -e "      ansible_user: $user" >> $bsd_file
-      echo -e "      in_domain: true" >> $bsd_file
      
 	    read -p "Are you using private key login? (y/n): " priv
 	    
@@ -213,7 +230,12 @@ for host in "$@"; do
       os_input=1
 	    # Get the winrm username and password and the ip address to connect to
 	    read -p "Enter ip address: " ip
-	    read -p "Enter winrm username: " user
+      if [ same_user == "n" ]; then
+	      read -p "Enter winrm username: " user
+      fi
+      if [ same_pass == "n" ]; then
+        read -p "Enter winrm password: " password
+      fi
       read -p "Domain cotroller? (true or false): " controller
 	    
             echo -e "    $host:" >> $win_file
@@ -224,7 +246,6 @@ for host in "$@"; do
 	    echo -e '      ansible_winrm_scheme: "http"' >> $win_file
             echo -e '      ansible_port: "5985"' >> $win_file
 	    echo -e '      ansible_winrm_transport: "ntlm"' >> $win_file
-      echo -e "      in_domain: true" >> $win_file
       echo -e "      domain_controller: $controller" >> $win_file
             echo
 	    ;;
@@ -280,14 +301,12 @@ if [ $(ansible-galaxy collection list | grep ansible\\\.posix | wc -l) -eq "0" ]
 fi
 
 echo "Creating ansible.cfg"
-echo
-echo "" > ~/.ansible.cfg
-echo "[default]" > ~/.ansible.cfg
+echo "[defaults]" > ~/.ansible.cfg
 echo "gathering = smart" >> ~/.ansible.cfg
 echo "fact_caching = jsonfile" >> ~/.ansible.cfg
 echo "fact_caching_connection = /tmp" >> ~/.ansible.cfg
-echo "" >> ~/.ansible.cfg
 echo "inventory = $inventory_file" >> ~/.ansible.cfg
+echo "forks=20" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
 echo "" >> ~/.ansible.cfg
 echo "[ssh_connection]" >> ~/.ansible.cfg

@@ -4,9 +4,11 @@
   become: true
   when: ansible_system | lower == "linux"
   block:
-    - name: install iptables if not present
+    - name: install iptables/rsyslog if not present
       ansible.builtin.package:
-        name: iptables
+        name: 
+          - iptables
+          - rsyslog
         state: present
 
     - name: Do stuff with iptables
@@ -18,4 +20,5 @@
   become_method: runas
   become_user: Administrator
   block:
-    - include_tasks: windows.yaml
+    - name: Blackout on windows
+      include_tasks: windows.yaml

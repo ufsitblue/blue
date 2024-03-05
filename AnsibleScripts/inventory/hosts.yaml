@@ -3,39 +3,32 @@ linux:
     alpine:
       ansible_host: 10.0.0.15
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
     centos:
       ansible_host: 10.0.0.12
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
     debian:
       ansible_host: 10.0.0.11
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
     suse:
       ansible_host: 10.0.0.14
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
     ubuntu:
       ansible_host: 10.0.0.10
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
     wazuh-dash:
       ansible_host: 10.0.0.5
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
 bsd:
   hosts:
     bsd:
       ansible_host: 10.0.0.13
       ansible_user: root
-      in_domain: true
       ansible_password: Is1WaterWet?
 windows:
   hosts:
@@ -47,7 +40,6 @@ windows:
       ansible_winrm_scheme: "http"
       ansible_port: "5985"
       ansible_winrm_transport: "ntlm"
-      in_domain: true
       domain_controller: true
     win2019:
       ansible_host: 10.0.0.17
@@ -57,7 +49,6 @@ windows:
       ansible_winrm_scheme: "http"
       ansible_port: "5985"
       ansible_winrm_transport: "ntlm"
-      in_domain: true
       domain_controller: false
 manager:
   hosts:

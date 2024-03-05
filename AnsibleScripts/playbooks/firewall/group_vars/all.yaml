@@ -45,3 +45,5 @@ manager_ip: 10.0.0.5
 agent_ports:
   - 1515
   - 1514
+
+domain_hosts:

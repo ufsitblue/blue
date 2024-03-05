@@ -1,53 +1,16 @@
 ---
 # Implement Network Blackout with IPTables
 
-- name: Create iptables folder
-  ansible.builtin.file:
-    path: "/etc/iptables"
-    state: "directory"
-
-- name: Create restore script
-  ansible.builtin.template:
-    mode: "0500"
-    src: "restore-iptables.j2"
-    dest: "/etc/iptables/restore-iptables.sh"
-
-- name: Create custom systemd service
-  when: not ansible_os_family | lower == "alpine"
-  block:
-    - name: Create service file
-      ansible.builtin.copy:
-        dest: "/etc/systemd/system/iptables-persistent.service"
-        src: "iptables-persistent.service"
-
-    - name: Enable iptables reloader
-      ansible.builtin.systemd:
-        name: "iptables-persistent.service"
-        enabled: true
-
-- name: Create custom openrc service
-  when: ansible_os_family | lower == "alpine"
-  block:
-    - name: Create service file
-      ansible.builtin.copy:
-        mode: "0550"
-        dest: "/etc/init.d/iptables-persistent"
-        src: "iptables-persistent"
-
-    - name: Add custom service to default run level
-      ansible.builtin.shell: rc-update add iptables-persistent default
-
-- name: Make sure rsyslog is installed
-  ansible.builtin.package:
-    name: "rsyslog"
-    state: "present"
+- name: Check if domain machine
+  ansible.builtin.shell: command -v adcli || command -v winbindd
+  ignore_errors: true
+  register: adcli
 
 - name: flush current rules
   ansible.builtin.iptables:
     flush: true
     chain: "{{ item }}"
   with_items: ["INPUT", "OUTPUT"]
-
 
 - name: Add invalid packet rule
   ansible.builtin.iptables:
@@ -102,8 +65,8 @@
     state: "present"
 
 - name: Add DC rules (Linux)
-  when: in_domain
-  import_role: 
+  when: adcli.rc == 0
+  import_role:
     name: DC
 
 - name: Add dropped INPUT LOG rule
@@ -141,6 +104,42 @@
     job: "iptables -F"
     disabled: true
 
+- name: Create iptables folder
+  ansible.builtin.file:
+    path: "/etc/iptables"
+    state: "directory"
+
+- name: Create restore script
+  ansible.builtin.template:
+    mode: "0500"
+    src: "restore-iptables.j2"
+    dest: "/etc/iptables/restore-iptables.sh"
+
+- name: Create custom systemd service
+  when: not ansible_os_family | lower == "alpine"
+  block:
+    - name: Create service file
+      ansible.builtin.copy:
+        dest: "/etc/systemd/system/iptables-persistent.service"
+        src: "iptables-persistent.service"
+
+    - name: Enable iptables reloader
+      ansible.builtin.systemd:
+        name: "iptables-persistent.service"
+        enabled: true
+
+- name: Create custom openrc service
+  when: ansible_os_family | lower == "alpine"
+  block:
+    - name: Create service file
+      ansible.builtin.copy:
+        mode: "0550"
+        dest: "/etc/init.d/iptables-persistent"
+        src: "iptables-persistent"
+
+    - name: Add custom service to default run level
+      ansible.builtin.shell: rc-update add iptables-persistent default
+
 - name: Make sure rsyslog.d exists
   ansible.builtin.file:
     path: "/etc/rsyslog.d"
@@ -155,6 +154,33 @@
   ansible.builtin.service:
     name: "rsyslog"
     state: "restarted"
+
+- name: Create own variable file
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.lineinfile
+    insertafter: "hosts:"
+    path: "group_vars/{{ inventory_hostname }}.yaml"
+    line: "  - \"{{ inventory_hostname }}\""
+    create: true
+
+- name: Integrate into domain_hosts
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell cat group_vars/{{ inventory_hostname }}.yaml >> group_vars/all.yaml
+
+- name: Cleanup variable files
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell rm group_vars/{{ inventory_hostname }}.yaml
+
+- name: Reboot systems
+  ansible.builtin.shell: reboot
+  ignore_unreachable: true
+  ignore_errors: true
 
 #- name: reboot system to kill active connections
 #  ansible.builtin.reboot:
