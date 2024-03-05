@@ -5,10 +5,16 @@
     name: suricata
     state: stopped
   listen: "restart suricata"
- 
+
+- name: Enable internet access
+  ansible.builtin.script: enable_internet.sh
+
 - name: Running suricata-update
   ansible.builtin.shell: suricata-update
   listen: "restart suricata"
+
+- name: Disable internet access
+  ansible.builtin.script: disable_internet.sh
 
 - name: Restarting Suricata
   ansible.builtin.service:

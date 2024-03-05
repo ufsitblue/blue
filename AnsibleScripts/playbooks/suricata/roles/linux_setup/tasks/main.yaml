@@ -1,6 +1,6 @@
 # Install Suricata on All Linux Distros
 
-- name: Enable internet access
+- name: Enable internet access (Suricata Linux)
   ansible.builtin.script: enable_internet.sh
 
 - name: Setup using Package Manager

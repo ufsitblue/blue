@@ -1,9 +1,8 @@
 - name: Install and Configure Auditd
   hosts: linux
   become: yes
-  strategy: free
   tasks:
-  - name: Enable internet access
+  - name: Enable internet access (Auditd)
     ansible.builtin.script: enable_internet.sh
 
   - name: Install Auditd

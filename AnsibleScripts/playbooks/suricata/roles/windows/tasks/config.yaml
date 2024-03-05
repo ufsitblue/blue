@@ -9,7 +9,7 @@
     dest: "{{ et_rules_path }}" 
 
 - name: Create Suricata Service
-  ansible.windows.win_command: .\Suricata.exe -c suricata.yaml -i  {{ ansible_host }} --service-install
+  ansible.windows.win_command: ./Suricata.exe -c suricata.yaml -i  {{ ansible_host }} --service-install
   args:
     chdir: "{{ suricata_dir }}"
   tags: Startup
@@ -24,3 +24,7 @@
       delay_ms: 100
   tags: Startup
 
+- name: Disable internet access
+  community.windows.win_firewall_rule:
+    group: "Internet"
+    enabled: false

@@ -85,6 +85,11 @@
           <log_format>syslog</log_format>
           <location>/var/log/input.log</location>
         </localfile>
+        
+        <localfile>
+          <log_format>json</log_format>
+          <location>/var/log/suricata/eve.log</location>
+        </localfile>
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: not grep_ossec_conf.rc == 0
@@ -103,6 +108,11 @@
         <localfile>
           <log_format>syslog</log_format>
           <location>/var/log/input.log</location>
+        </localfile>
+        
+        <localfile>
+          <log_format>json</log_format>
+          <location>/var/log/suricata/eve.log</location>
         </localfile>
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"

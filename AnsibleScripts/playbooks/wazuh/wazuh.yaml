@@ -37,11 +37,6 @@
   tags:
     - install
 
-- name: Install suricata
-  import_playbook: ../suricata/suricata.yaml
-  tags:
-    -install
-
 - name: Install the manager
   hosts: manager
   become: yes
