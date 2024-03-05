@@ -311,3 +311,12 @@ echo "" >> ~/.ansible.cfg
 echo "[ssh_connection]" >> ~/.ansible.cfg
 echo "ssh_args = -o ControlMaster=auto -o ControlPersist=600s" >> ~/.ansible.cfg
 echo "host_key_checking = False" >> ~/.ansible.cfg
+
+while true; do
+  read -p "Enter team ip (blank for done): " ip
+  if [ ! ip == "" ]; then
+    sed -i s/team_ips:/"team_ips:\n  - $ip"/g group_vars/all.yaml
+  else
+    break
+  fi
+done
