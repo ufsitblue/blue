@@ -4,10 +4,16 @@ dc_ips=()
 team_ips=()
 linux_dc_ports_tcp=("53" "88" "135" "389" "445" "464" "636" "3268" "3269" "49152:65535")
 dc_ports_udp=(53 88 123 389 464)
+in_domain=0
 
-read -p "In domain? (y/n): " in_domain
+read -p "What is the hostname? " hostname
+if command -v adcli &> /dev/null; then 
+    in_domain=1
+else
+    in_domain=0
+fi
 
-if [ "$in_domain" == "y" ]; then
+if [ "$in_domain" -eq 1 ]; then
     while true; do
         read -p "Enter a Domain Controller IP address (or type 'done' to finish): " ip
         if [ "$ip" == "done" ]; then
@@ -58,11 +64,9 @@ fi
 mkdir -p /etc/iptables
 
 # Create restore script
-cat << 'EOF' > /etc/iptables/restore-iptables.sh
-#!/bin/bash
-# Restore iptables rules
-iptables-restore < /root/{{ inventory_hostname }}.rules
-EOF
+echo '#!/bin/bash'  > /etc/iptables/restore-iptables.sh
+echo "# Restore iptables rules" >> /etc/iptables/restore-iptables.sh
+echo "iptables-restore < /root/$hostname.rules" >> /etc/iptables/restore-iptables.sh
 
 chmod 0500 /etc/iptables/restore-iptables.sh
 
@@ -133,7 +137,7 @@ done
 
 
 # Add DC rules if in domain
-if [ "$in_domain" == "y" ]; then
+if [ "$in_domain" -eq 1 ]; then
   for ip in "${dc_ips[@]}"; do
     # DC rules for TCP
     for port in "${linux_dc_ports_tcp[@]}"; do
@@ -149,43 +153,19 @@ if [ "$in_domain" == "y" ]; then
   done
 fi
 
-echo Adding Drop Rules
-
 # Add dropped input and output LOG rules
 iptables -A INPUT -j LOG --log-prefix "[DROPPED_INPUT] "
 iptables -A OUTPUT -j LOG --log-prefix "[DROPPED_OUTPUT] "
 
-sleep(30)
-
 # Add cron job to flush rules every 5 minutes
-echo "*/5 * * * * root iptables -F" > /etc/cron.d/flush_firewall
+echo "*/5 * * * * root iptables -F" >> /etc/crontabs/root
+echo "*/5 * * * * root iptables -F" >> /etc/crontab
 
-echo Removed cron
+echo "Adding drop rules.  If you still have access to machine, run finish.sh after this script ends"
 
 # Add default DROP rule
 iptables -A INPUT -j DROP
 iptables -A OUTPUT -j DROP
 
 # Save custom rules
-iptables-save > /root/{{ inventory_hostname }}.rules
-
-# Remove crontab entry
-sed -i '/iptables -F/d' /etc/cron.d/flush_firewall
-
-# Create rsyslog.d directory
-mkdir -p /etc/rsyslog.d
-
-# Add rsyslog file
-cat << 'EOF' > /etc/rsyslog.d/00-iptables.conf
-:msg, contains, "[DROPPED_INPUT] " /var/log/input.log
-:msg, contains, "[DROPPED_OUTPUT] " /var/log/output.log
-& stop
-EOF
-
-# Restart rsyslog
-case $package_manager in
-    "apk") rc-service rsyslog restart ;;
-    "yum"|"dnf") systemctl restart rsyslog ;;
-    "apt") systemctl restart rsyslog ;;
-    "zypper") systemctl restart rsyslog ;;
-esac
+iptables-save > /root/$hostname.rules
