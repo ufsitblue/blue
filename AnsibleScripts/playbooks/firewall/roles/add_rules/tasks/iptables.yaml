@@ -127,7 +127,7 @@
     jump: "ACCEPT"
 
 - name: Add DC rules
-  when: in_domain
+  when: inventory_hostname in domain_hosts
   import_role:
     name: DC
 
