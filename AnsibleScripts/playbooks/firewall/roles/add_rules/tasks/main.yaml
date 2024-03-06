@@ -21,6 +21,13 @@
   - name: Use IPtables
     import_tasks: iptables.yaml
 
+- name: Add firewall rules on BSD
+  when: "'bsd' in group_names"
+  become: true
+  block:
+    - name: Add firewall rules on BSD
+      import_tasks: bsd.yaml
+
 - name: Add Firewall Rules on Windows
   when: "ansible_os_family | lower == 'windows'"
   become: true
