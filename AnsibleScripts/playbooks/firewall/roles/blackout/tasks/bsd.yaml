@@ -31,8 +31,29 @@
     dest: /root/blackout.conf
     src: blackout.j2
 
+- name: Create own variable file
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.lineinfile
+    insertafter: "hosts:"
+    path: "group_vars/{{ inventory_hostname }}.yaml"
+    line: "  - \"{{ inventory_hostname }}\""
+    create: true
+
+- name: Integrate into domain_hosts
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell cat group_vars/{{ inventory_hostname }}.yaml >> group_vars/all.yaml
+
+- name: Cleanup variable files
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell rm group_vars/{{ inventory_hostname }}.yaml
+
 - name: Start pf
-  ignore_unreachable: true
-  ansible.builtin.service:
-    name: pf
-    state: started
+  ignore_errors: true
+  timeout: 2
+  ansible.builtin.shell: service pf start

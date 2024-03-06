@@ -24,8 +24,12 @@
   loop_control:
     loop_var: ip
 
+- name: load DC variables
+  include_vars:
+    file: group_vars/all.yaml
+
 - name: Allow domain machines into DC tcp
-  when: domain_controller and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow domain machines into DC tcp"
@@ -38,7 +42,7 @@
   loop: "{{ groups['all'] }}"
 
 - name: Allow domain machines into DC udp
-  when: domain_controller and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow domain machines into DC udp"
@@ -51,7 +55,7 @@
   loop: "{{ groups['all'] }}"
 
 - name: Allow DC to connect out to machines tcp
-  when: domain_controller and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC out to domain machine tcp"
@@ -64,7 +68,7 @@
   loop: "{{ groups['all'] }}"
  
 - name: Allow DC to connect out to machines udp
-  when: domain_controller and hostvars[item].ansible_host not in dc_ips
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
   community.windows.win_firewall_rule:
     action: "allow"
     description: "Allow DC out to machine udp"
