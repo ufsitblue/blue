@@ -1,3 +1,37 @@
+- name: Stop pf
+  ansible.builtin.service:
+    name: pf
+    status: "stopped"
+
+- name: Check if in domain
+  ansible.builtin.shell: command -v adcli
+  ignore_errors: true
+  register: adcli
+
+- name: Insert rules in dc conf file
+  when: adcli.rc == 0
+  ansible.builtin.blockinfile:
+    path: /root/dc_blackout.conf
+    block: |
+      pass out inet proto tcp from any to any port 80 keep state
+      pass out inet proto tcp from any to any port 443 keep state
+      pass out inet proto udp from any to any port 53 keep state
+
+- name: Insert rules in conf file
+  when: not adcli.rc == 0
+  ansible.builtin.blockinfile:
+    path: /root/blackout.conf
+    block: |
+      pass out inet proto tcp from any to any port 80 keep state
+      pass out inet proto tcp from any to any port 443 keep state
+      pass out inet proto udp from any to any port 53 keep state
+
+- name: Start pf
+  ignore_unreachable: true
+  ansible.builtin.service:
+    name: pf
+    status: "started"
+
 - name: Install wazuh
   ansible.builtin.package:
     name: "wazuh-agent"
@@ -64,3 +98,34 @@
 
 - name: start wazuh agent
   ansible.builtin.shell: /var/ossec/bin/wazuh-control start
+
+- name: Stop pf
+  ansible.builtin.service:
+    name: pf
+    status: "stopped"
+
+- name: Insert rules in dc conf file
+  when: adcli.rc == 0
+  ansible.builtin.blockinfile:
+    path: /root/dc_blackout.conf
+    state: absent
+    block: |
+      pass out inet proto tcp from any to any port 80 keep state
+      pass out inet proto tcp from any to any port 443 keep state
+      pass out inet proto udp from any to any port 53 keep state
+
+- name: Insert rules in conf file
+  when: not adcli.rc == 0
+  ansible.builtin.blockinfile:
+    path: /root/blackout.conf
+    state: absent
+    block: |
+      pass out inet proto tcp from any to any port 80 keep state
+      pass out inet proto tcp from any to any port 443 keep state
+      pass out inet proto udp from any to any port 53 keep state
+
+- name: Start pf
+  ignore_unreachable: true
+  ansible.builtin.service:
+    name: pf
+    status: "started"

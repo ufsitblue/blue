@@ -31,7 +31,8 @@
     dest: /root/blackout.conf
     src: blackout.j2
 
-- name: Start pf 
+- name: Start pf
+  ignore_unreachable: true
   ansible.builtin.service:
     name: pf
     state: started
