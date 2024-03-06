@@ -35,6 +35,8 @@ dc_ports_udp:
   - 464
 
 team_ips:
+  - 172.19.253.6
+  - 10.0.0.4
 
 # Wazuh manager IP
 manager_ip: 10.0.0.5
