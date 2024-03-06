@@ -80,3 +80,10 @@ Disable-NetFirewallRule -Group "Internet"
 
 # Enable firewalls
 Set-NetFirewallProfile -All -Enabled True -DefaultOutboundAction Block
+
+Start-Sleep -Seconds 15
+Set-NetFirewallProfile -All -Enabled False
+Read-Host "Are you still there?" kicked
+if ( kicked -ne "" ) {
+  Set-NetFirewallProfile -All -Enabled True -DefaultOutboundAction Block
+}
