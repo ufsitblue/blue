@@ -246,7 +246,10 @@ for host in "$@"; do
             echo -e '      ansible_port: "5985"' >> $win_file
 	    echo -e '      ansible_winrm_transport: "ntlm"' >> $win_file
       echo -e "      domain_controller: $controller" >> $win_file
-            echo
+      if [ $domain_controller == "true" ]; then
+        sed -i s/dc_ips:/"dc_ips:\n  - $ip"/g playbooks/firewall/group_vars/all.yaml
+      fi
+      echo
 	    ;;
         *)
             echo "Invalid input. Specify 'l' for Linux or 'w' for Windows."

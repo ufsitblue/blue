@@ -1,7 +1,6 @@
 ---
 # Variables for all machines
 dc_ips:
-  - 10.0.0.16
 
 win_dc_ports_tcp:
   - "53"
