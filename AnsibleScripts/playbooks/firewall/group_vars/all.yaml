@@ -1,6 +1,10 @@
 ---
 # Variables for all machines
 dc_ips:
+  - 10.0.0.17
+  - 10.0.0.16
+  - 10.0.0.17
+  - 10.0.0.16
 
 win_dc_ports_tcp:
   - "53"
@@ -34,6 +38,9 @@ dc_ports_udp:
   - 464
 
 team_ips:
+  - 10.0.0.4
+  - 10.0.0.4
+  - 10.0.0.4
   - 172.19.253.6
   - 10.0.0.4
 
@@ -46,3 +53,5 @@ agent_ports:
   - 1514
 
 domain_hosts:
+  - win2019
+  - win2016

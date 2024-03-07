@@ -246,8 +246,9 @@ for host in "$@"; do
             echo -e '      ansible_port: "5985"' >> $win_file
 	    echo -e '      ansible_winrm_transport: "ntlm"' >> $win_file
       echo -e "      domain_controller: $controller" >> $win_file
-      if [ $domain_controller == "true" ]; then
+      if [ "$controller" == "true" ]; then
         sed -i s/dc_ips:/"dc_ips:\n  - $ip"/g playbooks/firewall/group_vars/all.yaml
+        sed -i s/domain_hosts:/"domain_hosts:\n  - $host"/g playbooks/firewall/group_vars/all.yaml
       fi
       echo
 	    ;;
