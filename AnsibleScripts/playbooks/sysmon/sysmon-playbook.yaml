@@ -1,30 +1,38 @@
-- name: Enable internet access
-  community.windows.win_firewall_rule:
-    group: "Internet"
-    enabled: true
-    
-- name: Download Sysinternals Suite ZIP file
-  ansible.windows.win_get_url:
-    url: https://download.sysinternals.com/files/SysinternalsSuite.zip
-    dest: C:\Users\Administrator\Documents\Sysinternals.zip
+- name: Install and configure Sysmon
+  hosts: windows
+  tasks:
+  - name: Enable internet access
+    community.windows.win_firewall_rule:
+      group: "Internet"
+      enabled: true
+      
+  - name: Download Sysinternals Suite ZIP file
+    ansible.windows.win_get_url:
+      url: https://download.sysinternals.com/files/SysinternalsSuite.zip
+      dest: C:\Users\Administrator\Documents\Sysinternals.zip
 
-- name: Unzip Sysinternals
-  ansible.windows.win_unzip:
-    src: C:\Users\Administrator\Documents\Sysinternals.zip
-    dest: C:\Users\Administrator\Documents\Sysinternals
-    creates: C:\Users\Administrator\Documents\Sysinternals
+  - name: Unzip Sysinternals
+    community.windows.win_unzip:
+      src: C:\Users\Administrator\Documents\Sysinternals.zip
+      dest: C:\Users\Administrator\Documents\Sysinternals
+      creates: C:\Users\Administrator\Documents\Sysinternals
 
-- name: Install Sysmon
-ansible.windows.win_command: "Sysmon -i -accepteula"
-args:
-  chdir: "C:\Users\Administrator\Documents\Sysinternals"
+  - name: Copy over our Sysmon config
+    ansible.builtin.copy:
+      src: "sysmonconfig.xml"
+      dest: C:\Users\Administrator\Documents\Sysinternals
 
-- name: Restart Sysmon
-  ansible.windows.win_service:
-    name: Sysmon
-    state: restarted
+  - name: Install Sysmon
+    ansible.windows.win_command: "Sysmon -accepteula -i sysmonconfig.xml"
+    args:
+      chdir: C:\Users\Administrator\Documents\Sysinternals
 
-- name: Disable internet access
-  community.windows.win_firewall_rule:
-    group: "Internet"
-    enabled: false
+  - name: Restart Sysmon
+    ansible.windows.win_service:
+      name: Sysmon
+      state: restarted
+
+  - name: Disable internet access
+    community.windows.win_firewall_rule:
+      group: "Internet"
+      enabled: false
