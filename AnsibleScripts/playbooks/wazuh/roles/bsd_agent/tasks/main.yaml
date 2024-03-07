@@ -27,10 +27,9 @@
       pass out inet proto udp from any to any port 53 keep state
 
 - name: Start pf
-  ignore_unreachable: true
-  ansible.builtin.service:
-    name: pf
-    status: "started"
+  ignore_errors: true
+  timeout: 5
+  ansible.builtin.shell: service pf start
 
 - name: Install wazuh
   ansible.builtin.package:
@@ -126,6 +125,5 @@
 
 - name: Start pf
   ignore_unreachable: true
-  ansible.builtin.service:
-    name: pf
-    status: "started"
+  timeout: 5
+  ansible.builtin.shell: service pf start

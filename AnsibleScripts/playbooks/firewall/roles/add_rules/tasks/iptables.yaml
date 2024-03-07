@@ -144,7 +144,7 @@
     log_prefix: "[DROPPED_OUTPUT] "
 
 - name: Add default drop rule
-  ansible.builtin.shell:
+  ansible.builtin.shell: |
     iptables -A INPUT -j DROP
     iptables -A OUTPUT -j DROP
 

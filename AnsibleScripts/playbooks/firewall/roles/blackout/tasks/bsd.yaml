@@ -55,5 +55,5 @@
 
 - name: Start pf
   ignore_errors: true
-  timeout: 2
+  timeout: 5
   ansible.builtin.shell: service pf start

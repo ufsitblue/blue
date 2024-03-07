@@ -28,7 +28,6 @@
     src: standard.j2
 
 - name: Start pf
-  ignore_unreachable: true
-  ansible.builtin.service:
-    name: pf
-    state: started
+  ignore_errors: true
+  timeout: 5
+  ansible.builtin.shell: service pf start
