@@ -27,7 +27,7 @@ linux:
       ansible_password: Is1WaterWet?
 bsd:
   hosts:
-    dsb:
+    bsd:
       ansible_host: 10.0.0.13
       ansible_user: root
       ansible_password: Is1WaterWet?
@@ -50,7 +50,7 @@ windows:
       ansible_winrm_scheme: "http"
       ansible_port: "5985"
       ansible_winrm_transport: "ntlm"
-      domain_controller: true
+      domain_controller: false
 manager:
   hosts:
     dash:
