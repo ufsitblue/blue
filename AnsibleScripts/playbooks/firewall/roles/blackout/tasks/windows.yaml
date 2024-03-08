@@ -114,5 +114,8 @@
     state: "enabled"
     outbound_action: "block"
 
+- name: Set up firewall logging
+  ansible.windows.win_shell: Set-NetFirewallProfile -LogFileName %SystemRoot%\System32\LogFiles\Firewall\pfirewall.log
+
 - name: Reboot
   ansible.windows.win_reboot:
