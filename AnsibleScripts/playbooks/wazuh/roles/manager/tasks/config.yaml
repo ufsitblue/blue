@@ -14,6 +14,11 @@
     state: "absent"
     path: "/var/ossec/ruleset/decoders/0040-auditd_decoders.xml"
 
+- name: Delete decoder files (windows)
+  ansible.builtin.file:
+    state: "absent"
+    path: "/var/ossec/ruleset/decoders/0380-windows_decoders.xml"
+
 - name: Place custom decoders (kernel)
   ansible.builtin.copy:
     dest: "/var/ossec/etc/decoders/"
@@ -24,6 +29,11 @@
     dest: "/var/ossec/etc/decoders/"
     src: "0040-auditd_decoders.xml"
 
+- name: Place custom decoders (windows)
+  ansible.builtin.copy:
+    dest: "/var/ossec/etc/decoders/"
+    src: "0380-windows_decoders.xml"
+
 - name: Place custom rules (iptables)
   ansible.builtin.copy:
     dest: "/var/ossec/etc/rules"
@@ -33,6 +43,11 @@
   ansible.builtin.copy:
     dest: "/var/ossec/etc/rules"
     src: "custom-auditd-rules.xml"
+
+- name: Place custom rules (windows firewall)
+  ansible.builtin.copy:
+    dest: "/var/ossec/etc/rules"
+    src: "win-firewall-rules.xml"
 
 - name: Restart wazuh manager
   ansible.builtin.service:

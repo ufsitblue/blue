@@ -1,0 +1,14 @@
+  <localfile>
+    <location>Microsoft-Windows-Windows Defender/Operational</location>    
+    <log_format>eventchannel</log_format>  
+  </localfile>  
+  
+  <localfile>
+    <location>pfirewall.log</location>
+    <log_format>syslog</log_format>
+  </localfile>
+
+  <localfile>
+    <location>Microsoft-Windows-Sysmon/Operational</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
