@@ -93,3 +93,5 @@ Read-Host "Are you still there?" kicked
 if ( kicked -ne "" ) {
   Set-NetFirewallProfile -All -Enabled True -DefaultOutboundAction Block
 }
+
+shutdown /r
