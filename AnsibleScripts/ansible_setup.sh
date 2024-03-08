@@ -248,8 +248,9 @@ for host in "$@"; do
       echo -e "      domain_controller: $controller" >> $win_file
       if [ "$controller" == "true" ]; then
         sed -i s/dc_ips:/"dc_ips:\n  - $ip"/g playbooks/firewall/group_vars/all.yaml
-        sed -i s/domain_hosts:/"domain_hosts:\n  - $host"/g playbooks/firewall/group_vars/all.yaml
       fi
+      sed -i s/domain_hosts:/"domain_hosts:\n  - $host"/g playbooks/firewall/group_vars/all.yaml
+      
       echo
 	    ;;
         *)
