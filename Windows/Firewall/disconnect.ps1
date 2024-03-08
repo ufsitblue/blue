@@ -5,6 +5,12 @@ $team_ips = @()
 $dc_ports_tcp = @("53", "88", "135", "389", "445", "464", "636", "3268", "3269", "49152-65535")
 $dc_ports_udp = @("53", "88", "123", "389", "464")
 
+# Disable Guest user
+net user Guest /ACTIVE:NO
+
+# Disable Sticky Keys
+Set-ItemProperty -Path 'HKCU:\Control Panel\Accessibility\StickyKeys' -Name "Flags" -Value "506"
+
 do {
     $ip = Read-Host "Enter a team IP address (or type 'done' to finish)"
     if ($ip -ne "done") {

@@ -91,5 +91,3 @@ manager:
       ansible_host: 10.0.0.5
       ansible_user: root
       ansible_password: Is1WaterWet?
-      required_ports:
-        - 22

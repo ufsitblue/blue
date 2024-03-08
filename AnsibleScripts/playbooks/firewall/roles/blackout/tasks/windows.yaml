@@ -3,6 +3,12 @@
     name: Guest
     account_disabled: true
 
+- name: Disable Sticky Keys
+  ansible.windows.win_regedit:
+    name: "Flags"
+    path: "HKCU:\\Control Panel\\Accessibility\\StickyKeys"
+    data: "506"
+
 - name: Disable all firewalls
   community.windows.win_firewall:
     state: "disabled"
@@ -107,3 +113,6 @@
   community.windows.win_firewall:
     state: "enabled"
     outbound_action: "block"
+
+- name: Reboot
+  ansible.windows.win_reboot:
