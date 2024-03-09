@@ -28,4 +28,4 @@
   become_user: Administrator
   block:
     - name: Blackout on windows
-      include_tasks: windows.yaml
+      import_tasks: windows.yaml

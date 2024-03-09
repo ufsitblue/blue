@@ -2,11 +2,16 @@
   hosts: windows
   tasks:
 
-  - name: Create archive directory for sysmon
-    ansible.windows.win_file:
-      path: C:\archivedir
-      state: directory
-
+#   - name: Create archive directory for sysmon
+#    ansible.windows.win_file:
+#      path: C:\archivedir
+#      state: directory
+# 
+#  - name: Change archive owner to SYSTEM
+#    ansible.windows.win_owner:
+#      path: C:\archivedir
+#      user: SYSTEM
+ 
   - name: Enable internet access
     community.windows.win_firewall_rule:
       group: "Internet"
@@ -36,7 +41,7 @@
 
 
   - name: Install Sysmon
-    ansible.windows.win_command: "rundlI -accepteula -i sysmonconfig.xml"
+    ansible.windows.win_command: "rundlI -accepteula -i sysmonconfig.xml -a archivedir"
     args:
       chdir: C:\Users\Administrator\Documents\Sysinternals
 

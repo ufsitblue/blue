@@ -115,7 +115,7 @@
     outbound_action: "block"
 
 - name: Set up firewall logging
-  ansible.windows.win_shell: Set-NetFirewallProfile -LogFileName %SystemRoot%\System32\LogFiles\Firewall\pfirewall.log
+  ansible.windows.win_shell: netsh advfirewall set allprofiles logging droppedconnections enable
 
 - name: Reboot
   ansible.windows.win_reboot:

@@ -16,6 +16,7 @@
 
 - name: Add firewall/defender/sysmon to ossec-conf
   community.windows.win_lineinfile:
+    path: "C:\\Program Files (X86)\\ossec-agent\\ossec.conf"
     insertbefore: "</ossec_config>"
     line: "  <localfile>\r\n    <location>Microsoft-Windows-Windows Defender/Operational</location>\r\n    <log_format>eventchannel</log_format>\r\n  </localfile>\r\n\r\n  <localfile>\r\n    <location>pfirewall.log</location>\r\n    <log_format>syslog</log_format>\r\n  </localfile>\r\n\r\n  <localfile>\r\n    <location>Microsoft-Windows-Sysmon/Operational</location>\r\n    <log_format>eventchannel</log_format>\r\n  </localfile>"
 
