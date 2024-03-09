@@ -4,6 +4,7 @@ Script to change passwords on Linux machines
 Copyright (c) 2024 Yuliang Huang
 """
 import argparse
+import secrets
 import socket
 import subprocess
 import sys
@@ -31,7 +32,9 @@ def main(argv: list[str]) -> int:
         except subprocess.CalledProcessError:
             user_exists = False
         if user_exists:
-            password = "-".join((w.lower() for w in genpass.genpass()))
+            word_password = "-".join((w.lower() for w in genpass.genpass()))
+            insert_index = secrets.randbelow(len(word_password))
+            password = word_password[:insert_index] + str(secrets.randbelow(10)) + word_password[insert_index:]
             subprocess.run(["chpasswd"], input=(username + ":" + password).encode("utf-8"))
         output_string += socket.gethostname() + "-ssh2," + username + "," + password + "\n"
 

@@ -14,7 +14,7 @@ def get_token() -> typing.Optional[str]:
         username = os.environ["MATTERMOST_USERNAME"]
         password = os.environ["MATTERMOST_PASSWORD"]
     except KeyError:
-        print("Please make sure the following environment variables are set: MATTERMOST_HOST, MATTERMOST_USERNAME, MATTERMOST_PASSWORD")
+        print("Please make sure the following environment variables are set: MATTERMOST_URL, MATTERMOST_USERNAME, MATTERMOST_PASSWORD")
     
     if hostname is None or username is None or password is None:
         return None
