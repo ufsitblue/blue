@@ -6,7 +6,10 @@ import typing
 
 def get_token() -> typing.Optional[str]:
     """
-    Get the session token for MatterMost
+    Get the session token for Mattermost.
+
+    WARNING: Does not verify the SSL certificate, use at the risk of your
+    credentials being MITMed!!!
     """
     hostname, username, password = None, None, None
     try:
@@ -20,9 +23,9 @@ def get_token() -> typing.Optional[str]:
         return None
 
     try:
-        request = requests.post(hostname + "/api/v4/users/login", data=json.dumps({"login_id": username, "password": password}))
+        request = requests.post(hostname + "/api/v4/users/login", verify=False, data=json.dumps({"login_id": username, "password": password}))
     except requests.exceptions.SSLError:
-        request = requests.post(hostname + "/api/v4/users/login", data=json.dumps({"login_id": username, "password": password}))
+        request = requests.post(hostname + "/api/v4/users/login", verify=False, data=json.dumps({"login_id": username, "password": password}))
     if request.status_code == 401:
         raise PermissionError("401 Unauthorized: incorrect username or password?")
 
@@ -35,11 +38,11 @@ class MattermostApi:
         self.default_headers = {"Authorization": "Bearer " + token}
 
     def get_teams(self):
-        r = requests.get(self.base_url + "/api/v4/teams", headers=self.default_headers)
+        r = requests.get(self.base_url + "/api/v4/teams", headers=self.default_headers, verify=False)
         return r.json()
 
     def get_channels(self, team_guid: str):
-        r = requests.get(self.base_url + "/api/v4/teams/" + team_guid + "/channels", headers=self.default_headers)
+        r = requests.get(self.base_url + "/api/v4/teams/" + team_guid + "/channels", headers=self.default_headers, verify=False)
         return r.json()
     
     def get_some_channel(self):
@@ -86,7 +89,7 @@ class MattermostApi:
         return channels[choice]
 
     def post_message(self, channel_id: str, message_str):
-        r = requests.post(self.base_url + "/api/v4/posts", headers=self.default_headers, data=json.dumps({"channel_id": channel_id, "message": message_str}))
+        r = requests.post(self.base_url + "/api/v4/posts", headers=self.default_headers, verify=False, data=json.dumps({"channel_id": channel_id, "message": message_str}))
         if r.status_code == 201:
             return 0
         else:
