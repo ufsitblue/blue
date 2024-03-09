@@ -44,6 +44,72 @@
   <order>audit.path.1</order>
 </decoder>
 
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">type=PATH\.+item=2\.+name="(\.+)"</regex>
+  <order>audit.path.2</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">type=PATH\.+item=3\.+name="(\.+)"</regex>
+  <order>audit.path.3</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">type=PATH\.+item=4\.+name="(\.+)"</regex>
+  <order>audit.path.4</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">type=EXECV\.+argc=(\d+)</regex>
+  <order>audit.argc</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a0="(\S+)"</regex>
+  <order>audit.a0</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a1="(\S+)"</regex>
+  <order>audit.a1</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a2="(\S+)"</regex>
+  <order>audit.a2</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a3="(\S+)"</regex>
+  <order>audit.a3</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a4="(\S+)"</regex>
+  <order>audit.a4</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a5="(\S+)"</regex>
+  <order>audit.a5</order>
+</decoder>
+
+<decoder name="auditd-syscall">
+  <parent>auditd</parent>
+  <regex offset="after_parent">a6="(\S+)"</regex>
+  <order>audit.a6</order>
+</decoder>
+
 <decoder name="auditd-config_change">
   <parent>auditd</parent>
   <prematch offset="after_parent">^CONFIG_CHANGE </prematch>
