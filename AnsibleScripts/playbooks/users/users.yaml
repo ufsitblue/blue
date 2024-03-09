@@ -6,7 +6,7 @@
   roles:
     - create
   tags: 
-    - "Create Users"
+    - "create"
 
 - name: Change Passwords
   hosts: all
@@ -14,7 +14,7 @@
   roles:
     - change_passwords
   tags: 
-    - "Change Passwords"
+    - "change"
 
 - name: Remove Users
   hosts: all
@@ -22,4 +22,4 @@
   roles:
     - remove
   tags: 
-    - "Remove Users"
+    - "remove"
