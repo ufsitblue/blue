@@ -6,12 +6,13 @@ Copyright (c) 2024 Yuliang Huang
 import os
 import secrets
 import sys
+from typing import List
 
 def printhelp(programname: str):
     print(programname + " <NUMBER_OF_WORDS>")
     print("NUMBER_OF_WORDS - The number of words in the password to generate")
 
-def genpass(num_words: int = 4) -> list[str]:
+def genpass(num_words: int = 4) -> List[str]:
     """
     Gets a password of a certain length, as a list of strings
     :param num_words: Number of words in the password. Default is 4
@@ -38,7 +39,7 @@ def genpass(num_words: int = 4) -> list[str]:
 
     return output_words
 
-def main(argv: list[str]) -> int:
+def main(argv: List[str]) -> int:
     
     words = 4
     if len(argv) >= 2:

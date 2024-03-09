@@ -9,8 +9,7 @@
     - "create"
 
 - name: Change Passwords
-  hosts: all
-  strategy: free
+  hosts: linux
   roles:
     - change_passwords
   tags: 

@@ -9,17 +9,19 @@ import socket
 import subprocess
 import sys
 import os
+from typing import List
 sys.dont_write_bytecode = True
 
 import genpass
 import mattermost
 
-def main(argv: list[str]) -> int:
+def main(argv: List[str]) -> int:
     argparser = argparse.ArgumentParser(description="password changer for Linux")
     argparser.add_argument("usersfile", help="path to a file containing a newline-delimited list of users")
     parsedargs = argparser.parse_args()
+    max_len = int(os.environ["MAX_LENGTH"])
 
-    users_to_change_password: list[str] = []
+    users_to_change_password: List[str] = []
     with open(parsedargs.usersfile, 'r') as usersfile:
         for line in usersfile:
             users_to_change_password.append(line.strip())
@@ -36,6 +38,8 @@ def main(argv: list[str]) -> int:
             word_password = "-".join((w.lower() for w in genpass.genpass()))
             insert_index = secrets.randbelow(len(word_password))
             password = word_password[:insert_index] + str(secrets.randbelow(10)) + word_password[insert_index:]
+            if (len(password) > max_len):
+              password = password[:max_len]
             subprocess.run(["chpasswd"], input=(username + ":" + password).encode("utf-8"))
         output_string += os.environ["CUSTOM_HOSTNAME"] + "-ssh2," + username + "," + password + "\n"
 

@@ -2,3 +2,4 @@
 mattermost_url: www.test.com
 mattermost_user: test
 mattermost_pass: test
+password_max: 24

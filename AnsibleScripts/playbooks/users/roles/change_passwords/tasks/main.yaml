@@ -1,4 +1,12 @@
 # Change the password for the users
+- name: Load domain hosts var
+  include_vars:
+    file: ../firewall/group_vars/all.yaml
+
+- name: Fail if not domain password changer
+  when: inventory_hostname in domain_hosts and not inventory_hostname == domain_pass_changer
+  fail:
+
 - name: Drop files
   ansible.builtin.copy:
     src: "{{ item }}"
@@ -14,7 +22,7 @@
   ansible.builtin.script: enable_internet.sh
 
 - name: Run python script
-  ansible.builtin.shell: python3 passchange.py users.txt
+  ansible.builtin.shell: "{{ discovered_interpreter_python }} passchange.py users.txt"
   args:
     chdir: /root/
   environment:
@@ -22,6 +30,7 @@
     MATTERMOST_USERNAME: "{{ mattermost_user }}"
     MATTERMOST_PASSWORD: "{{ mattermost_pass }}"
     CUSTOM_HOSTNAME: "{{ inventory_hostname }}"
+    MAX_LENGTH: "{{ password_max }}"
   register: passwords
   ignore_errors: true
 
