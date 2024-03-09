@@ -29,11 +29,11 @@ def main(argv: list[str]) -> int:
     request_timeout = 5
     try:
         if argsdict["timeout"]:
-            request_timeout = int(argsdict["timeout"])
+            request_timeout = float(argsdict["timeout"])
             if request_timeout < 0:
                 raise ValueError("request timeout must be greater than 0")
     except ValueError:
-        print("ERROR: Expected a non-negative integer for TIMEOUT, not \"" + argsdict["timeout"] + "\"") 
+        print("ERROR: Expected a non-negative decimal for TIMEOUT, not \"" + argsdict["timeout"] + "\"") 
         return 1
 
     dbfilename = "monitor-uptime.db"
