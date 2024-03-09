@@ -27,12 +27,12 @@ def main(argv: list[str]) -> int:
     for username in users_to_change_password:
         user_exists = True
         try:
-            subprocess.call(["id", username], check=True)
+            subprocess.run(["id", username], check=True)
         except subprocess.CalledProcessError:
             user_exists = False
         if user_exists:
             password = "-".join(genpass.genpass())
-            subprocess.call(["chpasswd"], input=username + ":" + password)
+            subprocess.run(["chpasswd"], input=username + ":" + password)
         output_string += socket.gethostname() + "-ssh2," + username + "," + password + "\n"
 
     print("Copy and paste this text into the scoring portal: \n" + output_string)
