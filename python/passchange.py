@@ -31,7 +31,7 @@ def main(argv: list[str]) -> int:
         except subprocess.CalledProcessError:
             user_exists = False
         if user_exists:
-            password = "-".join(genpass.genpass())
+            password = "-".join((w.lower() for w in genpass.genpass()))
             subprocess.run(["chpasswd"], input=(username + ":" + password).encode("utf-8"))
         output_string += socket.gethostname() + "-ssh2," + username + "," + password + "\n"
 
