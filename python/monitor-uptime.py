@@ -142,7 +142,7 @@ def main(argv: list[str]) -> int:
             upafter = False  # Whether we are up after the check
             if protocol in {"http", "https"}:
                 try:
-                    httprequest = requests.get(protocol + "://" + hostname + ":" + port + (path if path else "/"), timeout=request_timeout, verify=False)
+                    httprequest = requests.get(protocol + "://" + host + ":" + str(port) + (path if path else "/"), timeout=request_timeout, verify=False)
                     if responseregex:
                         if re.search(responseregex, httprequest.text):
                             upafter = True
