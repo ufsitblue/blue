@@ -1,1 +1,0 @@
-./chisel client --auth "user:redacted" --header "User-agent: curl/7.73.0" --tls-skip-verify --fingerprint "3NNfwjtVbI1jgvX/S1Ub531cHtzN8O1EKFm6X5A0zz4=" http://10.100.0.9/redacted/ 127.0.0.1:2222:localhost:22

@@ -1,3 +1,0 @@
-# CPP Cyber Blue Team Things
-
-EVEN AT MY LOIS IM GRIFFIN IT ALL

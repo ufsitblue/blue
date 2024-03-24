@@ -1,8 +1,0 @@
----
-# Wazuh manager IP
-manager_ip: 10.0.0.5
-
-# Wazuh agent ports
-basic_ports:
-  - 1515
-  - 1514

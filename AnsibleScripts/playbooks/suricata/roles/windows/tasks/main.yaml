@@ -1,9 +1,0 @@
-# Main Role to Install and Run Suricata
-
-- name: Install Dependencies on Windows
-  include_tasks: install.yaml
-  tags: Setup
-
-- name: Configure and Start Suricata on Widnows
-  include_tasks: config.yaml
-  tags: Configuration

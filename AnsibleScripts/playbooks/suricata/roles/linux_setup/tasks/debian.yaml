@@ -1,6 +1,0 @@
-# Adding Suricata Repository on Debian distributions
-
-- name: Adding Repository on Debian
-  ansible.builtin.apt_repository:
-    repo: "{{ debian_package }}"
-    state: present

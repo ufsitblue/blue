@@ -1,1 +1,0 @@
-Enable-NetFirewallRule -Group "Internet"

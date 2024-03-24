@@ -1,2 +1,0 @@
-- Implement NoTTY
-- Warn on empty script input

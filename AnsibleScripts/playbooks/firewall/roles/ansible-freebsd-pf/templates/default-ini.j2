@@ -1,9 +1,0 @@
-# {{ ansible_managed }}. Template: {{ template_path }}
-
-{% for section, conf in ini|groupby('section') %}
-[{{ section }}]
-{% for i in conf %}
-{{ i.line }}
-{% endfor %}
-
-{% endfor %}

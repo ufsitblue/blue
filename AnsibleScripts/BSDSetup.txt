@@ -1,5 +1,0 @@
-If the managed node is FreeBSD run:
-ansible -m raw -a "pkg install -y python" <BSD_HOST>
-
-If the managed node is OpenBSD run:
-ansible -m raw -a "pkg_add python%3.8"
