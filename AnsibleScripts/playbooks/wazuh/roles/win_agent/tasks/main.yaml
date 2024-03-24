@@ -32,8 +32,8 @@
     direction: "out"
     group: "Wazuh"
     name: "Wazuh to manager"
-    remote_ip: "{{ manager_ip }}"
-    remote_port: "1514,1515"
+    remoteip: "{{ manager_ip }}"
+    remoteport: "1514,1515"
     protocol: "tcp"
 
 - name: Disable internet access

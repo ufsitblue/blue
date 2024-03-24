@@ -47,8 +47,12 @@ agent_ports:
   - 1515
   - 1514
 
+domain_pass_changer: ubuntu
+
 domain_hosts:
-  - ubuntu
-  - centos
   - win2019
   - win2016
+  - "ubuntu"
+  - "dash"
+  - "ubuntu"
+  - "dash"

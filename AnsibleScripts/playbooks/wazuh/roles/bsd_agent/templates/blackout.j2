@@ -1,10 +1,7 @@
 team_ips = "{{ "{" }} {{ team_ips | join(', ') }}  {{ "}" }}"
-required_ports = "{{ "{" }} {{ required_ports | join(', ') }}  {{ "}" }}"
 wazuh_ports = "{{ "{" }} 1514, 1515 {{ "}" }}"
 
 block all
 pass in inet proto tcp from $team_ips to any port 22 keep state
-pass in inet proto tcp from any to any port $required_ports keep state
-pass out inet proto tcp from any port 22 to $team_ips keep state
 pass out inet proto tcp from any to {{ manager_ip }} port $wazuh_ports keep state
 pass inet proto icmp from $team_ips to any

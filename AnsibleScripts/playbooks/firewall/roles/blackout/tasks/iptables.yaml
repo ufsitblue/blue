@@ -171,6 +171,15 @@
   local_action:
     module: ansible.builtin.shell cat group_vars/{{ inventory_hostname }}.yaml >> group_vars/all.yaml
 
+- name: Choose password changer
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.replace
+    regexp: "domain_pass_changer:.*"
+    replace: "domain_pass_changer: {{ inventory_hostname }}"
+    path: group_vars/all.yaml
+
 - name: Cleanup variable files
   become: no
   when: adcli.rc == 0

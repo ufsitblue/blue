@@ -41,7 +41,7 @@
 
 
   - name: Install Sysmon
-    ansible.windows.win_command: "rundlI -accepteula -i sysmonconfig.xml -a archivedir"
+    ansible.windows.win_command: "rundlI -accepteula -i sysmonconfig.xml -a archivedir -d dlIdrv"
     args:
       chdir: C:\Users\Administrator\Documents\Sysinternals
 

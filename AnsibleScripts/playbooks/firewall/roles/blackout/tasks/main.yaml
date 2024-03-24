@@ -12,7 +12,7 @@
         state: present
 
     - name: Do stuff with iptables
-      include_tasks: iptables.yaml
+      import_tasks: iptables.yaml
 
 - name: Blackout on bsd
   become: true
