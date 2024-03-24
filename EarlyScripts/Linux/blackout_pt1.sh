@@ -1,13 +1,13 @@
 #!/bin/bash
 # Variables
-dc_ips=()
-team_ips=()
-linux_dc_ports_tcp=("53" "88" "135" "389" "445" "464" "636" "3268" "3269" "49152:65535")
-dc_ports_udp=(53 88 123 389 464)
+dc_ips=""
+team_ips=""
+linux_dc_ports_tcp="53 88 135 389 445 464 636 3268 3269 49152:65535"
+dc_ports_udp="53 88 123 389 464"
 in_domain=0
 
 read -p "What is the hostname? " hostname
-if command -v adcli &> /dev/null; then 
+if command -v adcli &> /dev/null; then
     in_domain=1
 else
     in_domain=0
@@ -15,8 +15,8 @@ fi
 
 if [ "$in_domain" -eq 1 ]; then
     while true; do
-        read -p "Enter a Domain Controller IP address (or type 'done' to finish): " ip
-        if [ "$ip" == "done" ]; then
+        read -p "Enter a Domain Controller IP address (or type 'q' to finish): " ip
+        if [ "$ip" == "q" ]; then
             break
         else
             dc_ips+=("$ip")
@@ -25,8 +25,8 @@ if [ "$in_domain" -eq 1 ]; then
 fi
 
 while true; do
-    read -p "Enter a team IP address (or type 'done' to finish): " ip
-    if [ "$ip" == "done" ]; then
+    read -p "Enter a team IP address (or type 'q' to finish): " ip
+    if [ "$ip" == "q" ]; then
         break
     else
         team_ips+=("$ip")
@@ -52,11 +52,11 @@ fi
 # Install iptables if not present
 if ! command -v iptables &> /dev/null; then
     case $package_manager in
-        "apk") apk add iptables ;;
-        "yum") yum install -y iptables ;;
-        "dnf") dnf install -y iptables ;;
-        "apt") apt-get install -y iptables ;;
-        "zypper") zypper install -y iptables ;;
+        "apk") apk add iptables > /dev/null ;;
+        "yum") yum install -y iptables > /dev/null ;;
+        "dnf") dnf install -y iptables > /dev/null ;;
+        "apt") apt-get install -y iptables > /dev/null ;;
+        "zypper") zypper install -y iptables > /dev/null ;;
     esac
 fi
 
@@ -109,12 +109,13 @@ fi
 
 # Ensure rsyslog is installed
 case $package_manager in
-    "apk") apk add rsyslog ;;
-    "yum") yum install -y rsyslog ;;
-    "dnf") dnf install -y rsyslog ;;
-    "apt") apt-get install -y rsyslog ;;
-    "zypper") zypper install -y rsyslog ;;
+    "apk") apk add rsyslog  > /dev/null;;
+    "yum") yum install -y rsyslog > /dev/null;;
+    "dnf") dnf install -y rsyslog > /dev/null;;
+    "apt") apt-get install -y rsyslog > /dev/null;;
+    "zypper") zypper install -y rsyslog > /dev/null;;
 esac
+echo "Verified rsyslog is installed"
 
 # Flush current rules
 iptables -F INPUT
@@ -158,8 +159,8 @@ iptables -A INPUT -j LOG --log-prefix "[DROPPED_INPUT] "
 iptables -A OUTPUT -j LOG --log-prefix "[DROPPED_OUTPUT] "
 
 # Add cron job to flush rules every 5 minutes
-echo "*/5 * * * * root iptables -F" >> /etc/crontabs/root
-echo "*/5 * * * * root iptables -F" >> /etc/crontab
+echo "*/5 * * * * root iptables -F" >> /etc/crontabs/root > /dev/null
+echo "*/5 * * * * root iptables -F" >> /etc/crontab > /dev/null
 
 echo "Adding drop rules.  If you still have access to machine, run finish.sh after this script ends"
 

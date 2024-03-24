@@ -19,5 +19,7 @@ case $package_manager in
     "apt") systemctl restart rsyslog ;;
     "zypper") systemctl restart rsyslog ;;
 esac
+echo "Blackout finished.  Rebooting machine in 5 seconds"
 
+sleep 5
 reboot
