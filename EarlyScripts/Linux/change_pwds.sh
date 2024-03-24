@@ -1,4 +1,10 @@
 # Change passwords.
+passChanger=chpasswd
+
+cat /etc/os-release | grep -i "bsd" > /dev/null
+if [ $? -eq 0 ]; then
+  passChanger=chpass
+fi
 
 users=""
 read -p "Enter list of protected users space delimited: " special
@@ -12,7 +18,7 @@ for user in $(cat /etc/passwd | grep "sh$" | cut -d ':' -f 1); do
         pword=$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9@$%&!?:-+=' | cut -c1-16)
 
         # Change password and echo to std output for use in csv file
-        echo "$user:$pword" | chpasswd > /dev/null
+        echo "$user:$pword" | $passChanger > /dev/null
         echo "$user,$pword"
     fi
 done
