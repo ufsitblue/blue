@@ -11,13 +11,17 @@ read -p "Enter list of protected users space delimited: " special
 
 if [ $bsd -eq 1 ]; then
   for user in $(cat /etc/passwd | grep "sh$" | cut -d ':' -f 1); do
-    new_password=$(openssl rand -base64 12)
-    printf "password: $new_password\n" | chpass -s $user
+    echo $special | grep "$user " > /dev/null || echo $special | grep "$user$" > /dev/null
+    if [ $? -ne 0 ]; then
+      new_password=$(openssl rand -base64 12 | tr -d '\n')
+      encoded_password=$(echo -n "$new_password" | openssl passwd -6 -stdin)
+      chpass -p $encoded_password $user
     
-    if [ $? -eq 0 ]; then
-      echo "$user,$new_password"
-    else
-      echo "Failed to change password for $user"
+      if [ $? -eq 0 ]; then
+        echo "$user,$new_password"
+      else
+        echo "Failed to change password for $user"
+      fi
     fi
   done
 else
