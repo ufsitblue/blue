@@ -33,7 +33,7 @@ else
       pword=$(head -c 200 /dev/urandom | tr -dc 'a-zA-Z0-9@$%&!?:+-=' | cut -c1-16)
 
       # Change password and echo to std output for use in csv file
-      echo "$user:$pword" | $passChanger > /dev/null
+      echo "$user:$pword" | chpasswd > /dev/null
       echo "$user,$pword"
     fi
   done
