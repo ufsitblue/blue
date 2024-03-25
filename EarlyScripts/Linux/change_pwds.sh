@@ -33,4 +33,5 @@ else
       echo "$user,$pword"
     fi
   done
+fi
 echo "Passwords successfully changed.  Submit to black team"
