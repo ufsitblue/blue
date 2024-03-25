@@ -13,9 +13,9 @@ if [ $bsd -eq 1 ]; then
   for user in $(cat /etc/passwd | grep "sh\$" | cut -d ':' -f 1); do
     echo $special | grep "$user " > /dev/null || echo $special | grep "$user\$" > /dev/null
     if [ $? -ne 0 ]; then
-      new_password=$(openssl rand -base64 12 | tr -d '\n')
+      new_password=$(openssl rand -base64 12 | tr -d '\n' | tr -d '/')
       encoded_password=$(echo -n "$new_password" | openssl passwd -6 -stdin)
-      chpass -p $encoded_password $user > /dev/null
+      chpass -p $encoded_password $user >/dev/null 2>&1
     
       if [ $? -eq 0 ]; then
         echo "$user,$new_password"
