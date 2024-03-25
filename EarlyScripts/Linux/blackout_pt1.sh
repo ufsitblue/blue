@@ -1,4 +1,3 @@
-#!/bin/bash
 # Variables
 dc_ips=""
 team_ips=""
@@ -6,8 +5,9 @@ linux_dc_ports_tcp="53 88 135 389 445 464 636 3268 3269 49152:65535"
 dc_ports_udp="53 88 123 389 464"
 in_domain=0
 
-read -p "What is the hostname? " hostname
-if command -v adcli &> /dev/null; then
+echo "What is the hostname? " 
+read hostname
+if command -v adcli > /dev/null 2>&1; then
     in_domain=1
 else
     in_domain=0
@@ -15,34 +15,36 @@ fi
 
 if [ "$in_domain" -eq 1 ]; then
     while true; do
-        read -p "Enter a Domain Controller IP address (or type 'q' to finish): " ip
-        if [ "$ip" == "q" ]; then
+        echo "Enter a Domain Controller IP address (or type 'q' to finish): " 
+        read ip
+        if [ $ip = "q" ]; then
             break
         else
-            dc_ips+=("$ip")
+            dc_ips="$dc_ips $ip"
         fi
     done
 fi
 
 while true; do
-    read -p "Enter a team IP address (or type 'q' to finish): " ip
-    if [ "$ip" == "q" ]; then
+    echo "Enter a team IP address (or type 'q' to finish): " 
+    read ip
+    if [ $ip = "q" ]; then
         break
     else
-        team_ips+=("$ip")
+        team_ips="$team_ips $ip"
     fi
 done
 
 # Determine package manager
-if command -v apk &> /dev/null; then
+if command -v apk > /dev/null 2>&1; then
     package_manager="apk"
-elif command -v yum &> /dev/null; then
+elif command -v yum > /dev/null 2>&1; then
     package_manager="yum"
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     package_manager="dnf"
-elif command -v apt-get &> /dev/null; then
+elif command -v apt-get > /dev/null 2>&1; then
     package_manager="apt"
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     package_manager="zypper"
 else
     echo "Unsupported package manager"
@@ -50,7 +52,7 @@ else
 fi
 
 # Install iptables if not present
-if ! command -v iptables &> /dev/null; then
+if ! command -v iptables > /dev/null 2>&1; then
     case $package_manager in
         "apk") apk add iptables > /dev/null ;;
         "yum") yum install -y iptables > /dev/null ;;
@@ -71,7 +73,7 @@ echo "iptables-restore < /root/$hostname.rules" >> /etc/iptables/restore-iptable
 chmod 0500 /etc/iptables/restore-iptables.sh
 
 # Check if using rc-service or systemd
-if command -v systemctl &> /dev/null; then
+if command -v systemctl > /dev/null 2>&1; then
   cat << 'EOF' > /etc/systemd/system/iptables-persistent.service
 [Unit] 
 Description=runs iptables restore on boot
@@ -130,26 +132,26 @@ iptables -A INPUT -p icmp -j ACCEPT
 iptables -A OUTPUT -p icmp -j ACCEPT
 
 # Add team IPs to INPUT chain
-for ip in "${team_ips[@]}"; do
-    iptables -A INPUT -p tcp --dport 22 -s "$ip" -j ACCEPT
+for ip in $team_ips; do
+    iptables -A INPUT -p tcp --dport 22 -s $ip -j ACCEPT
     # Allow established SSH connections
-    iptables -A OUTPUT -p tcp --sport 22 -d "$ip" -m conntrack --ctstate ESTABLISHED -j ACCEPT
+    iptables -A OUTPUT -p tcp --sport 22 -d $ip -m conntrack --ctstate ESTABLISHED -j ACCEPT
 done
 
 
 # Add DC rules if in domain
 if [ "$in_domain" -eq 1 ]; then
-  for ip in "${dc_ips[@]}"; do
+  for ip in $dc_ips@; do
     # DC rules for TCP
-    for port in "${linux_dc_ports_tcp[@]}"; do
-        iptables -A INPUT -p tcp --sport "$port" -s "$ip" -j ACCEPT
-        iptables -A OUTPUT -p tcp --dport "$port" -d "$ip" -j ACCEPT
+    for port in $linux_dc_ports_tcp; do
+        iptables -A INPUT -p tcp --sport $port -s $ip -j ACCEPT
+        iptables -A OUTPUT -p tcp --dport $port -d $ip -j ACCEPT
     done
 
     # DC rules for UDP
-    for port in "${dc_ports_udp[@]}"; do
-        iptables -A INPUT -p udp --sport "$port" -s "$ip" -j ACCEPT
-        iptables -A OUTPUT -p udp --dport "$port" -d "$ip" -j ACCEPT
+    for port in $dc_ports_udp; do
+        iptables -A INPUT -p udp --sport $port -s $ip -j ACCEPT
+        iptables -A OUTPUT -p udp --dport $port -d $ip -j ACCEPT
     done
   done
 fi

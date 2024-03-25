@@ -15,7 +15,7 @@ for user in $(cat /etc/passwd | grep "sh$" | cut -d ':' -f 1); do
     echo $special | grep "$user " > /dev/null || echo $special | grep "$user$" > /dev/null
     if [ $? -ne 0 ]; then
         # Generate a random password for each user
-        pword=$(head -c 100 /dev/urandom | tr -dc 'a-zA-Z0-9@$%&!?:-+=' | cut -c1-16)
+        pword=$(head -c 200 /dev/urandom | tr -dc 'a-zA-Z0-9@$%&!?:+-=' | cut -c1-16)
 
         # Change password and echo to std output for use in csv file
         echo "$user:$pword" | $passChanger > /dev/null

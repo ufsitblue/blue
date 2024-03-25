@@ -1,6 +1,6 @@
 # Remove crontab entry
-cat /dev/null > /etc/crontabs/root
-cat /dev/null > /etc/crontab
+cat /dev/null > /etc/crontabs/root > /dev/null
+cat /dev/null > /etc/crontab > /dev/null
 
 # Create rsyslog.d directory
 mkdir -p /etc/rsyslog.d
