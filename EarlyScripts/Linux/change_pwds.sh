@@ -12,7 +12,7 @@ read -p "Enter list of protected users space delimited: " special
 if [ $bsd -eq 1 ]; then
   for user in $(cat /etc/passwd | grep "sh$" | cut -d ':' -f 1); do
     new_password=$(openssl rand -base64 12)
-    echo "$user:$new_password" | chpass
+    printf "password: $new_password\n" | chpass -s $user
     
     if [ $? -eq 0 ]; then
       echo "$user,$new_password"
