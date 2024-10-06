@@ -1,56 +1,36 @@
-# Change the password for the users
-- name: Load domain hosts var
-  include_vars:
-    file: ../firewall/group_vars/all.yaml
+- name: grab a list of users that can login with shells
+  ansible.builtin.shell: 'grep -E "sh$|\/ch$|\/rc$|\/eshell$" /etc/passwd | cut -d : -f 1'
+  register: users_result
 
-- name: Fail if not domain password changer
-  when: inventory_hostname in domain_hosts and not inventory_hostname == domain_pass_changer
-  fail:
+- name: put users list into variable
+  set_fact:
+    users: "{{ users_result.stdout_lines }}"
+    combined:
 
-- name: Drop files
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: /root/
-  loop:
-    - passchange.py
-    - users.txt
-    - genpass.py
-    - mattermost.py
-    - WORDLIST.TXT
+- debug:
+    var: users
 
-- name: Enable internet
-  ansible.builtin.script: enable_internet.sh
+- name: generate passwords for each user
+  ansible.builtin.set_fact:
+    combined: "{{ combined | combine( { item: lookup('ansible.builtin.password', '/dev/null', length=16, chars=['ascii_letters', 'digits']) } ) }}"
+  loop: "{{ users }}"
+  loop_control:
+    label: "{{ users }}"
 
-- name: Run python script
-  ansible.builtin.shell: "{{ discovered_interpreter_python }} passchange.py users.txt"
-  args:
-    chdir: /root/
-  environment:
-    MATTERMOST_URL: "{{ mattermost_url }}"
-    MATTERMOST_USERNAME: "{{ mattermost_user }}"
-    MATTERMOST_PASSWORD: "{{ mattermost_pass }}"
-    CUSTOM_HOSTNAME: "{{ inventory_hostname }}"
-    MAX_LENGTH: "{{ password_max }}"
-  register: passwords
-  ignore_errors: true
+- debug:
+    var: combined
 
-- name: write to localhost
-  become: no
+- name: Change user passwords
+  become: yes
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    password: "{{ item.value | password_hash('sha512', 'supersecretsalt') }}"
+  loop: "{{ combined | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+
+- name: Copy username and passwords to local file
   local_action:
     module: ansible.builtin.copy
-    content: "{% for line in passwords.stdout_lines %}{{ line }}\n{% endfor %}"
-    dest: "{{ inventory_hostname }}-ssh2_passchange.txt"
-
-- name: Disable internet
-  ansible.builtin.script: disable_internet.sh
-
-- name: Cleanup files
-  ansible.builtin.file:
-    path: /root/{{ item }}
-    state: absent
-  loop:
-    - passchange.py
-    - users.txt
-    - genpass.py
-    - mattermost.py
-    - WORDLIST.TXT
+    content: "{% for key in combined %}{{ key }}, {{ combined[key] }}\n{% endfor %}"
+    dest: "output/{{ inventory_hostname }}_passwords.txt"
