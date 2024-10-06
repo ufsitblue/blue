@@ -10,7 +10,6 @@
 
 - name: Change Passwords
   hosts: linux
-  gather_facts: no
   roles:
     - change_passwords
   tags: 

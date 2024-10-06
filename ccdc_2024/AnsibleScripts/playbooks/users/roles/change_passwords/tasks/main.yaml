@@ -14,7 +14,7 @@
   loop_control:
     label: "{{ item }}"
 
-- name: Change user passwords
+- name: Change user passwords using sudo
   become: yes
   ansible.builtin.user:
     name: "{{ item.key }}"
@@ -22,6 +22,18 @@
   loop: "{{ combined | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
+  when: ansible_os_family | lower != 'alpine'
+
+- name: Change user passwords using doas
+  become: yes
+  become_method: "doas"
+  ansible.builtin.user:
+    name: "{{ item.key }}"
+    password: "{{ item.value | password_hash('sha512', lookup('ansible.builtin.password', '/dev/null', length=8, chars=['ascii_letters'])) }}"
+  loop: "{{ combined | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
+  when: ansible_os_family | lower == 'alpine'
 
 - name: Copy username and passwords to local file
   ansible.builtin.copy:
