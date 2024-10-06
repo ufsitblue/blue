@@ -53,8 +53,8 @@ bsd:
   hosts:
     bsd:
       ansible_host: 10.0.0.13
-      ansible_user: root
-      ansible_password: Is1WaterWet?
+      ansible_user: ec2-user
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/centos.pem
       required_ports:
       - 20
       - 21

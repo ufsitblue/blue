@@ -9,7 +9,7 @@
     - "create"
 
 - name: Change Passwords
-  hosts: linux
+  hosts: linux,bsd
   roles:
     - change_passwords
   tags: 

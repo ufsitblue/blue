@@ -22,7 +22,7 @@
   loop: "{{ combined | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
-  when: ansible_os_family | lower != 'alpine'
+  when: ansible_os_family | lower != 'alpine' and ansible_os_family | lower != 'freebsd' and ansible_os_family | lower != 'openbsd'
 
 - name: Change user passwords using doas
   become: yes
@@ -33,7 +33,7 @@
   loop: "{{ combined | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
-  when: ansible_os_family | lower == 'alpine'
+  when: ansible_os_family | lower == 'alpine' or ansible_os_family | lower == 'freebsd' or ansible_os_family | lower == 'openbsd'
 
 - name: Copy username and passwords to local file
   ansible.builtin.copy:
