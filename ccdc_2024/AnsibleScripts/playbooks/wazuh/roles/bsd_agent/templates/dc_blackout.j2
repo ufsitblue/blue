@@ -1,0 +1,14 @@
+team_ips = "{{ "{" }} {{ team_ips | join(', ') }}  {{ "}" }}"
+dc_ips = "{{ "{" }} {{ dc_ips | join(', ') }}  {{ "}" }}"
+dc_ports_tcp = "{ 53, 88, 135, 389, 445, 464, 636, 3268, 3269, 49152:65535 }"
+dc_ports_udp = "{ 53, 88, 123, 389, 464 }"
+wazuh_ports = "{{ "{" }} 1514, 1515 {{ "}" }}"
+
+block all
+pass in inet proto tcp from $team_ips to any port 22 keep state
+pass in inet proto tcp from $dc_ips to any port $dc_ports_tcp keep state
+pass in inet proto udp from $dc_ips to any port $dc_ports_udp keep state
+pass out inet proto tcp from any to {{ manager_ip }} port $wazuh_ports keep state
+pass out inet proto tcp from any to $dc_ips port $dc_ports_tcp keep state
+pass out inet proto udp from any to $dc_ips port $dc_ports_udp keep state
+pass inet proto icmp from $team_ips to any

@@ -1,0 +1,60 @@
+# Install Suricata on All Linux Distros
+
+- name: Enable internet access (Suricata Linux)
+  ansible.builtin.script: enable_internet.sh
+
+- name: Setup using Package Manager
+  block:
+  - name: Setup on Debian
+    include_tasks: debian.yaml
+    when: ansible_os_family == 'Debian'
+    tags:
+    - Setup
+    - Debian
+
+  - name: Setup on RedHat/Centos/Fedora
+    block:
+    - include_tasks: redhat.yaml
+    rescue:
+    - include_tasks: old_redhat.yaml
+    when: ansible_os_family == 'RedHat' 
+    tags:
+    - Setup
+    - RedHat
+    - Fedora
+    - Centos
+
+  - name: Setup on Suse
+    block:
+    - name: Refresh and update all packages on Suse
+      community.general.zypper:
+        name: '*'
+        update_cache: true
+        state: latest
+
+    - name: install Dependencies on Suse
+      community.general.zypper:
+        name: "{{ dependencies }}"
+        state: present
+        update_cache: true
+
+    - name: Install with Package Manager
+      include_tasks: suse_package.yaml
+    when: ansible_os_family == 'Suse'
+    tags:
+    - Setup
+    - Suse
+
+  - name: Install Suricata using Package Manager
+    ansible.builtin.package:
+      name: suricata
+      state: present
+
+  - name: Disable internet access
+    ansible.builtin.script: disable_internet.sh
+
+  # If package manager install fails, switch to source install
+  rescue:
+  - name: Install Using Source Files on Suse
+    include_tasks: suse_source.yaml
+    when: ansible_os_family == 'Suse'

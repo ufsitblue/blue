@@ -1,0 +1,24 @@
+# Main playbook to run all roles
+
+- name: Add Users
+  hosts: all
+  strategy: free
+  roles:
+    - create
+  tags: 
+    - "create"
+
+- name: Change Passwords
+  hosts: linux,bsd
+  roles:
+    - change_passwords
+  tags: 
+    - "change"
+
+- name: Remove Users
+  hosts: all
+  strategy: free
+  roles:
+    - remove
+  tags: 
+    - "remove"

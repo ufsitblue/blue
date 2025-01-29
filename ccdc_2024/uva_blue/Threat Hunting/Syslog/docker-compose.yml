@@ -1,0 +1,20 @@
+version: "3.7"
+ 
+# USAGE: 
+# Create and start the cluster: docker-compose up -d 
+# Tear down the cluster: docker-compose down 
+# Reove everything including the volumes: docker-compose down -v  
+services:
+
+# 1. Syslog server 
+  syslogserver:
+    image: mysyslog
+    hostname: syslog
+    container_name: syslog
+    restart: always
+    volumes:
+      - "/var/log/remote:/var/log/remote"
+    ports:
+      - 514:514/udp
+    cap_add:
+      - SYSLOG

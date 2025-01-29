@@ -1,0 +1,51 @@
+- name: Install and configure Sysmon
+  hosts: windows
+  tasks:
+
+#   - name: Create archive directory for sysmon
+#    ansible.windows.win_file:
+#      path: C:\archivedir
+#      state: directory
+# 
+#  - name: Change archive owner to SYSTEM
+#    ansible.windows.win_owner:
+#      path: C:\archivedir
+#      user: SYSTEM
+ 
+  - name: Enable internet access
+    community.windows.win_firewall_rule:
+      group: "Internet"
+      enabled: true
+      
+  - name: Download Sysinternals Suite ZIP file
+    ansible.windows.win_get_url:
+      url: https://download.sysinternals.com/files/SysinternalsSuite.zip
+      dest: C:\Users\Administrator\Documents\Sysinternals.zip
+
+  - name: Unzip Sysinternals
+    community.windows.win_unzip:
+      src: C:\Users\Administrator\Documents\Sysinternals.zip
+      dest: C:\Users\Administrator\Documents\Sysinternals
+      creates: C:\Users\Administrator\Documents\Sysinternals
+
+  - name: Copy over our Sysmon config from local machine
+    ansible.builtin.copy:
+      src: "sysmonconfig.xml"
+      dest: C:\Users\Administrator\Documents\Sysinternals
+
+  - name: Copy Sysmon binary to obfuscate its name
+    ansible.builtin.copy:
+      remote_src: True
+      src: C:\Users\Administrator\Documents\Sysinternals\Sysmon64.exe
+      dest: C:\Users\Administrator\Documents\Sysinternals\rundlI.exe
+
+
+  - name: Install Sysmon
+    ansible.windows.win_command: "rundlI -accepteula -i sysmonconfig.xml -a archivedir -d dlIdrv"
+    args:
+      chdir: C:\Users\Administrator\Documents\Sysinternals
+
+  - name: Disable internet access
+    community.windows.win_firewall_rule:
+      group: "Internet"
+      enabled: false

@@ -1,0 +1,13 @@
+---
+# Manager wazuh ports
+wazuh_ports:
+  - 443
+  - 1514
+  - 1515
+  - 1516
+  - 9200
+  - '9300:9400'
+  - 55000
+
+mattermost_ip:
+  - 0.0.0.0/0

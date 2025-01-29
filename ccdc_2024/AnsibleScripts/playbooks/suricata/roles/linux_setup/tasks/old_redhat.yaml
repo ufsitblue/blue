@@ -1,0 +1,23 @@
+# Installing Dependcies and Suricata Repository on old RedHat
+
+- block:
+    - name: Installing Dependencies on RedHat/Centos/Fedora
+      ansible.builtin.yum:
+        name:
+        - epel-release
+        - yum-plugin-copr
+        state: present
+        update_cache: true
+  rescue:
+    - name: Installing Correct Dependencies
+      ansible.builtin.yum:
+        name:
+        - epel
+        - yum-plugin-copr
+        state: present
+        update_cache: true
+
+- name: Adding Repository on RedHat/Centos/Fedora
+  become: yes
+  ansible.builtin.command:
+    cmd: yum -y copr enable "{{ redhat_package }}"

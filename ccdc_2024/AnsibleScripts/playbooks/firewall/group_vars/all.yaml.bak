@@ -1,0 +1,50 @@
+---
+# Variables for all machines
+dc_ips:
+  - 10.0.0.16
+
+win_dc_ports_tcp:
+  - "53"
+  - "88"
+  - "135"
+  - "389"
+  - "445"
+  - "464"
+  - "636"
+  - "3268"
+  - "3269"
+  - "49152-65535"
+
+linux_dc_ports_tcp:
+  - "53"
+  - "88"
+  - "135"
+  - "389"
+  - "445"
+  - "464"
+  - "636"
+  - "3268"
+  - "3269"
+  - "49152:65535"
+
+dc_ports_udp:
+  - 53
+  - 88
+  - 123
+  - 389
+  - 464
+
+team_ips:
+  - 10.0.0.4
+  - 172.19.253.6
+  - 10.0.0.4
+
+# Wazuh manager IP
+manager_ip: 10.0.0.5
+
+# Wazuh agent ports
+agent_ports:
+  - 1515
+  - 1514
+
+domain_hosts:

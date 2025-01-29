@@ -1,0 +1,3 @@
+# variables for all hosts
+
+subnet: 10.10.0.0/24

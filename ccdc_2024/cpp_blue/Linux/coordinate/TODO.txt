@@ -1,0 +1,2 @@
+- Implement NoTTY (idk what fabriel gawk meant by this)
+- Clean up code

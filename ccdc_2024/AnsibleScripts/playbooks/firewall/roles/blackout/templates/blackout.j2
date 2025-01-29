@@ -1,0 +1,5 @@
+team_ips = "{{ "{" }} {{ team_ips | join(', ') }}  {{ "}" }}"
+
+block all
+pass in inet proto tcp from $team_ips to any port 22 keep state
+pass inet proto icmp from $team_ips to any

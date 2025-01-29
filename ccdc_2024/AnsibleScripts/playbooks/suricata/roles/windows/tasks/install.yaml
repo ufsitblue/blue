@@ -1,0 +1,10 @@
+# Installs Suricata's Windows Dependencies
+
+- name: Enable internet access (Suricata)
+  community.windows.win_firewall_rule:
+    group: "Internet"
+    enabled: true
+
+- name: Installing Suricata
+  ansible.windows.win_package:
+    path: "{{ suricata_download }}" 

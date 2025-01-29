@@ -1,0 +1,5 @@
+/etc/passwd
+/etc/shadow
+/var/www/html
+/etc/crontab.d
+/etc/init.d

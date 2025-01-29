@@ -1,0 +1,5 @@
+# Variables for Rust Installation
+
+rust_cmd: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+cargo_bin_path: "/home/{{ ansible_user }}/.cargo/bin/"
+cargo_path: "/home/{{ ansible_user }}/.cargo"

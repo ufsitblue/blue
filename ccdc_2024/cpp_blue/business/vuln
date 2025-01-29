@@ -1,0 +1,60 @@
+' CREATE VULN SCAN TABLE
+Sub VULNTABLE()
+
+    Dim odoc, otext, ocursor, mytable, tablecursor
+
+    odoc = ThisComponent
+    otext = odoc.getText()
+    mytable = CreateTable(odoc)
+    ocursor = otext.CreateTextCursor()
+    ocursor.gotoStart(False)
+
+    otext.insertTextContent(ocursor, myTable, False)
+    tablecursor = myTable.createCursorByCellName("A1")
+    InsertNextItem("[NAME HERE]", tablecursor, mytable)
+    InsertNextItem("", tablecursor, mytable)
+    InsertNextItem("", tablecursor, mytable)
+    InsertNextItem("Vulnerability", tablecursor, mytable)
+    InsertNextItem("Description", tablecursor, mytable)
+    InsertNextItem("Remediation Status", tablecursor, mytable)
+    InsertNextItem("", tablecursor, mytable)
+    InsertNextItem("", tablecursor, mytable)
+    InsertNextItem("", tablecursor, mytable)
+
+    ' Set cell background color
+    tablecursor.gotoStart(False)
+    tablecursor.gotoEnd(True)
+    tablecursor.Range.Interior.Color = RGB(255, 0, 0) ' Red color
+
+    ' Set different colors for each cell
+    tablecursor.gotoStart(False)
+    tablecursor.goRight(1, False)
+    tablecursor.Range.Interior.Color = RGB(0, 255, 0) ' Green color
+
+    tablecursor.goRight(1, False)
+    tablecursor.Range.Interior.Color = RGB(0, 0, 255) ' Blue color
+
+    ' Add more colors for other cells as needed
+
+End Sub
+
+Sub InsertNextItem(what, oCursor, oTable)
+
+    Dim oCell As Object
+    sName = oCursor.getRangeName()
+    oCelle = oTable.getCellByName(sName)
+    oCelle.String = what
+    oCursor.goRight(1, False)
+
+End Sub
+
+Function CreateTable(document) As Object
+
+    oTextTable = document.createInstance("com.sun.star.text.TextTable")
+    oTextTable.initialize(3, 3)
+    oTextTable.HoriOrient = 0
+    oTextTable.LeftMargin = 2000
+    oTextTable.RightMargin = 2000
+    CreateTable = oTextTable
+
+End Function

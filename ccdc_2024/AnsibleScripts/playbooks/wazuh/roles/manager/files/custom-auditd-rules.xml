@@ -1,0 +1,239 @@
+<!-- Auditd Rules -->
+<group name="auditd">
+
+    <!-- Key: etcpasswd -->
+    <!-- Alert modifying /etc/passwd for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100005" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcpasswd</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/passwd was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/passwd using differnt user than original user -->
+    <rule id="100004" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcpasswd</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/passwd was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/passwd generic -->
+    <rule id="100001" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">etcpasswd</field>
+		<description>/etc/passwd was modified by user: $(audit.auid-h)</description>
+	</rule>
+	
+	<!-- Key: etcshadow -->
+    <!-- Alert modifying /etc/shadow for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100006" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcshadow</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/shadow was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/shadow using differnt user than original user -->
+    <rule id="100007" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcshadow</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/shadow was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/shadow generic -->
+    <rule id="100008" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">etcshadow</field>
+		<description>/etc/shadow was modified by user: $(audit.auid-h)</description>
+	</rule>
+	
+	<!-- Key: etcgroup -->
+    <!-- Alert modifying /etc/group for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100009" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcgroup</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/group was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/group using differnt user than original user -->
+    <rule id="100010" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcgroup</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/group was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/group generic -->
+    <rule id="100011" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">etcgroup</field>
+		<description>/etc/group was modified by user: $(audit.auid-h)</description>
+	</rule>
+
+    <!-- Key: etcgshadow -->
+    <!-- Alert modifying /etc/gshadow for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100012" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcgshadow</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/gshadow was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/gshadow using differnt user than original user -->
+    <rule id="100013" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">etcgshadow</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/gshadow was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/gshadow generic -->
+    <rule id="100014" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">etcgshadow</field>
+		<description>/etc/gshadow was modified by user: $(audit.auid-h)</description>
+	</rule>
+
+    <!-- Key: opasswd -->
+    <!-- Alert modifying /etc/security/opasswd for unknown users. (i.e. uid > 4294967295)  -->
+    <rule id="100015" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">opasswd</field>
+        <!-- Check if audit.euid or audit.auid is the 'unknown' UID value -->
+        <field name="audit.auid-h">unset</field>
+        <description>/etc/security/opasswd was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/security/opasswd using differnt user than original user -->
+    <rule id="100016" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">opasswd</field>
+        <field name="audit.euid" negate="yes">^$(audit.auid)$</field>
+        <description>/etc/security/opasswd was modified by $(audit.auid-h) as user: $(audit.euid-h)</description>
+    </rule>
+    
+    <!-- Alert modifying /etc/security/opasswd generic -->
+    <rule id="100017" level="12">
+		<if_sid>80700</if_sid>
+       	<field name="audit.key">opasswd</field>
+		<description>/etc/security/opasswd was modified by user: $(audit.auid-h)</description>
+	</rule>
+
+    <!-- Key: auditlog_wa -->
+    <!-- Alert modifying to files /var/log/audit/ or /var/audit by UKNOWN users -->
+    <rule id="100019" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditlog_wa</field>
+        <field name="audit.auid-h">unset</field>
+        <description>Auditd log file was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying to files /var/log/audit/ or /var/audit by known users -->
+    <rule id="100018" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditlog_wa</field>
+        <description>Auditd log file was modified by user: $(audit.auid-h)</description>
+    </rule>
+
+    <!-- Key: auditlog_r -->
+    <!-- Alert reading files in /var/log/audit/ or /var/audit by UKNOWN users -->
+    <rule id="100021" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditlog_r</field>
+        <field name="audit.auid-h">unset</field>
+        <description>Auditd log file was read by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert reading files in /var/log/audit/ or /var/audit -->
+    <rule id="100020" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditlog_r</field>
+        <description>Auditd log file was read by user: $(audit.auid-h)</description>
+    </rule>
+
+    <!-- Key: auditconfig -->
+    <!-- Modifications to audit configuration that occur while the audit collection functions are operating by UNKNOWN users -->
+    <rule id="100023" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditconfig</field>
+        <field name="audit.auid-h">unset</field>
+        <description>Auditd configuration was modified by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Modifications to audit configuration that occur while the audit collection functions are operating by known users -->
+    <rule id="100022" level="6">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">auditconfig</field>
+        <description>Auditd configuration was modified by user: $(audit.auid-h)</description>
+    </rule>
+
+    <!-- Key: audittools -->
+    <!-- Level 8 because we should never be using audit tools to sift through logs -->
+    <!-- Alert executing audit tools by known users -->
+    <rule id="100024" level="8">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">audittools</field>
+        <description>Audit tool: $(audit.command) was executed by user: $(audit.auid-h)</description>
+    </rule>
+
+    <!-- Alert executing audit tools by UNKNOWN users -->
+    <rule id="100025" level="8">
+        <if_sid>100024</if_sid>
+        <field name="audit.key">audittools</field>
+        <field name="audit.auid-h">unset</field>
+        <description>Audit tool: $(audit.command) was executed by an UNKNOWN USER (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert executing audit tools by known users using sudo -->
+    <rule id="100026" level="8">
+        <if_sid>100024</if_sid>
+        <field name="audit.auid-h" negate="yes">root</field>
+        <field name="audit.key">audittools</field>
+        <description>Audit tool: $(audit.command) was executed by user: $(audit.auid-h) with sudo.</description>
+    </rule>
+
+    <!-- Key: sysctl -->
+    <!-- Level 12 because kernel parameters should rarely/never changed -->
+    <!-- Alert modifying kernel parameters by known users -->
+    <rule id="100027" level="12">
+        <if_sid>80700</if_sid>
+        <field name="audit.key">sysctl</field>
+        <description>Kernel parameter modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying kernel parameters by known users. Only one path item. -->
+    <rule id="100028" level="12">
+        <if_sid>100027</if_sid>
+        <field name="audit.key">sysctl</field>
+        <field name="audit.path.0">\.+</field>
+        <description>Kernel parameter: $(audit.path.0) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying kernel parameters by known users. Two path items. Second path item is not full path. -->
+    <rule id="100029" level="12">
+        <if_sid>100028</if_sid>
+        <field name="audit.key">sysctl</field>
+        <field name="audit.path.0">\.+</field>
+        <field name="audit.path.1">\.+</field>
+        <field name="audit.path.1" negate="yes">^/</field>
+        <description>Kernel parameter: $(audit.path.0)/$(audit.path.1) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+    <!-- Alert modifying kernel parameters by known users. Two path items. Second path item is full path. -->
+    <rule id="100030" level="12">
+        <if_sid>100028</if_sid>
+        <field name="audit.key">sysctl</field>
+        <field name="audit.path.0">\.+</field>
+        <field name="audit.path.1">\.+</field>
+        <field name="audit.path.1" negate="no">^/</field>
+        <description>Kernel parameter: $(audit.path.1) modified by user: $(audit.auid-h) (group: $(audit.gid-h))</description>
+    </rule>
+
+</group>

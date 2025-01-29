@@ -1,0 +1,68 @@
+'-------------------------------- title page color --------------------------------
+Sub ChangePageBackgroundColor()
+
+	Dim oDoc 
+	Dim pageStyle As String
+	Dim oViewCursor	
+	Dim oStyle
+
+	oViewCursor = ThisComponent.CurrentController.getViewCursor()
+	pageStyle = oViewCursor.PageStyleName
+
+	oDoc = ThisComponent
+	oStyle = ThisComponent.StyleFamilies.getByName("PageStyles").getByName(pageStyle)
+
+	oStyle.FillBackground = True
+	oStyle.BackColor = RGB(16, 55, 93)
+
+End Sub
+
+'-------------------------------- header and footer color --------------------------------
+Sub ChangeHeaderFooterColor()
+
+	Dim oDoc 
+	Dim pageStyle As String
+	Dim oViewCursor	
+	Dim oStyle
+	Dim oHeaderStyles As Object
+	Dim oFooterStyles As Object
+	Dim oHeader As Object
+	Dim oFooter As Object
+
+	oViewCursor = ThisComponent.CurrentController.getViewCursor()
+	pageStyle = oViewCursor.PageStyleName
+
+	oDoc = ThisComponent
+	oStyle = ThisComponent.StyleFamilies.getByName("PageStyles").getByName(pageStyle)
+
+
+	oStyle.BottomMargin = 0
+	oStyle.TopMargin = 0
+	oStyle.LeftMargin = 0
+	oStyle.RightMargin = 0
+	oStyle.FillBackground = True
+	oStyle.HeaderBackColor = RGB(16, 55, 93)
+	oStyle.HeaderHeight = 5000
+	oStyle.FooterBackColor = RGB(217,217,217)
+	oStyle.FooterHeight = 3000
+	oStyle.BackColor = RGB(255, 255, 255)
+
+End Sub
+
+'-------------------------------- paragraph style --------------------------------
+sub ParagraphStyle
+
+	dim document   as object
+	dim dispatcher as object
+	
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService("com.sun.star.frame.DispatchHelper")
+	
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = "Param"
+	args1(0).Value = "Default Paragraph Style"
+	
+	dispatcher.executeDispatch(document, ".uno:EditStyle", "", 0, args1())
+
+
+end sub

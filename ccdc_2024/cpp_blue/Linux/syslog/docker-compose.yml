@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+
+  syslog:
+    image: mysyslog
+    hostname: syslog
+    container_name: syslog
+    restart: always
+    volumes:
+      - "/var/log/remote:/var/log/remote"
+    ports:
+      - 514:514/udp
+    cap_add:
+      - SYSLOG
+
+  web:
+    image: vsc55/loganalyzer:latest
+    hostname: web
+    container_name: web
+    restart: always
+    volumes:
+      - "/var/log/remote:/var/log/remote"
+      - "/docker/web:/data"
+    ports:
+      - 127.0.0.1:8069:80
+    environment:
+      - TZ=America/Los_Angeles

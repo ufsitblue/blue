@@ -1,0 +1,129 @@
+- name: Allow everything between the DCs in
+  when: domain_controller and not ip == ansible_host
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DCs to communicate in"
+    direction: "in"
+    group: "DC"
+    name: "DC to DC in {{ ip }}"
+    remoteip: "{{ ip }}"
+  loop: "{{ dc_ips }}"
+  loop_control:
+    loop_var: ip
+
+- name: Allow everything between the DCs out
+  when: domain_controller and not ip == ansible_host
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DCs to communicate out"
+    direction: "out"
+    group: "DC"
+    name: "DC to DC out {{ ip }}"
+    remoteip: "{{ ip }}"
+  loop: "{{ dc_ips }}"
+  loop_control:
+    loop_var: ip
+
+- name: load DC variables
+  include_vars:
+    file: group_vars/all.yaml
+
+- name: Allow domain machines into DC tcp
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow domain machines into DC tcp"
+    direction: "in"
+    group: "DC"
+    name: "Allow into DC tcp {{ hostvars[item].ansible_host }}"
+    remoteip: "{{ hostvars[item].ansible_host }}"
+    localport: "{{ win_dc_ports_tcp  | join(',')}}"
+    protocol: "tcp"
+  loop: "{{ groups['all'] }}"
+
+- name: Allow domain machines into DC udp
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow domain machines into DC udp"
+    direction: "in"
+    group: "DC"
+    name: "Allow into DC udp {{ hostvars[item].ansible_host }}"
+    remoteip: "{{ hostvars[item].ansible_host }}"
+    localport: "{{ dc_ports_udp | join(',') }}"
+    protocol: "udp"
+  loop: "{{ groups['all'] }}"
+
+- name: Allow DC to connect out to machines tcp
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC out to domain machine tcp"
+    direction: "out"
+    group: "DC"
+    name: "Allow DC out tcp {{ hostvars[item].ansible_host }}"
+    remoteip: "{{ hostvars[item].ansible_host }}"
+    localport: "{{ win_dc_ports_tcp | join(',') }}"
+    protocol: "tcp"
+  loop: "{{ groups['all'] }}"
+ 
+- name: Allow DC to connect out to machines udp
+  when: domain_controller and item in domain_hosts and hostvars[item].ansible_host not in dc_ips
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC out to machine udp"
+    direction: "out"
+    group: "DC"
+    name: "Allow DC out udp {{ hostvars[item].ansible_host }}"
+    remoteip: "{{ hostvars[item].ansible_host }}"
+    localport: "{{ dc_ports_udp | join(',') }}"
+    protocol: "udp"
+  loop: "{{ groups['all'] }}"
+
+- name: Allow DC ports into domain machines tcp
+  when: not domain_controller
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine tcp"
+    direction: "in"
+    group: "DC"
+    name: "Allow DC in tcp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remoteport: "{{ win_dc_ports_tcp | join(',') }}"
+    protocol: "tcp"
+ 
+- name: Allow DC ports into domain machines udp
+  when: not domain_controller
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine udp"
+    direction: "in"
+    group: "DC"
+    name: "Allow DC in udp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remoteport: "{{ dc_ports_udp | join(',') }}"
+    protocol: "udp"
+
+- name: Allow DC ports from domain machines tcp
+  when: not domain_controller
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine tcp"
+    direction: "out"
+    group: "DC"
+    name: "Allow DC out tcp"
+    remoteip: "{{ dc_ips | join(',') }}"
+    remoteport: "{{ win_dc_ports_tcp | join(',') }}"
+    protocol: "tcp"
+
+- name: Allow DC ports from domain machines udp
+  when: not domain_controller
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow DC into machine udp"
+    direction: "out"
+    group: "DC"
+    name: "Allow DC out udp"
+    remoteip: "{{ dc_ips | join(',') }}" 
+    remoteport: "{{ dc_ports_udp | join(',') }}"
+    protocol: "udp"
