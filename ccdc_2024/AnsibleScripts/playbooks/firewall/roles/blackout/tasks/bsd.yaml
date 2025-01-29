@@ -1,0 +1,59 @@
+- name: Load firewall if not loaded
+  ansible.builtin.shell: kldload pf
+  ignore_errors: true
+
+- name: Check if in domain
+  ansible.builtin.shell: command -v adcli
+  ignore_errors: true
+  register: adcli
+
+- name: Add dc config to rc.conf
+  when: adcli.rc == 0
+  ansible.builtin.shell: |
+    sysrc pf_enable="yes"
+    sysrc pf_rules="/root/dc_blackout.conf"
+
+- name: Add config to rc.conf
+  when: not adcli.rc == 0
+  ansible.builtin.shell: |
+    sysrc pf_enable="yes"
+    sysrc pf_rules="/root/blackout.conf"
+
+- name: Add dc_blackout.conf if in domain
+  when: adcli.rc == 0
+  ansible.builtin.template:
+    dest: /root/dc_blackout.conf
+    src: dc_blackout.j2
+
+- name: Add blackout.conf if not in domain
+  when: not adcli.rc == 0
+  ansible.builtin.template:
+    dest: /root/blackout.conf
+    src: blackout.j2
+
+- name: Create own variable file
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.lineinfile
+    insertafter: "hosts:"
+    path: "group_vars/{{ inventory_hostname }}.yaml"
+    line: "  - \"{{ inventory_hostname }}\""
+    create: true
+
+- name: Integrate into domain_hosts
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell cat group_vars/{{ inventory_hostname }}.yaml >> group_vars/all.yaml
+
+- name: Cleanup variable files
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell rm group_vars/{{ inventory_hostname }}.yaml
+
+- name: Start pf
+  ignore_errors: true
+  timeout: 5
+  ansible.builtin.shell: service pf start

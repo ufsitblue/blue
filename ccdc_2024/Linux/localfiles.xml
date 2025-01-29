@@ -1,0 +1,19 @@
+  <localfile>
+    <log_format>audit</log_format>
+    <location>/var/log/audit/audit.log</location>
+  </localfile> 
+
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/output.log</location>
+  </localfile>
+
+  <localfile>
+    <log_format>syslog</log_format>
+    <location>/var/log/input.log</location>
+  </localfile>
+      
+  <localfile>
+    <log_format>json</log_format>
+    <location>/var/log/suricata/eve.log</location>
+  </localfile>

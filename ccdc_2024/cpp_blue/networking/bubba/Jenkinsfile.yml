@@ -1,0 +1,23 @@
+pipeline {
+  agent {
+    label 'network-agent-ubuntu22'
+  }
+
+  environment {
+    VERSION = "v1.1.0"
+    GITHUB_TOKEN = credentials('network-agent')
+  }
+
+  tools { go '1.21.5' }
+
+  stages {
+    stage('Compile') {
+      agent {
+        label 'network-agent-ubuntu22'
+      }
+      steps {
+        sh '/var/jenkins/build-networkinator.sh $GITHUB_TOKEN_PSW'
+      }
+    }
+  }
+}

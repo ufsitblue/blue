@@ -1,0 +1,25 @@
+# Do Firewall Stuff
+
+# Allow only the team IP Addresses into the network
+- name: Network Blackout
+  hosts: all
+  roles:
+    - blackout
+  tags:
+    - blackout
+
+# Distribute host based Firewall Rules
+- name: Add Firewall Rules
+  hosts: all
+  roles:
+    - add_rules
+  tags:
+    - add
+
+- name: Restore Firewall Rules
+  hosts: all
+  strategy: free
+  roles:
+    - restore_rules
+  tags:
+    - restore

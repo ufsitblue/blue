@@ -1,0 +1,42 @@
+<group name="security_event, windows,">
+ 
+  <!-- This rule detects DCSync attacks using windows security event on the domain controller -->
+  <rule id="110001" level="12">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4662$</field>
+    <field name="win.eventdata.properties" type="pcre2">{1131f6aa-9c07-11d1-f79f-00c04fc2dcd2}|{19195a5b-6da0-11d0-afd3-00c04fd930c9}</field>
+    <options>no_full_log</options>
+    <description>Directory Service Access. Possible DCSync attack</description>
+  </rule>
+ 
+ <!-- This rule ignores Directory Service Access originating from machine accounts containing $ -->
+ <rule id="110009" level="0">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4662$</field>
+    <field name="win.eventdata.properties" type="pcre2">{1131f6aa-9c07-11d1-f79f-00c04fc2dcd2}|{19195a5b-6da0-11d0-afd3-00c04fd930c9}</field>
+    <field name="win.eventdata.SubjectUserName" type="pcre2">\$$</field>
+    <options>no_full_log</options>
+    <description>Ignore all Directory Service Access that is originated from a machine account containing $</description>
+  </rule>
+ 
+  <!-- This rule detects Keberoasting attacks using windows security event on the domain controller -->
+  <rule id="110002" level="12">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4769$</field>
+    <field name="win.eventdata.TicketOptions" type="pcre2">0x40810000</field>
+    <field name="win.eventdata.TicketEncryptionType" type="pcre2">0x17</field>
+    <options>no_full_log</options>
+    <description>Possible Keberoasting attack</description>
+  </rule>
+ 
+  <!-- This rule detects Golden Ticket attacks using windows security events on the domain controller -->
+  <rule id="110003" level="12">
+    <if_sid>60103</if_sid>
+    <field name="win.system.eventID">^4624$</field>
+    <field name="win.eventdata.LogonGuid" type="pcre2">{00000000-0000-0000-0000-000000000000}</field>
+    <field name="win.eventdata.logonType" type="pcre2">3</field>
+    <options>no_full_log</options>
+    <description>Possible Golden Ticket attack</description>
+  </rule>
+ 
+</group>

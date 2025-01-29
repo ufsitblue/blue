@@ -1,0 +1,146 @@
+<decoder name="kernel">
+   <program_name>^kernel</program_name>
+</decoder>
+
+<decoder name="iptables-1">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <prematch>^[\.*] \S+ IN=</prematch>
+
+   <regex>^[\.*] (\S+) \.+ SRC=(\S+) DST=(\S+)</regex>
+   <regex> \.+ PROTO=(\w+) </regex>
+   <order>action,srcip,dstip,protocol</order>
+</decoder>
+
+<decoder name="iptables-1">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">^SPT=(\d+) DPT=(\d+) </regex>
+   <order>srcport,dstport</order>
+</decoder>
+
+<decoder name="iptables-2">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <prematch>^\S+ IN=</prematch>
+
+   <regex>^(\S+) \.+ SRC=(\S+) DST=(\S+) \.+ </regex>
+   <regex>PROTO=(\w+) </regex>
+   <order>action,srcip,dstip,protocol</order>
+</decoder>
+
+<decoder name="iptables-2">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">^SPT=(\d+) DPT=(\d+) </regex>
+   <order>srcport,dstport</order>
+</decoder>
+
+<decoder name="iptables-shorewall">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <prematch>^Shorewall:\S+:</prematch>
+
+   <regex offset="after_prematch">^(\S+):\.+ SRC=(\S+) DST=(\S+) \.+ </regex>
+   <regex>PROTO=(\w+) </regex>
+   <order>action,srcip,dstip,protocol</order>
+</decoder>
+
+<decoder name="iptables-shorewall">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">^SPT=(\d+) DPT=(\d+) </regex>
+   <order>srcport,dstport</order>
+</decoder>
+
+<decoder name="iptables-shorewall2">
+  <parent>kernel</parent>
+  <type>firewall</type>
+  <prematch>^\p\S+\p Shorewall:\S+:</prematch>
+  <regex offset="after_prematch">^(\S+):\.+ SRC=(\S+) DST=(\S+) \.+ </regex>
+  <regex>PROTO=(\w+) </regex>
+  <order>action,srcip,dstip,protocol</order>
+</decoder>
+
+
+
+
+<decoder name="iptables-OpenWRT">
+   <type>firewall</type>
+   <parent>kernel</parent>
+   <prematch>^[\d+.\d+] \S*\(\.*IN=</prematch>
+   <regex>^[\d+.\d+] (\S*)\(</regex>
+   <order>action</order>
+</decoder>
+
+<decoder name="iptables-OpenWRT">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">SRC=(\S+) DST=(\S+)</regex>
+   <order>srcip,dstip</order>
+</decoder>
+
+<decoder name="iptables-OpenWRT">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">PROTO=(\w+)</regex>
+   <order>protocol</order>
+</decoder>
+
+<decoder name="iptables-OpenWRT">
+   <parent>kernel</parent>
+   <type>firewall</type>
+   <regex offset="after_regex">SPT=(\d+) DPT=(\d+) </regex>
+   <order>srcport,dstport</order>
+</decoder>
+
+
+
+<decoder name="apparmor">
+  <parent>kernel</parent>
+  <prematch> apparmor=</prematch>
+  <regex> apparmor=&quot;(\S+)&quot; operation=&quot;(\S+)&quot;</regex>
+  <order>status, extra_data</order>
+</decoder>
+
+
+
+<decoder name="mptscsih-1">
+  <parent>kernel</parent>
+  <prematch>^[\s\d+.\d+] mptscsih: </prematch>
+  <regex>^[\s\d+.\d+] (\w+): (\w+): task abort: (\w+)</regex>
+  <order>id,data,status</order>
+</decoder>
+
+<decoder name="mptbase-1">
+  <parent>kernel</parent>
+  <prematch>^[\s\d+.\d+] mptbase: </prematch>
+  <regex>^[\s\d+.\d+] (\w+): (\w+):\s+\w+ is now (\w+)\p\s(\D+)$</regex>
+  <order>id,data,action,status</order>
+</decoder>
+
+
+
+<decoder name="usb-storage-attached">
+    <parent>kernel</parent>
+    <prematch offset="after_parent">^usb|^[\s*\S+] usb</prematch>
+    <regex offset="after_parent">^(usb) |^[\s*\S+] (usb)</regex>
+    <order>id</order>
+</decoder>
+
+
+<decoder name="ufw">
+   <type>firewall</type>
+   <parent>kernel</parent>
+   <prematch>^[\s*\d+.\d+] [\.*] IN=</prematch>
+   <regex>^[\s*\d+.\d+] [(UFW \.*)] \.+ SRC=(\S+) DST=(\S+)</regex>
+   <regex> \.+ PROTO=(\w+) </regex>
+   <order>action,srcip,dstip,protocol</order>
+</decoder>
+
+<decoder name="ufw">
+   <type>firewall</type>
+   <parent>kernel</parent>
+   <regex offset="after_regex">^SPT=(\d+) DPT=(\d+) </regex>
+   <order>srcport,dstport</order>
+</decoder>

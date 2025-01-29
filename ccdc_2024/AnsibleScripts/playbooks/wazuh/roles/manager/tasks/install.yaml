@@ -1,0 +1,62 @@
+- name: enable internet access
+  ansible.builtin.script: enable_internet.sh
+
+- name: Download script
+  ansible.builtin.get_url:
+    url: "https://packages.wazuh.com/4.7/wazuh-install.sh"
+    dest: "/tmp/wazuh-install.sh"
+    mode: '0775'
+
+- name: Run script
+  ansible.builtin.shell: './wazuh-install.sh -a -i'
+  args:
+    creates: "/var/ossec/etc/ossec.conf"
+    chdir: /tmp
+  register: wazuh_result
+
+- name: Copy output to local machine for creds
+  become: no
+  local_action:
+    module: ansible.builtin.copy
+    content: "{{ wazuh_result }}"
+    dest: wazuh_creds.txt
+
+- name: disable internet access
+  ansible.builtin.script: disable_internet.sh
+
+- name: Open wazuh ports
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    destination_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ wazuh_ports }}"
+    
+- name: Open wazuh ports outbound
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "OUTPUT"
+    protocol: "tcp"
+    source_port: "{{ item }}"
+    jump: "ACCEPT"
+  loop: "{{ wazuh_ports }}"
+
+- name: Open mattermost port inbound
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "INPUT"
+    protocol: "tcp"
+    source_port: 443
+#    source: "{{ mattermost_ip }}"
+    ctstate: "ESTABLISHED"
+    jump: "ACCEPT"
+
+- name: Open mattermost port outbound
+  ansible.builtin.iptables:
+    action: "insert"
+    chain: "OUTPUT"
+    protocol: "tcp"
+    destination_port: 443
+#    destination: "{{ mattermost_ip }}"
+    jump: "ACCEPT"

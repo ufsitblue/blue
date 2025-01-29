@@ -1,0 +1,56 @@
+# Change the password for the users
+- name: Load domain hosts var
+  include_vars:
+    file: ../firewall/group_vars/all.yaml
+
+- name: Fail if not domain password changer
+  when: inventory_hostname in domain_hosts and not inventory_hostname == domain_pass_changer
+  fail:
+
+- name: Drop files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /root/
+  loop:
+    - passchange.py
+    - users.txt
+    - genpass.py
+    - mattermost.py
+    - WORDLIST.TXT
+
+- name: Enable internet
+  ansible.builtin.script: enable_internet.sh
+
+- name: Run python script
+  ansible.builtin.shell: "{{ discovered_interpreter_python }} passchange.py users.txt"
+  args:
+    chdir: /root/
+  environment:
+    MATTERMOST_URL: "{{ mattermost_url }}"
+    MATTERMOST_USERNAME: "{{ mattermost_user }}"
+    MATTERMOST_PASSWORD: "{{ mattermost_pass }}"
+    CUSTOM_HOSTNAME: "{{ inventory_hostname }}"
+    MAX_LENGTH: "{{ password_max }}"
+  register: passwords
+  ignore_errors: true
+
+- name: write to localhost
+  become: no
+  local_action:
+    module: ansible.builtin.copy
+    content: "{% for line in passwords.stdout_lines %}{{ line }}\n{% endfor %}"
+    dest: "{{ inventory_hostname }}-ssh2_passchange.txt"
+
+- name: Disable internet
+  ansible.builtin.script: disable_internet.sh
+
+- name: Cleanup files
+  ansible.builtin.file:
+    path: /root/{{ item }}
+    state: absent
+  loop:
+    - passchange.py
+    - users.txt
+    - genpass.py
+    - mattermost.py
+    - WORDLIST.TXT

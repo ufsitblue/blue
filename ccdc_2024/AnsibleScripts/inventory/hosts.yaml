@@ -1,0 +1,93 @@
+
+linux:
+  hosts:
+    alpine:
+      ansible_host: 10.0.0.15
+      ansible_user: alpine
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/wazuh-ir-network.pem 
+      required_ports:
+      - 20
+      - 21
+      - 22
+    centos:
+      ansible_host: 10.0.0.12
+      ansible_user: centos
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/centos.pem
+      required_ports:
+      - 20
+      - 21
+      - 22
+    debian:
+      ansible_host: 10.0.0.11
+      ansible_user: admin
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/wazuh-ir-network.pem
+      required_ports:
+      - 20
+      - 21
+      - 22
+    suse:
+      ansible_host: 10.0.0.14
+      ansible_user: ec2-user
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/wazuh-ir-network.pem
+      required_ports:
+      - 20
+      - 21
+      - 22
+    ubuntu:
+      ansible_host: 10.0.0.10
+      ansible_user: ubuntu
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/wazuh-ir-network.pem
+      required_ports:
+      - 20
+      - 21
+      - 22
+    dash:
+      ansible_host: 10.0.0.5
+      ansible_user: ubuntu
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/wazuh-ir-network.pem
+      required_ports:
+      - 20
+      - 21
+      - 22
+bsd:
+  hosts:
+    bsd:
+      ansible_host: 10.0.0.13
+      ansible_user: ec2-user
+      ansible_private_key_file: /home/max/BlueTeam/Cyberforce_2024/centos.pem
+      required_ports:
+      - 20
+      - 21
+      - 22
+windows:
+  hosts:
+    win2016:
+      ansible_host: 10.0.0.16
+      ansible_user: Administrator
+      ansible_password: Is1WaterWet?
+      ansible_connection: "winrm"
+      ansible_winrm_scheme: "http"
+      ansible_port: "5985"
+      ansible_winrm_transport: "ntlm"
+      domain_controller: true
+      required_ports:
+      - 22
+      - 3389
+    win2019:
+      ansible_host: 10.0.0.17
+      ansible_user: Administrator
+      ansible_password: Is1WaterWet?
+      ansible_connection: "winrm"
+      ansible_winrm_scheme: "http"
+      ansible_port: "5985"
+      ansible_winrm_transport: "ntlm"
+      domain_controller: true
+      required_ports:
+      - 22
+      - 3389
+manager:
+  hosts:
+    dash:
+      ansible_host: 10.0.0.5
+      ansible_user: ubuntu
+      ansible_ssh_private_key_file: /home/max/BlueTeam/Cyberforce_2024/wazuh-ir-network.pem

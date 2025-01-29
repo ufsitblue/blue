@@ -1,0 +1,30 @@
+# General Linux Variables
+home: '/home/{{ ansible_user }}/'
+
+# Variables for Ubuntu Setup
+debian_package: 'ppa:oisf/suricata-stable'
+
+# Variables for RedHat Setup
+redhat_package: '@oisf/suricata-7.0'
+
+# Variables for SUSE Setup
+config_inputs: '--prefix{{"="}}/usr --sysconfdir{{"="}}/etc --localstatedir{{"="}}/var --enable-nfqueue --enable-lua'
+suricata_source_dir: '/home/{{ ansible_user }}/suricata-6.0.15'
+#suricata_source_dir: suricata-6.0.15
+suricata_download: https://www.openinfosecfoundation.org/download/suricata-6.0.15.tar.gz
+dependencies: 
+  - wget
+  - tar
+  - gcc
+  - pkg-config
+  - pcre-devel
+  - libyaml-devel
+  - libpcap-devel
+  - zlib-devel
+  - file-devel
+  - make
+  - libnetfilter_queue-devel
+  - libjansson-devel
+  - mozilla-nss-devel
+  - libcap-ng-devel
+  - lua5*-devel

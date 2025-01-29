@@ -1,0 +1,42 @@
+[Unicode]
+Unicode=yes
+[Version]
+signature="$CHICAGO$"
+Revision=1
+[System Access]
+MinimumPasswordAge = 10
+MaximumPasswordAge = 30
+MinimumPasswordLength = 14
+PasswordComplexity = 1
+PasswordHistorySize = 24
+LockoutBadCount = 5
+ResetLockoutCount = 30
+LockoutDuration = 30
+ForceLogoffWhenHourExpire = 0
+ClearTextPassword = 0
+LSAAnonymousNameLookup = 0
+EnableAdminAccount = 0
+EnableGuestAccount = 0
+[Event Audit]
+AuditSystemEvents = 3
+AuditLogonEvents = 3
+AuditObjectAccess = 3
+AuditPrivilegeUse = 3
+AuditPolicyChange = 3
+AuditAccountManage = 3
+AuditProcessTracking = 3
+AuditDSAccess = 3
+AuditAccountLogon = 3
+[Privilege Rights]
+SeTcbPrivilege =
+SeImpersonatePrivilege = *S-1-5-6,*S-1-5-20,*S-1-5-19,*S-1-5-32-544
+SeDebugPrivilege = *S-1-5-32-544
+SeAuditPrivilege = *S-1-5-20,*S-1-5-19
+SeBackupPrivilege = *S-1-5-32-544
+SeLoadDriverPrivilege = *S-1-5-32-544
+SeRemoteShutdownPrivilege = *S-1-5-32-544
+SeShutdownPrivilege = *S-1-5-32-545,*S-1-5-32-544
+SeTakeOwnershipPrivilege = *S-1-5-32-544
+SeMachineAccountPrivilege = *S-1-5-32-544
+[Profile Description]
+Description=INF Template 
