@@ -2,30 +2,13 @@
 # https://github.com/scoringengine/scoringengine
 #
 # remember that this file must be renamed and placed in bin/competition.yaml to work with the scoring engine
-#
-#
-#                     .--.  .--.
-#                    /    \/    \
-#                   | .-.  .-.   \
-#                   |/_  |/_  |   \
-#                   || `\|| `\|    `----.
-#                   |\0_/ \0_/    --,    \_
-# .--"""""-.       /              (` \     `-.
-#/          \-----'-.              \          \
-#\  () ()                         /`\          \
-#|                         .___.-'   |          \
-#\                        /` \|      /           ;
-# `-.___             ___.' .-.`.---.|             \
-#    \| ``-..___,.-'`\| / /   /     |              `\
-#     `      \|      ,`/ /   /   ,  /
-#             `      |\ /   /    |\/
-#              ,   .'`-;   '     \/
-#         ,    |\-'  .'   ,   .-'`
-#       .-|\--;`` .-'     |\.'
-#      ( `"'-.|\ (___,.--'`'   
-#       `-.    `"`          _.--'
-#          `.          _.-'`-.
-#            `''---''``  jgs  `.
+#              _  _
+#    _ _      (0)(0)-._  _.-'^^'^^'^^'^^'^^'--.
+#   (.(.)----'`        ^^'                /^   ^^-._
+#   (    `                 \             |    _    ^^-._
+#    VvvvvvvVv~~`__,/.._>  /:/:/:/:/:/:/:/\  (_..,______^^-.
+#  jgs  `^^^^^^^^`/  /   /  /`^^^^^^^^^>^^>^`>  >        _`)  )
+#              (((`   (((`          (((`  (((`        `'--'^
 ---
 teams:
 - name: WhiteTeam
@@ -38,7 +21,7 @@ teams:
   users:
   - username: redteamuser
     password: testpass
-- name: UFSitcom
+- name: ufsitcom
   color: Blue
   users:
   - username: imblue
