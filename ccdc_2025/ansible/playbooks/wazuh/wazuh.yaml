@@ -44,11 +44,3 @@
     - manager
   tags:
     - manager
-
-- name: uninstall the wazuh agent
-  hosts: linux,bsd,!manager
-  become: yes
-  roles:
-    - linux_uninstall
-  tags:
-    - uninstall
