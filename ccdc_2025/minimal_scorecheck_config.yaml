@@ -1,0 +1,221 @@
+# NDG SCORINGENGINE TEMPLATE (todo: fix compilation errors w/ this?)
+---
+teams:
+- name: WhiteTeam
+  color: White
+  users:
+  - username: whiteteamuser
+    password: testpass
+- name: RedTeam
+  color: Red
+  users:
+  - username: redteamuser
+    password: testpass
+- name: UFSitcom
+  color: Blue
+  users:
+  - username: imblue
+    password: imblue
+  services:
+  - name: QuasarLoud-ICMP
+    check_name: ICMPCheck
+    host: 10.119.119.5
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: QuasarLoud-SSH
+    check_name: SSHCheck
+    host: 10.119.119.5
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: QuasarLoud-HTTP
+    check_name: HTTPCheck
+    host: 10.119.119.5
+    port: 80
+    points: 100
+    environments:
+    - matching_content: This is the default welcome page used to test
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: QuasarLoud-MySQL
+    check_name: MYSQLCheck
+    host: 10.13.37.4
+    port: 3306
+    points: 100
+    accounts:
+    - username: elgatoconbotas
+      password: Congratulations21
+    environments:
+    - matching_content: USER_PRIVILEGES
+      properties:
+      - name: database
+        value: information_schema
+      - name: command
+        value: show tables;
+  - name: QuasarLoud-FTP
+    check_name: FTPCheck
+    host: 10.13.37.4
+    port: 21
+    points: 150
+    accounts:
+    - username: elgatoconbotas
+      password: Congratulations21
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Sample file contents
+  - name: ThirdImpact-SMB
+    check_name: SMBCheck
+    host: 10.13.37.6
+    port: 445
+    points: 100
+    accounts:
+    - username: shinji.ikari
+      password: Congratulations21
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remote_name
+        value: COMPUTERNAME
+      - name: share
+        value: ScoredShare
+      - name: file
+        value: flag.txt
+      # SHA256 hash of file
+      - name: hash
+        value: 3ac8347c1130bd1ffe9078f99be6cb690baedd9e5552de0f7140c0daded7e1fa
+  - name: ThirdImpact-DNS
+    check_name: DNSCheck
+    host: 10.13.37.6
+    port: 53
+    points: 100
+    environments:
+    - matching_content: 'status: NOERROR'
+      properties:
+      - name: qtype
+        value: A
+      - name: domain
+        value: nerv.ccdc
+    - matching_content: 'status: NOERROR'
+      properties:
+      - name: qtype
+        value: AAAA
+      - name: domain
+        value: www.team.scoringengine
+    - matching_content: 'status: NOERROR'
+      properties:
+      - name: qtype
+        value: A
+      - name: domain
+        value: anotherhost.team.scoringengine
+  - name: Lilith-PostgreSQL
+    check_name: POSTGRESQLCheck
+    host: 10.13.37.61
+    port: 5432
+    points: 100
+    accounts:
+    - username: elgatoconbotas
+      password: Congratulations21
+    environments:
+    - matching_content: You are connected to database
+      properties:
+      - name: database
+        value: testdb
+      - name: command
+        value: "\\conninfo"
+  # - name: AGENT
+  #   check_name: AgentCheck
+  #   host: testbed_icmp
+  #   port: 0
+  #   points: 25
+  #   environments:
+  #     - matching_content: SUCCESS
+  - name: ThirdImpact-WinRM
+    check_name: WinRMCheck
+    host: 10.13.37.6
+    port: 0
+    points: 100
+    accounts:
+    - username: shinji.ikari
+      password: Congratulations21
+   environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Tokyo3-WinRM
+    check_name: WinRMCheck
+    host: 10.13.37.9
+    port: 0
+    points: 100
+    accounts:
+    - username: shinji.ikari
+      password: Congratulations21
+   environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: ThirdImpact-RDP
+    check_name: RDPCheck
+    host: 10.13.37.6
+    port: 3390
+    points: 100
+    accounts:
+    - username: shinji.ikari
+      password: Congratulations21
+    environments:
+    - matching_content: SUCCESS$
+  - name: Tokyo3-RDP
+    check_name: RDPCheck
+    host: 10.13.37.9
+    port: 3390
+    points: 100
+    accounts:
+    - username: shinji.ikari
+      password: Congratulations21
+    environments:
+    - matching_content: SUCCESS$
+  - name: ThirdImpact-LDAP
+    check_name: LDAPCheck
+    host: 10.13.37.6
+    port: 389
+    points: 50
+    accounts:
+    - username: shinji.ikari
+      password: Congratulations21
+    environments:
+    - matching_content: "^result: 0 Success"
+      properties:
+      - name: domain
+        value: nerv.ccdc
+      - name: base_dn
+        value: dc=nerv,dc=ccdc
+flags:
+  - type: file
+    platform: nix
+    perm: user
+    data:
+        path: "/tmp/flag"
+        content: "hi"
