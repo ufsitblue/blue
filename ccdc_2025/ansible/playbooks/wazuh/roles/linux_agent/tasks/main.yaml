@@ -1,6 +1,6 @@
 ---
-- name: enable internet access
-  ansible.builtin.script: enable_internet.sh
+# - name: enable internet access
+#   ansible.builtin.script: enable_internet.sh
 
 - name: Install on suse
   when: ansible_os_family | lower == "suse"
@@ -30,25 +30,25 @@
     when: "'zypper' in ansible_facts.packages"
     include_tasks: zypp.yaml
 
-- name: disable internet access
-  ansible.builtin.script: disable_internet.sh
+# - name: disable internet access
+#   ansible.builtin.script: disable_internet.sh
 
-- name: Open wazuh ports
-  ansible.builtin.iptables:
-    action: "insert"
-    chain: "INPUT"
-    protocol: "tcp"
-    source: "{{ manager_ip }}"
-    source_port: "{{ item }}"
-    jump: "ACCEPT"
-  loop: "{{ basic_ports }}"
-    
-- name: Open wazuh ports outbound
-  ansible.builtin.iptables:
-    action: "insert"
-    chain: "OUTPUT"
-    protocol: "tcp"
-    destination: "{{ manager_ip }}"
-    destination_port: "{{ item }}"
-    jump: "ACCEPT"
-  loop: "{{ basic_ports }}"
+# - name: Open wazuh ports
+#   ansible.builtin.iptables:
+#     action: "insert"
+#     chain: "INPUT"
+#     protocol: "tcp"
+#     source: "{{ manager_ip }}"
+#     source_port: "{{ item }}"
+#     jump: "ACCEPT"
+#   loop: "{{ basic_ports }}"
+#     
+# - name: Open wazuh ports outbound
+#   ansible.builtin.iptables:
+#     action: "insert"
+#     chain: "OUTPUT"
+#     protocol: "tcp"
+#     destination: "{{ manager_ip }}"
+#     destination_port: "{{ item }}"
+#     jump: "ACCEPT"
+#   loop: "{{ basic_ports }}"
