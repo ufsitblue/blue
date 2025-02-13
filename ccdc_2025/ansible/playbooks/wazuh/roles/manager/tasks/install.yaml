@@ -1,6 +1,6 @@
 - name: Download script
   ansible.builtin.get_url:
-    url: "https://packages.wazuh.com/4.7/wazuh-install.sh"
+    url: "https://packages.wazuh.com/4.10/wazuh-install.sh"
     dest: "/tmp/wazuh-install.sh"
     mode: '0775'
 
