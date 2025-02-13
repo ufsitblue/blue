@@ -1,0 +1,5 @@
+- name: Install the wazuh manager
+  include_tasks: install.yaml
+
+- name: Configure the manager
+  include_tasks: config.yaml
