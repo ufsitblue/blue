@@ -4,7 +4,7 @@
     dest: "/tmp/wazuh-install.sh"
     mode: '0775'
 
-- name: Run script
+- name: Run script (This will take 5-10 minutes!)
   ansible.builtin.shell: './wazuh-install.sh -a -i'
   args:
     creates: "/var/ossec/etc/ossec.conf"
