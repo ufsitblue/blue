@@ -1,0 +1,66 @@
+---
+# - name: enable internet access
+#   ansible.builtin.script: enable_internet.sh
+
+- name: Print detected package manager
+  debug:
+    msg: "The detected package manager is {{ ansible_pkg_mgr }}"
+
+- name: Install on suse
+  when: ansible_os_family | lower == "suse"
+  include_tasks: zypp.yaml
+
+- name: Install everywhere else
+  when: not ansible_os_family | lower == "suse"
+  block:
+  - name: Gather package facts
+    ansible.builtin.package_facts:
+      manager: auto
+      strategy: first
+
+  - name: Install using apt
+    when: ansible_pkg_mgr == "apt"
+    include_tasks: apt.yaml
+
+  - name: Install using yum
+    when: ansible_pkg_mgr == "yum"
+    include_tasks: yum.yaml
+
+  - name: Install using dnf
+    when: ansible_pkg_mgr == "dnf"
+    include_tasks: yum.yaml
+
+  - name: Install using dnf
+    when: ansible_pkg_mgr == "pacman"
+    include_tasks: yum.yaml
+
+  - name: Install using apk
+    when: "'apk-tools' in ansible_facts.packages"
+    include_tasks: apk.yaml
+
+  - name: Install using zypper not on Suse
+    when: "'zypper' in ansible_facts.packages"
+    include_tasks: zypp.yaml
+
+# - name: disable internet access
+#   ansible.builtin.script: disable_internet.sh
+
+# - name: Open wazuh ports
+#   ansible.builtin.iptables:
+#     action: "insert"
+#     chain: "INPUT"
+#     protocol: "tcp"
+#     source: "{{ manager_ip }}"
+#     source_port: "{{ item }}"
+#     jump: "ACCEPT"
+#   loop: "{{ basic_ports }}"
+#     
+# - name: Open wazuh ports outbound
+#   ansible.builtin.iptables:
+#     action: "insert"
+#     chain: "OUTPUT"
+#     protocol: "tcp"
+#     destination: "{{ manager_ip }}"
+#     destination_port: "{{ item }}"
+#     jump: "ACCEPT"
+#   loop: "{{ basic_ports }}"

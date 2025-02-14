@@ -1,0 +1,125 @@
+---
+# - name: Add repository
+#   block:
+- name: Import Wazuh GPG key
+  ansible.builtin.apt_key:
+    url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+    keyring: "gnupg-ring:/usr/share/keyrings/wazuh.gpg"
+
+- name: Change GPG perms
+  ansible.builtin.file:
+    path: /usr/share/keyrings/wazuh.gpg
+    mode: '0644'
+
+- name: Add Wazuh repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main"
+    filename: "wazuh"
+
+  # rescue:
+  #   - name: First Rescue
+  #     block:
+  #       - name: Install packages
+  #         ansible.builtin.apt:
+  #           name:
+  #             - gnupg
+  #             - apt-transport-https
+  #           force_apt_get: true
+  #   
+  #       - name: Import gpg key again
+  #         ansible.builtin.apt_key:
+  #           url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+
+  #       - name: try adding repo again
+  #         ansible.builtin.apt_repository:
+  #           repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+  #           filename: "wazuh"
+
+  #     rescue:
+  #       - name: Second Rescue
+  #         block:
+  #           - name: Add public key
+  #             ansible.builtin.apt_key:
+  #               keyserver: 'hkp://keyserver.ubuntu.com:80'
+  #               id: '96B3EE5F29111145'
+  #           - name: Add repo
+  #             ansible.builtin.apt_repository:
+  #               repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+  #               filename: "wazuh"
+
+- name: Install wazuh agent
+  ansible.builtin.apt:
+    allow_unauthenticated: true
+    force_apt_get: true
+    name: wazuh-agent
+
+- name: Add manager IP
+  ansible.builtin.replace:
+    path: "/var/ossec/etc/ossec.conf"
+    regexp: "MANAGER_IP"
+    replace: "{{ manager_ip }}"
+
+- name: Add hostname
+  ansible.builtin.replace:
+    path: "/var/ossec/etc/ossec.conf"
+    regexp: "</server>"
+    replace: "</server>\n    <enrollment>\n      <agent_name>{{ inventory_hostname }}</agent_name>\n    </enrollment>"
+
+- name: Check ossec.conf for audit.log
+  ansible.builtin.command: grep -Fq 'audit.log' /var/ossec/etc/ossec.conf
+  register: grep_ossec_conf
+  failed_when: false
+  changed_when: false
+
+- name: Edit ossec conf file with audit
+  ansible.builtin.blockinfile:
+    path: "/var/ossec/etc/ossec.conf"
+    block: |
+      <ossec_config>
+        <localfile>
+          <log_format>audit</log_format>
+          <location>/var/log/audit/audit.log</location>
+        </localfile> 
+
+        <localfile>
+          <log_format>syslog</log_format>
+          <location>/var/log/output.log</location>
+        </localfile>
+
+        <localfile>
+          <log_format>syslog</log_format>
+          <location>/var/log/input.log</location>
+        </localfile>
+        
+        <localfile>
+          <log_format>json</log_format>
+          <location>/var/log/suricata/eve.log</location>
+        </localfile>
+      </ossec_config>
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+  when: not grep_ossec_conf.rc == 0
+  notify: "start/enable wazuh-agent"
+
+- name: Edit ossec conf file without audit
+  ansible.builtin.blockinfile:
+    path: "/var/ossec/etc/ossec.conf"
+    block: |
+      <ossec_config>
+        <localfile>
+          <log_format>syslog</log_format>
+          <location>/var/log/output.log</location>
+        </localfile>
+
+        <localfile>
+          <log_format>syslog</log_format>
+          <location>/var/log/input.log</location>
+        </localfile>
+        
+        <localfile>
+          <log_format>json</log_format>
+          <location>/var/log/suricata/eve.log</location>
+        </localfile>
+      </ossec_config>
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+  when: grep_ossec_conf.rc == 0
+  notify: "start/enable wazuh-agent"

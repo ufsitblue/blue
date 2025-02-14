@@ -1,0 +1,10 @@
+- name: Installing Python3
+  hosts: all
+  gather_facts: false
+  become: yes
+  tasks:
+      - name: Executing script
+        ansible.builtin.script: files/install_python3.sh
+        register: out
+
+      - debug: var=out.stdout_lines

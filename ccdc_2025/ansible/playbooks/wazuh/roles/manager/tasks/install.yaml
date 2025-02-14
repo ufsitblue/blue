@@ -1,0 +1,19 @@
+- name: Download script
+  ansible.builtin.get_url:
+    url: "https://packages.wazuh.com/4.10/wazuh-install.sh"
+    dest: "/tmp/wazuh-install.sh"
+    mode: '0775'
+
+- name: Run script (This will take 5-10 minutes!)
+  ansible.builtin.shell: './wazuh-install.sh -a -i'
+  args:
+    creates: "/var/ossec/etc/ossec.conf"
+    chdir: /tmp
+  register: wazuh_result
+
+- name: Copy output to local machine for creds
+  become: no
+  local_action:
+    module: ansible.builtin.copy
+    content: "{{ wazuh_result }}"
+    dest: wazuh_creds.txt
