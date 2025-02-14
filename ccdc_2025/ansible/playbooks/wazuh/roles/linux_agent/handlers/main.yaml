@@ -8,4 +8,6 @@
 
 - name: start wazuh if service failed
   listen: "start wazuh agent"
-  ansible.builtin.shell: "/var/ossec/bin/wazuh-control start"
+  ansible.builtin.shell:
+    cmd: "/var/ossec/bin/wazuh-control start"
+  become: true
