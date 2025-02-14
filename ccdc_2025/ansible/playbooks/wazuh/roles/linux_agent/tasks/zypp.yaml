@@ -18,7 +18,7 @@
 
 - name: Install wazuh agent
   ansible.builtin.shell:
-    cmd: "zypper install -y python3"
+    cmd: "zypper install -y wazuh-agent"
 
 - name: Add manager IP
   ansible.builtin.replace:
