@@ -1,46 +1,51 @@
 ---
-- name: Add repository
-  block:
-    - name: Import gpg key
-      ansible.builtin.apt_key:
-        url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
-        keyring: "gnupg-ring:/usr/share/keyrings/wazuh.gpg"
-    
-    - name: try adding repo
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main"
-        filename: "wazuh"
+# - name: Add repository
+#   block:
+- name: Import Wazuh GPG key
+  ansible.builtin.apt_key:
+    url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+    keyring: "gnupg-ring:/usr/share/keyrings/wazuh.gpg"
 
-  rescue:
-    - name: First Rescue
-      block:
-        - name: Install packages
-          ansible.builtin.apt:
-            name:
-              - gnupg
-              - apt-transport-https
-            force_apt_get: true
-    
-        - name: Import gpg key again
-          ansible.builtin.apt_key:
-            url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+- name: Change GPG perms
+  ansible.builtin.file:
+    path: /usr/share/keyrings/wazuh.gpg
+    mode: '0644'
 
-        - name: try adding repo again
-          ansible.builtin.apt_repository:
-            repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
-            filename: "wazuh"
+- name: Add Wazuh repo
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main"
+    filename: "wazuh"
 
-      rescue:
-        - name: Second Rescue
-          block:
-            - name: Add public key
-              ansible.builtin.apt_key:
-                keyserver: 'hkp://keyserver.ubuntu.com:80'
-                id: '96B3EE5F29111145'
-            - name: Add repo
-              ansible.builtin.apt_repository:
-                repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
-                filename: "wazuh"
+  # rescue:
+  #   - name: First Rescue
+  #     block:
+  #       - name: Install packages
+  #         ansible.builtin.apt:
+  #           name:
+  #             - gnupg
+  #             - apt-transport-https
+  #           force_apt_get: true
+  #   
+  #       - name: Import gpg key again
+  #         ansible.builtin.apt_key:
+  #           url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
+
+  #       - name: try adding repo again
+  #         ansible.builtin.apt_repository:
+  #           repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+  #           filename: "wazuh"
+
+  #     rescue:
+  #       - name: Second Rescue
+  #         block:
+  #           - name: Add public key
+  #             ansible.builtin.apt_key:
+  #               keyserver: 'hkp://keyserver.ubuntu.com:80'
+  #               id: '96B3EE5F29111145'
+  #           - name: Add repo
+  #             ansible.builtin.apt_repository:
+  #               repo: "deb https://packages.wazuh.com/4.x/apt/ stable main"
+  #               filename: "wazuh"
 
 - name: Install wazuh agent
   ansible.builtin.apt:

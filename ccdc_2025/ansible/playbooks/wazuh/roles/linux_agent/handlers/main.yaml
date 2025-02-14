@@ -1,5 +1,6 @@
 - name: enable and start wazuh agent
   listen: "start/enable wazuh-agent"
+  when: ansible_facts['distribution'] != 'Alpine'
   ansible.builtin.service:
     enabled: true
     name: "wazuh-agent"

@@ -2,6 +2,10 @@
 # - name: enable internet access
 #   ansible.builtin.script: enable_internet.sh
 
+- name: Print detected package manager
+  debug:
+    msg: "The detected package manager is {{ ansible_pkg_mgr }}"
+
 - name: Install on suse
   when: ansible_os_family | lower == "suse"
   include_tasks: zypp.yaml
@@ -15,11 +19,19 @@
       strategy: first
 
   - name: Install using apt
-    when: "'apt' in ansible_facts.packages"
+    when: ansible_pkg_mgr == "apt"
     include_tasks: apt.yaml
 
   - name: Install using yum
-    when: "'yum' in ansible_facts.packages"
+    when: ansible_pkg_mgr == "yum"
+    include_tasks: yum.yaml
+
+  - name: Install using dnf
+    when: ansible_pkg_mgr == "dnf"
+    include_tasks: yum.yaml
+
+  - name: Install using dnf
+    when: ansible_pkg_mgr == "pacman"
     include_tasks: yum.yaml
 
   - name: Install using apk
