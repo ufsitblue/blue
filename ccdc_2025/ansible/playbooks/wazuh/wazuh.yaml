@@ -6,23 +6,23 @@
   tags:
     - install
 
-- name: Install on Windows machines
-  hosts: windows
-  become: yes
-  become_method: runas
-  become_user: Administrator
-  roles:
-    - win_agent
-  tags:
-    - install
+# - name: Install on Windows machines
+#   hosts: windows
+#   become: yes
+#   become_method: runas
+#   become_user: Administrator
+#   roles:
+#     - win_agent
+#   tags:
+#     - install
 
-- name: Install on Solaris machines
-  hosts: solaris
-  become: yes
-  roles:
-    - solaris_agent
-  tags:
-    - install
+# - name: Install on Solaris machines
+#   hosts: solaris
+#   become: yes
+#   roles:
+#     - solaris_agent
+#   tags:
+#     - install
 
 - name: Install on BSD machines
   hosts: bsd
