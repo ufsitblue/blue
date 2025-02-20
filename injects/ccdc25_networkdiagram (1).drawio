@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36" version="26.0.13">
+  <diagram name="Page-1" id="6AkKrhjw2_hEyhQ-wrrx">
+    <mxGraphModel dx="690" dy="393" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-4" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-4" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="610" y="160" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-7" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-7" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="930" y="160" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-8" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="610" y="300" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-9" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-9" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="930" y="300" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-10" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="610" y="440" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-11" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-11" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="930" y="440" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-12" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="930" y="580" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;startFill=0;" parent="1" source="DrHJcnHKW2jNrY8YqLVg-13" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800.0000000000002" y="121.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-13" value="&lt;div&gt;MachineName&lt;/div&gt;&lt;div&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.tower_server;" parent="1" vertex="1">
+          <mxGeometry x="610" y="580" width="65" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="DrHJcnHKW2jNrY8YqLVg-15" value="&lt;div align=&quot;center&quot;&gt;Cosmic Horizon Router&lt;/div&gt;&lt;div align=&quot;center&quot;&gt;&amp;lt;IP&amp;gt;&lt;/div&gt;" style="text;whiteSpace=wrap;html=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="725" y="40" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="nsSXfsV0a8G6nhFcqMvf-4" value="" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.router;" parent="1" vertex="1">
+          <mxGeometry x="762" y="80" width="76.1" height="50.5" as="geometry" />
+        </mxCell>
+        <mxCell id="nsSXfsV0a8G6nhFcqMvf-7" value="" style="verticalLabelPosition=bottom;sketch=0;aspect=fixed;html=1;verticalAlign=top;strokeColor=none;align=center;outlineConnect=0;shape=mxgraph.citrix.dhcp_server;" parent="1" vertex="1">
+          <mxGeometry x="762" y="730" width="76" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
