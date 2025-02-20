@@ -1,5 +1,5 @@
 - name: enable and start wazuh agent
-  listen: "start/enable wazuh-agent"
+  listen: "Enable Wazuh service"
   when: ansible_facts['distribution'] != 'Alpine'
   ansible.builtin.service:
     enabled: true
@@ -7,7 +7,7 @@
     state: "started"
 
 - name: start wazuh if service failed
-  listen: "start wazuh agent"
+  listen: "Start Wazuh Agent manually"
   ansible.builtin.shell:
     cmd: "/var/ossec/bin/wazuh-control start"
   become: true

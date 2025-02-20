@@ -60,7 +60,7 @@
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: not grep_ossec_conf.rc == 0
-  notify: "start/enable wazuh-agent"
+  notify: "Enable Wazuh service"
 
 - name: Edit ossec conf file without audit
   ansible.builtin.blockinfile:
@@ -79,4 +79,4 @@
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: grep_ossec_conf.rc == 0
-  notify: "start/enable wazuh-agent"
+  notify: "Enable Wazuh service"

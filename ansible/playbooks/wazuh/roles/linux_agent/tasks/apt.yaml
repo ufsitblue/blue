@@ -1,6 +1,8 @@
 ---
-# - name: Add repository
-#   block:
+- name: Install GPG
+  ansible.builtin.apt:
+    name: "gnupg"
+
 - name: Import Wazuh GPG key
   ansible.builtin.apt_key:
     url: "https://packages.wazuh.com/key/GPG-KEY-WAZUH"
@@ -98,7 +100,7 @@
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: not grep_ossec_conf.rc == 0
-  notify: "start/enable wazuh-agent"
+  notify: "Enable Wazuh service"
 
 - name: Edit ossec conf file without audit
   ansible.builtin.blockinfile:
@@ -122,4 +124,4 @@
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: grep_ossec_conf.rc == 0
-  notify: "start/enable wazuh-agent"
+  notify: "Enable Wazuh service"

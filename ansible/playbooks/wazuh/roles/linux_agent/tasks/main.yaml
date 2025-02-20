@@ -2,7 +2,7 @@
 # - name: enable internet access
 #   ansible.builtin.script: enable_internet.sh
 
-- name: Print detected package manager
+- name: Detect Package Manager
   debug:
     msg: "The detected package manager is {{ ansible_pkg_mgr }}"
 
@@ -23,24 +23,25 @@
     include_tasks: apt.yaml
 
   - name: Install using yum
-    when: ansible_pkg_mgr == "yum"
+    when: ansible_pkg_mgr == "yum" or ansible_pkg_mgr == "dnf"
     include_tasks: yum.yaml
 
-  - name: Install using dnf
-    when: ansible_pkg_mgr == "dnf"
-    include_tasks: yum.yaml
-
-  - name: Install using dnf
-    when: ansible_pkg_mgr == "pacman"
-    include_tasks: yum.yaml
+  # - name: Install using dnf
+  #   when: ansible_pkg_mgr == "dnf"
+  #   include_tasks: yum.yaml
 
   - name: Install using apk
-    when: "'apk-tools' in ansible_facts.packages"
+    when: ansible_pkg_mgr == "apk"
     include_tasks: apk.yaml
 
-  - name: Install using zypper not on Suse
-    when: "'zypper' in ansible_facts.packages"
+  - name: Install using zypper
+    when: ansible_pkg_mgr == "zypper"
     include_tasks: zypp.yaml
+
+  - name: Install using Pacman
+    when: ansible_pkg_mgr == "pacman"
+    ansible.builtin.fail:
+      msg: "Pacman not supported as agent! Install manually via AUR"
 
 # - name: disable internet access
 #   ansible.builtin.script: disable_internet.sh

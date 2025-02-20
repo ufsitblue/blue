@@ -11,6 +11,7 @@
 - name: Install wazuh agent
   ansible.builtin.shell:
     cmd: "apk add --no-cache wazuh-agent"
+  become: true
 
 - name: Add manager IP
   ansible.builtin.replace:
@@ -52,7 +53,7 @@
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: not grep_ossec_conf.rc == 0
-  notify: "start wazuh agent"
+  notify: "Start Wazuh Agent manually"
 
 - name: Edit ossec conf file without audit
   ansible.builtin.blockinfile:
@@ -71,4 +72,4 @@
       </ossec_config>
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: grep_ossec_conf.rc == 0
-  notify: "start wazuh agent"
+  notify: "Start Wazuh Agent manually"

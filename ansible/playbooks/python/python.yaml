@@ -1,5 +1,5 @@
 - name: Installing Python3
-  hosts: all
+  hosts: all:!windows
   gather_facts: false
   become: yes
   tasks:

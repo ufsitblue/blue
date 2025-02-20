@@ -1,7 +1,7 @@
-- name: Stop pf
-  ansible.builtin.service:
-    name: pf
-    state: "stopped"
+# - name: Stop pf
+#   ansible.builtin.service:
+#     name: pf
+#     state: "stopped"
 
 # name: Insert rules in dc conf file
 # when: adcli.rc == 0
@@ -27,9 +27,8 @@
 # ansible.builtin.shell: service pf start
 
 - name: Install wazuh
-  ansible.builtin.package:
-    name: "wazuh-agent"
-    state: "present"
+  ansible.builtin.shell:
+    cmd: "pkg install -y wazuh-agent"
 
 - name: Add manager IP
   ansible.builtin.replace:
@@ -90,8 +89,11 @@
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
   when: grep_ossec_conf.rc == 0
 
-- name: start wazuh agent
-  ansible.builtin.shell: /var/ossec/bin/wazuh-control start
+
+- name: BSD Start Wazuh agent
+  ansible.builtin.shell:
+    cmd: "/var/ossec/bin/ossec-control start"
+  become: true
 
 # name: Stop pf
 # ansible.builtin.service:
@@ -118,23 +120,23 @@
 #     pass out inet proto tcp from any to any port 443 keep state
 #     pass out inet proto udp from any to any port 53 keep state
 
-- name: Load domain vars
-  include_vars:
-    file: ../firewall/group_vars/all.yaml
+# - name: Load domain vars
+#   include_vars:
+#     file: ../firewall/group_vars/all.yaml
 
-- name: Copy over new rules (dc)
-  when: inventory_hostname in domain_hosts
-  ansible.builtin.template: 
-    src: dc_blackout.j2
-    dest: /root/dc_blackout.conf
+# - name: Copy over new rules (dc)
+#   when: inventory_hostname in domain_hosts
+#   ansible.builtin.template: 
+#     src: dc_blackout.j2
+#     dest: /root/dc_blackout.conf
 
-- name: Copy over new rules
-  when: not inventory_hostname in domain_hosts
-  ansible.builtin.template: 
-    src: blackout.j2
-    dest: /root/blackout.conf
+# - name: Copy over new rules
+#   when: not inventory_hostname in domain_hosts
+#   ansible.builtin.template: 
+#     src: blackout.j2
+#     dest: /root/blackout.conf
 
-- name: Start pf
-  ignore_unreachable: true
-  timeout: 5
-  ansible.builtin.shell: service pf start
+# - name: Start pf
+#   ignore_unreachable: true
+#   timeout: 5
+#   ansible.builtin.shell: service pf start

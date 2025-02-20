@@ -1,18 +1,18 @@
-- name: Enable internet access
-  community.windows.win_firewall_rule:
-    group: "Internet"
-    enabled: true
+# - name: Enable internet access
+#   community.windows.win_firewall_rule:
+#     group: "Internet"
+#     enabled: true
 
 - name: Download and install msi for wazuh
   ansible.windows.win_package:
-    path: "https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.3-1.msi"
+    path: "https://packages.wazuh.com/4.x/windows/wazuh-agent-4.10.1-1.msi"
     arguments: >-
       /q
       WAZUH_MANAGER={{ manager_ip }}
       WAZUH_AGENT_NAME={{ inventory_hostname }}
 
-- name: Change firewall log directory
-  ansible.windows.win_shell: Set-NetFirewallProfile -LogFileName 'C:\Program Files (x86)\ossec-agent\pfirewall.log'
+# - name: Change firewall log directory
+#   ansible.windows.win_shell: Set-NetFirewallProfile -LogFileName 'C:\Program Files (x86)\ossec-agent\pfirewall.log'
 
 - name: Add firewall/defender/sysmon to ossec-conf
   community.windows.win_lineinfile:
@@ -36,7 +36,7 @@
     remoteport: "1514,1515"
     protocol: "tcp"
 
-- name: Disable internet access
-  community.windows.win_firewall_rule:
-    group: "Internet"
-    enabled: false
+# - name: Disable internet access
+#   community.windows.win_firewall_rule:
+#     group: "Internet"
+#     enabled: false
