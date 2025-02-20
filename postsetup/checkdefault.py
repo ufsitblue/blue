@@ -22,7 +22,7 @@ def main(argv: list[str]) -> int:
             help="The minimum delay between requests.")
     argparser.add_argument("--endpoint", "-e", default=None, type=str,
             help="The HTTP endpoint to send warnings to")
-    argparser.add_argument("--planka-api", "-", action="store_true",
+    argparser.add_argument("--planka-api", "-p", action="store_true",
             help="Whether to read Planka information from a config file")
     argparser.add_argument("user_file", type=pathlib.Path,
             help="A file containing a newline-separated list of users")
