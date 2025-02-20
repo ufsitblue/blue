@@ -79,7 +79,8 @@ def main(argv: list[str]) -> int:
                 planka_list.create_card("Change passwords", 100)
                 planka_list.create_card("Allow firewall traffic", 150)
                 planka_list.create_card("Check network connections", 200)
-                planka_list.create_card("General Hardening (Windows/Linux)", 2500)
+                planka_list.create_card("Back up service configs", 250)
+                planka_list.create_card("General Hardening (Windows/Linux)", 300)
 
             planka_list.create_card("Harden port " + service["port"] + " (" + service["service"] + ")", random.randint(1000, 5000))
 
