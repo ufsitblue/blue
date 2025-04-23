@@ -13,26 +13,26 @@ teams:
 - name: ufsit
   color: Blue
   users:
-  - username: blue1
+  - username: blueA
     password: DamnGoodCoffee
   services:
   - name: TwinPeaksPD-ping
     check_name: ICMPCheck
-    host: 172.16.48.1
+    host: 172.16.48.56
     port: 0
     points: 25
     environments:
     - matching_content: 1 packets transmitted, 1 received
   - name: Hospital-ping
     check_name: ICMPCheck
-    host: 172.16.48.2
+    host: 172.16.48.55
     port: 0
     points: 25
     environments:
     - matching_content: 1 packets transmitted, 1 received
   - name: TwinPeaksPD-SSH
     check_name: SSHCheck
-    host: 172.16.48.1
+    host: 172.16.48.56
     port: 22
     points: 150
     accounts:
@@ -53,7 +53,7 @@ teams:
         value: ps
   - name: TwinPeaksPD-HTTP
     check_name: HTTPCheck
-    host: 172.16.48.1
+    host: 172.16.48.56
     port: 80
     points: 100
     environments:
@@ -67,7 +67,7 @@ teams:
         value: "/"
   - name: TwinPeaksPD-FTP
     check_name: FTPCheck
-    host: 172.16.48.1
+    host: 172.16.48.56
     port: 21
     points: 150
     accounts:
@@ -86,7 +86,7 @@ teams:
         value: Twin Peaks Police Department
   - name: Hospital-WinRM
     check_name: WinRMCheck
-    host: 172.16.48.2
+    host: 172.16.48.55
     port: 0
     points: 100
     accounts:
@@ -103,7 +103,7 @@ teams:
         value: ipconfig /all;whoami
   - name: Hospital-HTTP
     check_name: HTTPCheck
-    host: 172.16.48.2
+    host: 172.16.48.55
     port: 80
     points: 100
     environments:
