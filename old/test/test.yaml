@@ -115,6 +115,636 @@ teams:
         value: testbed_web
       - name: uri
         value: "/"
+- name: blueC
+  color: Blue
+  users:
+  - username: blueC
+    password: DamnGoodCoffee
+  services:
+  - name: TwinPeaksPD-ping
+    check_name: ICMPCheck
+    host: 172.16.48.50
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: Hospital-ping
+    check_name: ICMPCheck
+    host: 172.16.48.200
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: TwinPeaksPD-SSH
+    check_name: SSHCheck
+    host: 172.16.48.50
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    - username: lmoran
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: TwinPeaksPD-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.50
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Twin Peaks Police Department
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: TwinPeaksPD-FTP
+    check_name: FTPCheck
+    host: 172.16.48.50
+    port: 21
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: hawk2hill
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Twin Peaks Police Department
+  - name: Hospital-WinRM
+    check_name: WinRMCheck
+    host: 172.16.48.200
+    port: 0
+    points: 100
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: ljacoby
+      password: twinpeaks1
+    - username: arosenfield
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Hospital-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.200
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Calhoun Memorial Hospital
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+- name: blueJ
+  color: Blue
+  users:
+  - username: blueJ
+    password: DamnGoodCoffee
+  services:
+  - name: TwinPeaksPD-ping
+    check_name: ICMPCheck
+    host: 172.16.48.185
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: Hospital-ping
+    check_name: ICMPCheck
+    host: 172.16.48.184
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: TwinPeaksPD-SSH
+    check_name: SSHCheck
+    host: 172.16.48.185
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    - username: lmoran
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: TwinPeaksPD-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.185
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Twin Peaks Police Department
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: TwinPeaksPD-FTP
+    check_name: FTPCheck
+    host: 172.16.48.185
+    port: 21
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: hawk2hill
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Twin Peaks Police Department
+  - name: Hospital-WinRM
+    check_name: WinRMCheck
+    host: 172.16.48.184
+    port: 0
+    points: 100
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: ljacoby
+      password: twinpeaks1
+    - username: arosenfield
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Hospital-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.184
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Calhoun Memorial Hospital
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+- name: blueG
+  color: Blue
+  users:
+  - username: blueG
+    password: DamnGoodCoffee
+  services:
+  - name: TwinPeaksPD-ping
+    check_name: ICMPCheck
+    host: 172.16.48.177
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: Hospital-ping
+    check_name: ICMPCheck
+    host: 172.16.48.176
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: TwinPeaksPD-SSH
+    check_name: SSHCheck
+    host: 172.16.48.177
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    - username: lmoran
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: TwinPeaksPD-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.177
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Twin Peaks Police Department
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: TwinPeaksPD-FTP
+    check_name: FTPCheck
+    host: 172.16.48.177
+    port: 21
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: hawk2hill
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Twin Peaks Police Department
+  - name: Hospital-WinRM
+    check_name: WinRMCheck
+    host: 172.16.48.176
+    port: 0
+    points: 100
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: ljacoby
+      password: twinpeaks1
+    - username: arosenfield
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Hospital-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.176
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Calhoun Memorial Hospital
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+- name: blueH
+  color: Blue
+  users:
+  - username: blueH
+    password: DamnGoodCoffee
+  services:
+  - name: TwinPeaksPD-ping
+    check_name: ICMPCheck
+    host: 172.16.48.198
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: Hospital-ping
+    check_name: ICMPCheck
+    host: 172.16.48.197
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: TwinPeaksPD-SSH
+    check_name: SSHCheck
+    host: 172.16.48.198
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    - username: lmoran
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: TwinPeaksPD-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.198
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Twin Peaks Police Department
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: TwinPeaksPD-FTP
+    check_name: FTPCheck
+    host: 172.16.48.198
+    port: 21
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: hawk2hill
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Twin Peaks Police Department
+  - name: Hospital-WinRM
+    check_name: WinRMCheck
+    host: 172.16.48.197
+    port: 0
+    points: 100
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: ljacoby
+      password: twinpeaks1
+    - username: arosenfield
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Hospital-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.197
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Calhoun Memorial Hospital
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+- name: blueL
+  color: Blue
+  users:
+  - username: blueL
+    password: DamnGoodCoffee
+  services:
+  - name: TwinPeaksPD-ping
+    check_name: ICMPCheck
+    host: 172.16.48.77
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: Hospital-ping
+    check_name: ICMPCheck
+    host: 172.16.48.78
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: TwinPeaksPD-SSH
+    check_name: SSHCheck
+    host: 172.16.48.77
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    - username: lmoran
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: TwinPeaksPD-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.77
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Twin Peaks Police Department
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: TwinPeaksPD-FTP
+    check_name: FTPCheck
+    host: 172.16.48.77
+    port: 21
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: hawk2hill
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Twin Peaks Police Department
+  - name: Hospital-WinRM
+    check_name: WinRMCheck
+    host: 172.16.48.78
+    port: 0
+    points: 100
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: ljacoby
+      password: twinpeaks1
+    - username: arosenfield
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Hospital-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.78
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Calhoun Memorial Hospital
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+- name: blueX
+  color: Blue
+  users:
+  - username: blueX
+    password: DamnGoodCoffee
+  services:
+  - name: TwinPeaksPD-ping
+    check_name: ICMPCheck
+    host: 172.16.48.95
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: Hospital-ping
+    check_name: ICMPCheck
+    host: 172.16.48.94
+    port: 0
+    points: 25
+    environments:
+    - matching_content: 1 packets transmitted, 1 received
+  - name: TwinPeaksPD-SSH
+    check_name: SSHCheck
+    host: 172.16.48.595
+    port: 22
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    - username: lmoran
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: id;ls -l /home
+    - matching_content: PID
+      properties:
+      - name: commands
+        value: ps
+  - name: TwinPeaksPD-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.95
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Twin Peaks Police Department
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
+  - name: TwinPeaksPD-FTP
+    check_name: FTPCheck
+    host: 172.16.48.95
+    port: 21
+    points: 150
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: hawk2hill
+      password: twinpeaks1
+    - username: htruman
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: remotefilepath
+        value: "/ftp_files/testfile.txt"
+      - name: filecontents
+        value: Twin Peaks Police Department
+  - name: Hospital-WinRM
+    check_name: WinRMCheck
+    host: 172.16.48.94
+    port: 0
+    points: 100
+    accounts:
+    - username: lpalmer
+      password: twinpeaks1
+    - username: ljacoby
+      password: twinpeaks1
+    - username: arosenfield
+      password: twinpeaks1
+    environments:
+    - matching_content: "^SUCCESS"
+      properties:
+      - name: commands
+        value: ipconfig /all;whoami
+  - name: Hospital-HTTP
+    check_name: HTTPCheck
+    host: 172.16.48.94
+    port: 80
+    points: 100
+    environments:
+    - matching_content: Calhoun Memorial Hospital
+      properties:
+      - name: useragent
+        value: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+      - name: vhost
+        value: testbed_web
+      - name: uri
+        value: "/"
 flags:
   - type: file
     platform: nix
