@@ -1376,9 +1376,9 @@ teams:
       - name: uri
         value: "/"
 - name: blueM
-  color: BluM
+  color: Blue
   users:
-  - username: blueF
+  - username: blueM
     password: DamnGoodCoffee
   services:
   - name: TwinPeaksPD-ping
