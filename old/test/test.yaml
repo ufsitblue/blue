@@ -10,7 +10,7 @@ teams:
   users:
   - username: redteam
     password: SeventyTimes7
-- name: ufsit
+- name: blueA
   color: Blue
   users:
   - username: blueA
