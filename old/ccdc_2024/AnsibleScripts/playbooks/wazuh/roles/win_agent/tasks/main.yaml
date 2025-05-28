@@ -1,0 +1,42 @@
+- name: Enable internet access
+  community.windows.win_firewall_rule:
+    group: "Internet"
+    enabled: true
+
+- name: Download and install msi for wazuh
+  ansible.windows.win_package:
+    path: "https://packages.wazuh.com/4.x/windows/wazuh-agent-4.7.3-1.msi"
+    arguments: >-
+      /q
+      WAZUH_MANAGER={{ manager_ip }}
+      WAZUH_AGENT_NAME={{ inventory_hostname }}
+
+- name: Change firewall log directory
+  ansible.windows.win_shell: Set-NetFirewallProfile -LogFileName 'C:\Program Files (x86)\ossec-agent\pfirewall.log'
+
+- name: Add firewall/defender/sysmon to ossec-conf
+  community.windows.win_lineinfile:
+    path: "C:\\Program Files (X86)\\ossec-agent\\ossec.conf"
+    insertbefore: "</ossec_config>"
+    line: "  <localfile>\r\n    <location>Microsoft-Windows-Windows Defender/Operational</location>\r\n    <log_format>eventchannel</log_format>\r\n  </localfile>\r\n\r\n  <localfile>\r\n    <location>pfirewall.log</location>\r\n    <log_format>syslog</log_format>\r\n  </localfile>\r\n\r\n  <localfile>\r\n    <location>Microsoft-Windows-Sysmon/Operational</location>\r\n    <log_format>eventchannel</log_format>\r\n  </localfile>"
+
+- name: Start and enable wazuh
+  ansible.windows.win_service:
+    name: Wazuh
+    state: "started"
+
+- name: Add wazuh rule
+  community.windows.win_firewall_rule:
+    action: "allow"
+    description: "Allow the wazuh-agent to communicate with the manager"
+    direction: "out"
+    group: "Wazuh"
+    name: "Wazuh to manager"
+    remoteip: "{{ manager_ip }}"
+    remoteport: "1514,1515"
+    protocol: "tcp"
+
+- name: Disable internet access
+  community.windows.win_firewall_rule:
+    group: "Internet"
+    enabled: false

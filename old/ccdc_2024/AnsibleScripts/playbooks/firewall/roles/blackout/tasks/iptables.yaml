@@ -1,0 +1,199 @@
+---
+# Implement Network Blackout with IPTables
+
+- name: Check if domain machine
+  ansible.builtin.shell: command -v adcli || command -v winbindd
+  ignore_errors: true
+  register: adcli
+
+- name: flush current rules
+  ansible.builtin.iptables:
+    flush: true
+    chain: "{{ item }}"
+  with_items: ["INPUT", "OUTPUT"]
+
+- name: Add invalid packet rule
+  ansible.builtin.iptables:
+    chain: "{{ item }}"
+    ctstate: ["INVALID"]
+    jump: "DROP"
+  with_items: ['INPUT', 'OUTPUT']
+
+- name: Add localhost INPUT rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    source: "127.0.0.0/8"
+    jump: "ACCEPT"
+
+- name: Add localhost OUTPUT rule
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
+    destination: "127.0.0.0/8"
+    jump: "ACCEPT"
+
+- name: Add ICMP INPUT rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    protocol: "icmp"
+    jump: "ACCEPT"
+
+- name: Add ICMP OUTPUT rule
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
+    protocol: "icmp"
+    jump: "ACCEPT"
+
+- name: use iptables to only allow team IPs into network
+  ansible.builtin.iptables:
+    action: "append"
+    chain: "INPUT"
+    destination_port: "22"
+    source: "{{ item }}"
+    jump: "ACCEPT"
+    protocol: "tcp"
+    state: "present"
+  loop: "{{ team_ips }}"
+
+- name: use iptables to only let established ssh out
+  ansible.builtin.iptables:
+    action: "append"
+    chain: "OUTPUT"
+    source_port: "22"
+    jump: "ACCEPT"
+    protocol: "tcp"
+    ctstate: ["ESTABLISHED"]
+    state: "present"
+
+- name: Add DC rules (Linux)
+  when: adcli.rc == 0
+  import_role:
+    name: DC
+
+- name: Add dropped INPUT LOG rule
+  ansible.builtin.iptables:
+    chain: "INPUT"
+    jump: "LOG"
+    log_prefix: "[DROPPED_INPUT] "
+
+- name: Add dropped OUTPUT LOG rule
+  ansible.builtin.iptables:
+    chain: "OUTPUT"
+    jump: "LOG"
+    log_prefix: "[DROPPED_OUTPUT] "
+
+- name: Add cron to flush rules just in case
+  ansible.builtin.cron:
+    name: "Flush Firewall"
+    minute: "*/5"
+    job: "iptables -F"
+
+- name: Add default drop rule
+  ansible.builtin.shell: |
+    iptables -A INPUT -j DROP
+    iptables -A OUTPUT -j DROP
+
+- name: Save custom rules
+  community.general.iptables_state:
+    state: "saved"
+    path: "/root/{{ inventory_hostname }}.rules"
+
+- name: Get rid of crontab
+  ansible.builtin.cron:
+    name: "Flush Firewall"
+    minute: "*/5"
+    job: "iptables -F"
+    disabled: true
+
+- name: Create iptables folder
+  ansible.builtin.file:
+    path: "/etc/iptables"
+    state: "directory"
+
+- name: Create restore script
+  ansible.builtin.template:
+    mode: "0500"
+    src: "restore-iptables.j2"
+    dest: "/etc/iptables/restore-iptables.sh"
+
+- name: Create custom systemd service
+  when: not ansible_os_family | lower == "alpine"
+  block:
+    - name: Create service file
+      ansible.builtin.copy:
+        dest: "/etc/systemd/system/iptables-persistent.service"
+        src: "iptables-persistent.service"
+
+    - name: Enable iptables reloader
+      ansible.builtin.systemd:
+        name: "iptables-persistent.service"
+        enabled: true
+
+- name: Create custom openrc service
+  when: ansible_os_family | lower == "alpine"
+  block:
+    - name: Create service file
+      ansible.builtin.copy:
+        mode: "0550"
+        dest: "/etc/init.d/iptables-persistent"
+        src: "iptables-persistent"
+
+    - name: Add custom service to default run level
+      ansible.builtin.shell: rc-update add iptables-persistent default
+
+- name: Make sure rsyslog.d exists
+  ansible.builtin.file:
+    path: "/etc/rsyslog.d"
+    state: "directory"
+
+- name: Add rsyslog file
+  ansible.builtin.copy:
+    dest: "/etc/rsyslog.d/00-iptables.conf"
+    src: "00-iptables.conf"
+
+- name: restart rsyslog
+  ansible.builtin.service:
+    name: "rsyslog"
+    state: "restarted"
+
+- name: Create own variable file
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.lineinfile
+    insertafter: "hosts:"
+    path: "group_vars/{{ inventory_hostname }}.yaml"
+    line: "  - \"{{ inventory_hostname }}\""
+    create: true
+
+- name: Integrate into domain_hosts
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell cat group_vars/{{ inventory_hostname }}.yaml >> group_vars/all.yaml
+
+- name: Choose password changer
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.replace
+    regexp: "domain_pass_changer:.*"
+    replace: "domain_pass_changer: {{ inventory_hostname }}"
+    path: group_vars/all.yaml
+
+- name: Cleanup variable files
+  become: no
+  when: adcli.rc == 0
+  local_action:
+    module: ansible.builtin.shell rm group_vars/{{ inventory_hostname }}.yaml
+
+- name: Reboot systems
+  ansible.builtin.shell: reboot
+  ignore_unreachable: true
+  ignore_errors: true
+
+#- name: reboot system to kill active connections
+#  ansible.builtin.reboot:
+
+#- name: restore blackout rules on CentOS
+#  when: ansible_distribution | lower == "centos"
+#  ansible.builtin.shell: bash /etc/iptables/restore-iptables.sh

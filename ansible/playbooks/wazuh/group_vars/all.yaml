@@ -1,0 +1,5 @@
+---
+# Wazuh agent ports
+basic_ports:
+  - 1515
+  - 1514

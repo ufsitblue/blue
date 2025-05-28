@@ -1,0 +1,5 @@
+description,host,port
+Quad9 Ping,9.9.9.9,ping
+Quad9 DNS,9.9.9.9,53
+Cloudflare HTTP,1.1.1.1,80
+Cloudflare HTTPS,1.1.1.1,443

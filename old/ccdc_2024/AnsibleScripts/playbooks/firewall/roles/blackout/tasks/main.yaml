@@ -1,0 +1,31 @@
+# Do a network blackout on linux
+
+- name: Blackout on Linux
+  become: true
+  when: ansible_system | lower == "linux"
+  block:
+    - name: install iptables/rsyslog if not present
+      ansible.builtin.package:
+        name: 
+          - iptables
+          - rsyslog
+        state: present
+
+    - name: Do stuff with iptables
+      import_tasks: iptables.yaml
+
+- name: Blackout on bsd
+  become: true
+  when: "'bsd' in group_names"
+  block:
+    - name: Blackout on bsd
+      include_tasks: bsd.yaml
+
+- name: Blackout on windows
+  when: ansible_os_family | lower == "windows"
+  become: true
+  become_method: runas
+  become_user: Administrator
+  block:
+    - name: Blackout on windows
+      import_tasks: windows.yaml

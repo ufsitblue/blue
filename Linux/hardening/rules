@@ -1,0 +1,6 @@
+block in all
+block out all
+pass in on lo
+pass out on lo
+pass in from <imps> keep state
+pass out proto tcp from port 22

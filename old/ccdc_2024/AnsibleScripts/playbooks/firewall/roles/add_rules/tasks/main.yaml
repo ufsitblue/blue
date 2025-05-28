@@ -1,0 +1,62 @@
+# Add Firewall Rules For All Systems
+
+- name: Add Firewall Rules on Linux
+  when: "ansible_system | lower == 'linux'"
+  become: true
+  block:
+#  - name: Gather Package Facts
+#    ansible.builtin.package_facts:
+#      manager: auto
+#      strategy: first
+
+#  - name: Use Firewalld
+#    when: '"firewalld in ansible_facts.package"'
+#    import_tasks: firewalld.yaml
+
+  - name: Make sure iptables is installed
+    ansible.builtin.package:
+      name: "iptables"
+      state: "present"
+  
+  - name: Use IPtables
+    import_tasks: iptables.yaml
+
+- name: Add firewall rules on BSD
+  when: "'bsd' in group_names"
+  become: true
+  block:
+    - name: Add firewall rules on BSD
+      import_tasks: bsd.yaml
+
+- name: Add Firewall Rules on Windows
+  when: "ansible_os_family | lower == 'windows'"
+  become: true
+  become_method: runas
+  become_user: Administrator
+  block:
+  - name: Allow services in
+    community.windows.win_firewall_rule:
+      name: "Scored services in to network"
+      group: "Scored Services"
+      direction: "in"
+      description: "This is a scored service.  This port must stay open."
+      localport: "{{ required_ports | join(',') }}"
+      protocol: "tcp"
+  
+  - name: Allow services out
+    community.windows.win_firewall_rule:
+      name: "Scored services out of network"
+      group: "Scored Services"
+      direction: "out"
+      description: "This is a scored service.  This port must stay open."
+      localport: "{{ required_ports | join(',') }}"
+      protocol: "tcp"
+
+  - name: Save rules
+    ansible.windows.win_shell: netsh advfirewall export C:\{{ inventory_hostname }}.wfw
+
+  - name: Grab rules
+    ansible.builtin.fetch:
+      flat: true
+      dest: "roles/restore_rules/files/"
+      src: "C:\\{{ inventory_hostname }}.wfw"

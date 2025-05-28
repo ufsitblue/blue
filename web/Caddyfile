@@ -1,0 +1,37 @@
+{
+	order coraza_waf before reverse_proxy
+}
+
+# Replace with https:// and uncomment the `tls` line below if secure
+http://:8080 {
+	coraza_waf {
+		load_owasp_crs
+		directives `
+			Include @coraza.conf-recommended
+			Include @crs-setup.conf.example
+			Include @owasp-crs/*.conf
+			SecRuleEngine On
+		`
+	}
+
+	# Don't forget to firewall this port off!
+	reverse_proxy http://127.0.0.1:8888
+
+	# Uncomment if HTTPS is being used (for whatever reason)
+	# tls /path/to/cert.pem /path/to/key.pem
+
+	handle_errors 403 {
+		# Totally legitimate website
+		redir https://www.youtube.com/watch?v=dQw4w9WgXcQ
+	}
+	handle_errors 404 {
+		respond "404 Not Found"
+	}
+	
+	log {
+		output file caddylog.json {
+			roll_size 128MiB
+		}
+		format json
+	}
+}

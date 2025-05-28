@@ -1,0 +1,17 @@
+ip,port,hostname,service
+127.0.0.1,22,localhost,SSH
+10.250.117.20,22,vault,SSH
+10.250.117.20,80,vault,HTTP
+10.250.117.44,22,store,SSH
+10.250.117.61,22,altitude,SSH
+10.250.117.61,3128,altitude,HTTP
+10.250.117.86,53,eclipse,DNS
+10.250.117.86,389,eclipse,LDAP
+10.250.117.86,636,eclipse,LDAPS
+10.250.117.86,3389,eclipse,RDP
+10.250.117.143,22,fruit,SSH
+10.250.117.177,3389,eclipse,RDP
+10.250.117.211,80,storefront,HTTP
+10.250.117.211,3389,storefront,RDP
+10.250.117.224,22,spectroscope,SSH
+10.250.117.224,80,spectroscope,HTTP

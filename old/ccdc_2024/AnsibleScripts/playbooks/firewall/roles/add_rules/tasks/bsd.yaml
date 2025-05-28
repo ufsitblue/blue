@@ -1,0 +1,35 @@
+- name: Stop pf
+  ansible.builtin.service:
+    name: pf
+    state: stopped
+  timeout: 5
+  ignore_errors: true
+
+- name: Add dc config to rc.conf
+  when: inventory_hostname in domain_hosts
+  ansible.builtin.shell: |
+    sysrc pf_enable="yes"
+    sysrc pf_rules="/root/dc_standard.conf"
+
+- name: Add config to rc.conf
+  when: not inventory_hostname in domain_hosts
+  ansible.builtin.shell: |
+    sysrc pf_enable="yes"
+    sysrc pf_rules="/root/standard.conf"
+
+- name: Add dc_blackout.conf if in domain
+  when: inventory_hostname in domain_hosts
+  ansible.builtin.template:
+    dest: /root/dc_standard.conf
+    src: dc_standard.j2
+
+- name: Add blackout.conf if not in domain
+  when: not inventory_hostname in domain_hosts
+  ansible.builtin.template:
+    dest: /root/standard.conf
+    src: standard.j2
+
+- name: Start pf
+  ignore_errors: true
+  timeout: 5
+  ansible.builtin.shell: service pf start

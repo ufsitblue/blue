@@ -1,0 +1,34 @@
+{
+	http_port 45411
+	https_port 45412
+	default_bind 127.0.0.1
+}
+https://:20501 {
+	bind 0.0.0.0
+	reverse_proxy /* http://localhost:1337
+	tls internal {
+		on_demand
+	}
+}
+https://:20502 {
+	bind 0.0.0.0
+	reverse_proxy /* http://localhost:3001
+	tls internal {
+		on_demand
+	}
+}
+https://:20503 {
+	bind 0.0.0.0
+	reverse_proxy /* http://localhost:20403
+	tls internal {
+		on_demand
+	}
+}
+https://:20504 {
+	bind 0.0.0.0
+	root * public
+	file_server browse
+	tls internal {
+		on_demand
+	}
+}
